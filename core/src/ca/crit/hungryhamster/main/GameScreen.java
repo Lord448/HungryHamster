@@ -8,8 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.sql.Time;
 
 import ca.crit.hungryhamster.GameHandler;
 
@@ -30,6 +35,9 @@ public class GameScreen implements Screen {
 
     /*OBJECTS*/
     private Food[] food;
+    private Skin skin;
+    private Stage stage;
+    private Label lblTime;
 
     /*TEXT*/
     //private final BitmapFont font;
@@ -51,8 +59,9 @@ public class GameScreen implements Screen {
         WinText = new GameText("¡Bien \nHecho!", Gdx.files.internal("Fonts/logros.fnt"), Gdx.files.internal("Fonts/logros.png"), false);
         WinText.setX(3);
         WinText.setY(50);
-        //font = new BitmapFont(Gdx.files.internal("Fonts/logros.fnt"), Gdx.files.internal("Fonts/logros.png"), false);
-        //font.getData().setScale(0.2f, 0.2f);
+        stage = new Stage();
+        skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
+        graphicsConstruct();
     }
     @Override
     public void show() {
@@ -65,28 +74,29 @@ public class GameScreen implements Screen {
             }
             switch (j) {
                 case 0: //BANANA
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i], 5, 6, Fruits.BANANA);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.BANANA);
+                break;
                 case 1: //APPLE
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.APPLE);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.APPLE);
+                break;
                 case 2: //GRAPE
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.GRAPE);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.GRAPE);
+                break;
                 case 3: //GREEN_APE
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.GREEN_APE);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.GREEN_APE);
+                break;
                 case 4: //PINEAPPLE
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.PINEAPPLE);
-                    break; //KIWI
-                case 5:
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.KIWI);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.PINEAPPLE);
+                break;
+                case 5: //KIWI
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.KIWI);
+                break;
                 case 6: //CHERRY
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.CHERRY);
-                    break;
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.CHERRY);
+                break;
                 case 7: //STRAWBERRY
-                    food[i] = new Food((float) GameHandler.WORLD_WIDTH/2+6, GameHandler.foodPositions[i],5, 6, Fruits.STRAWBERRY);
+                    food[i] = new Food((float) GameHandler.WORLD_WIDTH / 2 + 6, GameHandler.foodPositions[i], 5, 6, Fruits.STRAWBERRY);
+                break;
             }
         }
     }
@@ -97,6 +107,7 @@ public class GameScreen implements Screen {
             if(Intersector.overlaps(animal.hitbox, i.hitbox)) {
                 System.out.println("Collide on " + i);
                 i.setPicked(true);
+                GameSounds.eat();
             }
         }
         batch.begin();
@@ -111,8 +122,10 @@ public class GameScreen implements Screen {
         }
         /*CHARACTERS*/
         wizard.render(batch);
-        animal.render(batch);
+        animal.render(batch, deltaTime);
+
         batch.end();
+        graphicsRender(deltaTime);
     }
 
     @Override
@@ -141,5 +154,18 @@ public class GameScreen implements Screen {
         wizard.dispose();
         animal.dispose();
         WinText.dispose();
+    }
+
+    private void graphicsRender(float deltaTime) {
+        lblTime.setText(animal.timer.getStringMeasure());
+        Gdx.input.setInputProcessor(stage);
+        stage.draw();
+        stage.act(deltaTime);
+    }
+
+    private void graphicsConstruct() {
+        lblTime = new Label("", skin);
+        lblTime.setPosition(10, 10);
+        stage.addActor(lblTime);
     }
 }

@@ -72,7 +72,7 @@ public class GameHandler {
     public static int WORLD_WIDTH = 72;
     public static int WORLD_HEIGHT = 128;
     public static float musicVolume;
-    public static float effectsVolume = musicVolume / 5;
+    public static float effectsVolume;
     public static boolean wizardSpell  = false;
     public static float[] foodPositions;
     public static int countsToWin = numHouseSteps;
@@ -94,6 +94,7 @@ public class GameHandler {
     public static void init(float musicVolume, int env) {
         //Setting global variables
         GameHandler.musicVolume = musicVolume;
+        GameHandler.effectsVolume = musicVolume / 4;
         GameHandler.environment = env;
         Arrays.fill(GameHandler.touchPins, false);
         for(int i = 0; i < numHouseSteps; i++)
