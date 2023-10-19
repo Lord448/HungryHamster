@@ -1,14 +1,7 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
-
-import ca.crit.hungryhamster.GameHandler;
 
 public class Food {
     private final Fruits fruits;
@@ -29,9 +22,8 @@ public class Food {
     }
 
     public void render(final SpriteBatch batch){
-        if(!isPicked) {
+        if(!isPicked)
             batch.draw(fruits.getTexture(), x, y, width, height);
-        }
     }
 
     public String toString() {
@@ -40,6 +32,10 @@ public class Food {
 
     public void setPicked(boolean picked) {
         isPicked = picked;
-        hitbox.setPosition(100, 100);
+
+    }
+
+    public boolean isPicked() {
+        return isPicked;
     }
 }

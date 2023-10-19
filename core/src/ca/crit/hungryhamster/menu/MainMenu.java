@@ -27,6 +27,8 @@ import java.util.Objects;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.main.GameText;
+import ca.crit.hungryhamster.time.Time;
+import ca.crit.hungryhamster.time.TimeFormatException;
 
 public class MainMenu implements Screen{
     //STATES
@@ -367,11 +369,11 @@ public class MainMenu implements Screen{
         final int fieldHeight = 50;
         final int btnWidth = 150;
         final int btnHeight = 50;
-        final String initStringTime = "1.00";
+        final String initStringTime = "1:00";
         //Labels
         Label lblMaxStep = new Label("Escalon superior", skin);
         Label lblMinStep = new Label("Escalon inferior", skin);
-        Label lblTime = new Label("Tiempo (Mins)", skin);
+        Label lblTime = new Label("Tiempo", skin);
         Label lblReps = new Label("Repeticiones", skin);
         Label lblError = new Label("", skin);
         //Text Fields
@@ -393,6 +395,12 @@ public class MainMenu implements Screen{
             btnArrows[i] = new Button(shadeSkin, "left");
             btnArrows[i+1] = new Button(shadeSkin, "right");
         }
+        //Checkboxes
+        CheckBox cbExtraFruit = new CheckBox("Fruta extra", shadeSkin);
+        CheckBox cbRightHand = new CheckBox("Mano derecha", shadeSkin);
+        CheckBox cbLeftHand = new CheckBox("Mano izquierda", shadeSkin);
+        CheckBox cbBothHands = new CheckBox("Ambas manos", shadeSkin);
+        CheckBox cbFreeTime = new CheckBox("Libre", shadeSkin);
         //Tables
         Table mainTable = new Table();
         Table upperArrowsTable = new Table();
@@ -401,14 +409,10 @@ public class MainMenu implements Screen{
         Table extraArrowsTable = new Table();
         Table repsArrowsTable = new Table();
         Table handCheckTable = new Table();
+        Table timeTable = new Table();
         //Tables characteristics
         mainTable.setFillParent(true);
         mainTable.setPosition(0, -25);
-        //Checkboxes
-        CheckBox cbExtraFruit = new CheckBox("Fruta extra", shadeSkin);
-        CheckBox cbRightHand = new CheckBox("Mano derecha", shadeSkin);
-        CheckBox cbLeftHand = new CheckBox("Mano izquierda", shadeSkin);
-        CheckBox cbBothHands = new CheckBox("Ambas manos", shadeSkin);
         //Trying to rotate
         /*
         for(Button i : btnArrows) {
@@ -433,8 +437,11 @@ public class MainMenu implements Screen{
                         GameHandler.maxStep = Integer.parseInt(fieldMaxStep.getText().trim());
                         GameHandler.minStep = Integer.parseInt(fieldMinStep.getText().trim());
                         GameHandler.numHouseSteps = GameHandler.maxStep - GameHandler.minStep;
-                        GameHandler.sessionTime = Float.parseFloat(fieldTime.getText().trim());
-                        if(fieldReps.getText().equalsIgnoreCase("libre"))
+                        if(fieldTime.equals("Libre"))
+                            GameHandler.sessionTime = new Time(0, 0);
+                        else
+                            GameHandler.sessionTime = Time.parseTime(fieldTime.getText().trim());
+                        if(fieldReps.getText().equalsIgnoreCase("Libre"))
                             GameHandler.sessionReps = 0;
                         else
                             GameHandler.sessionReps = Integer.parseInt(fieldReps.getText().trim());
@@ -455,6 +462,22 @@ public class MainMenu implements Screen{
                     catch (NumberFormatException ex) {
                         lblError.setText("Inserte numeros porfavor");
                     }
+                    catch (TimeFormatException e) {
+                        if(e.getExId() == TimeFormatException.ExId.NEGATIVE_TIME)
+                            lblError.setText("No puede insertar numeros negativos");
+                        else if(e.getExId() == TimeFormatException.ExId.SECONDS_LIMIT)
+                            lblError.setText("No puede insertar más de 59 segundos");
+                        else if(e.getExId() == TimeFormatException.ExId.GENERIC) {
+                            if(e.getMessage().equals("Cannot parse a null string") || e.getMessage().equals("Cannot parse an empty string"))
+                                lblError.setText("Coloque un tiempo porfavor");
+                            else if(e.getMessage().equals("Have to put a 0 before the delimiter"))
+                                lblError.setText("Coloque un 0 antes de \":\"");
+                            else if(e.getMessage().equals("Missing the delimiter (:)"))
+                                lblError.setText("No se olvide de colocar el \":\"");
+                            else if(e.getMessage().equals("Cannot parse a no number time"))
+                                lblError.setText("Coloque solo numeros porfavor");
+                        }
+                    }
 
                 }
             }
@@ -466,10 +489,8 @@ public class MainMenu implements Screen{
             btnArrows[i].addListener(new ChangeListener() { //Up
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    final DecimalFormat df = new DecimalFormat("0.00");
                     int counter;
-                    float time;
-                    isTime[0] = false;
+                    Time time;
                     try {
                         if(finalI < 2) {
                             counter = Integer.parseInt(fieldMaxStep.getText().trim());
@@ -479,10 +500,15 @@ public class MainMenu implements Screen{
                             fieldMaxStep.setText(String.valueOf(counter));
                         }
                         else if (finalI < 4) {
-                            time = Float.parseFloat(fieldTime.getText().trim());
-                            time += 0.1f;
-                            fieldTime.setText(String.valueOf(df.format(time)));
-                            isTime[0] = true;
+                            if(fieldTime.getText().equals("Libre")) {
+                                time = new Time(0, 1);
+                                cbFreeTime.setChecked(false);
+                            }
+                            else {
+                                time = Time.parseTime(fieldTime.getText().trim());
+                                time.addSecond();
+                            }
+                            fieldTime.setText(time.toString());
                         }
                         else if (finalI < 6){
                             counter = Integer.parseInt(fieldMinStep.getText().trim());
@@ -496,7 +522,7 @@ public class MainMenu implements Screen{
                                 fieldExtra.setText(String.valueOf(counter));
                         }
                         else {
-                            if(fieldReps.getText().trim().equalsIgnoreCase("libre"))
+                            if(fieldReps.getText().trim().equalsIgnoreCase("Libre"))
                                 counter = 0;
                             else
                                 counter = Integer.parseInt(fieldReps.getText().trim());
@@ -506,10 +532,10 @@ public class MainMenu implements Screen{
                         lblError.setText("");
                     }
                     catch (NumberFormatException exception) {
-                        if(isTime[0])
-                            fieldTime.setText(initStringTime);
-                        else
-                            lblError.setText("Please select a number");
+                        lblError.setText("Please select a number");
+                    }
+                    catch (TimeFormatException e) {
+                        fieldTime.setText(initStringTime);
                     }
                     fieldCheck(fieldMaxStep, fieldMinStep, lblError);
                 }
@@ -517,10 +543,8 @@ public class MainMenu implements Screen{
             btnArrows[i+1].addListener(new ChangeListener() { //Down
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    final DecimalFormat df = new DecimalFormat("0.00");
                     int counter;
-                    float time;
-                    isTime[0] = false;
+                    Time time;
                     try {
                         if(finalI < 2) {
                             counter = Integer.parseInt(fieldMaxStep.getText().trim());
@@ -531,12 +555,14 @@ public class MainMenu implements Screen{
 
                         }
                         else if (finalI < 4) {
-                            time = Float.parseFloat(fieldTime.getText().trim());
-                            time -= 0.1f;
-                            if(time <= 0)
-                                time = 0;
-                            fieldTime.setText(String.valueOf(df.format(time)));
-                            isTime[0] = true;
+                            time = Time.parseTime(fieldTime.getText().trim());
+                            time.subtractSecond();
+                            if(time.equals(new Time(0, 0))) {
+                                fieldTime.setText("Libre");
+                                cbFreeTime.setChecked(true);
+                            }
+                            else
+                                fieldTime.setText(String.valueOf(time.toString()));
                         }
                         else if (finalI < 6){
                             counter = Integer.parseInt(fieldMinStep.getText().trim());
@@ -554,7 +580,7 @@ public class MainMenu implements Screen{
                                 fieldExtra.setText(String.valueOf(counter));
                         }
                         else {
-                            if(fieldReps.getText().trim().equalsIgnoreCase("libre"))
+                            if(fieldReps.getText().trim().equalsIgnoreCase("Libre"))
                                 counter = 0;
                             else
                                 counter = Integer.parseInt(fieldReps.getText().trim());
@@ -568,10 +594,10 @@ public class MainMenu implements Screen{
                         lblError.setText("");
                     }
                     catch (NumberFormatException exception) {
-                        if(isTime[0])
-                            fieldTime.setText(initStringTime);
-                        else
-                            lblError.setText("Porfavor coloque un numero valido");
+                        lblError.setText("Porfavor coloque un numero valido");
+                    }
+                    catch (TimeFormatException e) {
+                        fieldTime.setText(initStringTime);
                     }
                     fieldCheck(fieldMaxStep, fieldMinStep, lblError);
                 }
@@ -581,6 +607,22 @@ public class MainMenu implements Screen{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 menuState = MenuState.LOGIN;
+            }
+        });
+        fieldExtra.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                cbExtraFruit.setChecked(!fieldExtra.getText().equals(""));
+            }
+        });
+        //Checkboxes
+        cbFreeTime.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if(cbFreeTime.isChecked())
+                    fieldTime.setText("Libre");
+                else
+                    fieldTime.setText(initStringTime);
             }
         });
         cbExtraFruit.addListener(new ChangeListener() {
@@ -639,14 +681,16 @@ public class MainMenu implements Screen{
         mainTable.row();
         mainTable.add(lblMaxStep);
         mainTable.add(new Actor()); //Not null member for blank space
-        mainTable.add(lblTime);
+            timeTable.add(lblTime).padRight(25);
+            timeTable.add(cbFreeTime);
+        mainTable.add(timeTable).padLeft(120);
         mainTable.row();
         mainTable.add(fieldMaxStep).width(fieldWidth).height(fieldHeight);
             upperArrowsTable.add(btnArrows[0]); //Up
             upperArrowsTable.row();
             upperArrowsTable.add(btnArrows[1]); //Down
         mainTable.add(upperArrowsTable).left();
-        mainTable.add(fieldTime).width(fieldWidth).height(fieldHeight);
+        mainTable.add(fieldTime).width(fieldWidth).height(fieldHeight).right();
             timeArrowsTable.add(btnArrows[2]); //Up
             timeArrowsTable.row();
             timeArrowsTable.add(btnArrows[3]); //Down
@@ -654,14 +698,14 @@ public class MainMenu implements Screen{
         mainTable.row();
         mainTable.add(lblMinStep);
         mainTable.add(new Actor()); //Not null member for blank space
-        mainTable.add(cbExtraFruit);
+        mainTable.add(cbExtraFruit).padLeft(60);
         mainTable.row();
         mainTable.add(fieldMinStep).width(fieldWidth).height(fieldHeight);
             lowerArrowsTable.add(btnArrows[4]); //Up
             lowerArrowsTable.row();
             lowerArrowsTable.add(btnArrows[5]); //Down
         mainTable.add(lowerArrowsTable).left().padRight(50);
-        mainTable.add(fieldExtra).width(fieldWidth).height(fieldHeight);
+        mainTable.add(fieldExtra).width(fieldWidth).height(fieldHeight).right();
             extraArrowsTable.add(btnArrows[6]);
             extraArrowsTable.row();
             extraArrowsTable.add(btnArrows[7]);

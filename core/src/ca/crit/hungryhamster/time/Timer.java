@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.main;
+package ca.crit.hungryhamster.time;
 
 public class Timer {
     public enum Modes{
@@ -17,6 +17,7 @@ public class Timer {
     private final Time currentTime;
     private States state = States.STOP;
     private PeriodElapsedCallback periodElapsedCallback;
+    private SecondElapsedCallback secondElapsedCallback;
     private long timePast;
 
     public Timer(Modes mode, int desiredMinutes, int desiredSeconds) {
@@ -33,16 +34,22 @@ public class Timer {
         timePast = System.currentTimeMillis();
     }
 
-    public void timerRender() {
+    public void update(boolean secAfterResume) {
         long time;
 
         if(state == States.RUNNING) {
             time = System.currentTimeMillis();
             if (time - timePast >= 1000) {
+                secondElapsedCallback.secondElapsedCallback();
                 currentTime.addSecond();
                 timePast = time;
             }
         }
+        if(secAfterResume) { //false if want to count a second after resume
+            if(state == States.STOP)
+                timePast = System.currentTimeMillis();
+        }
+
         if(currentTime.equals(desiredTime) && mode != Modes.TIME_MEASURE) {
             if(mode == Modes.ONE_SHOT) {
                 state = States.STOP;
@@ -86,15 +93,15 @@ public class Timer {
         return desiredTime.toString();
     }
 
-    public int[] getMeasure() {
-        return currentTime.getTime();
+    public Time getTime() {
+        return currentTime;
     }
 
-    public float getFloatMeasure() {
+    public float getFloatTime() {
         return currentTime.getFloatTime();
     }
 
-    public String getStringMeasure() {
+    public String getStringTime() {
         return currentTime.toString();
     }
 
@@ -110,105 +117,11 @@ public class Timer {
         periodElapsedCallback = eventHandler;
     }
 
-    //Inner Class
-    private static class Time {
-        private int seconds;
-        private int minutes;
-        private final int[] compoundTime = new int[2];
+    public interface SecondElapsedCallback {
+        void secondElapsedCallback();
+    }
 
-        public Time (int minutes, int seconds) {
-            this.minutes = minutes;
-            this.seconds = seconds;
-            setCompoundTime();
-        }
-        public Time() {
-            this.minutes = 0;
-            this.seconds = 0;
-            setCompoundTime();
-        }
-        @Override
-        public boolean equals(Object obj) {
-            //If the object is compared with itself it returns true
-            if(obj == this) {
-                return true;
-            }
-
-            //Check if the object is an instance of Time or not
-            if(!(obj instanceof Time)) {
-                return false;
-            }
-            Time time = (Time) obj;
-
-            return (time.getSeconds() == this.getSeconds()) && (time.getMinutes() == this.getMinutes());
-        }
-
-        @Override
-        public String toString() {
-            return minutes + ":" + seconds;
-        }
-
-        public void addSecond() {
-            seconds++;
-            if(seconds >= 60) {
-                seconds = 0;
-                minutes++;
-            }
-            setCompoundTime();
-        }
-        public void setZeros() {
-            seconds = 0;
-            minutes = 0;
-        }
-
-        public void setSeconds(int seconds) throws SecondsOutOfLimitException {
-            if(seconds <= 60) {
-                throw new SecondsOutOfLimitException("No more than 60 seconds");
-            }
-            else {
-                this.seconds = seconds;
-            }
-        }
-
-        public void setMinutes(int minutes) {
-            this.minutes = minutes;
-        }
-
-        public float getFloatTime() {
-            return minutes + ((float)seconds /100);
-        }
-
-        public int[] getTime() {
-            return compoundTime;
-        }
-
-        public int getMinutes() {
-            return minutes;
-        }
-
-        public int getSeconds() {
-            return seconds;
-        }
-
-        public void setTime(int minutes, int seconds) {
-            while(seconds >= 60) {
-                seconds -= 60;
-                this.minutes++;
-            }
-            this.minutes = minutes;
-            this.seconds = seconds;
-            setCompoundTime();
-        }
-
-        private void setCompoundTime() {
-            compoundTime[0] = minutes;
-            compoundTime[1] = seconds;
-        }
-
-        //Exception inner class
-        private static class SecondsOutOfLimitException extends Exception{
-            public SecondsOutOfLimitException(String message) {
-                super(message);
-            }
-        }
+    public void setSecondElapsedCallback(SecondElapsedCallback eventHandler) {
+        secondElapsedCallback = eventHandler;
     }
 }

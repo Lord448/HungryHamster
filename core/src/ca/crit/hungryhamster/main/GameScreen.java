@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -8,15 +7,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.sql.Time;
-
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.time.Timer;
 
 public class GameScreen implements Screen {
 
@@ -35,17 +36,30 @@ public class GameScreen implements Screen {
 
     /*OBJECTS*/
     private Food[] food;
+    private Timer sesionTimer;
+
+    /*USER INTERFACE*/
     private Skin skin;
     private Stage stage;
     private Label lblTime;
+    private Label lblReps;
 
     /*TEXT*/
     //private final BitmapFont font;
 
     private final GameText WinText;
 
+    /*FIXED TYPES*/
+    private boolean repetitionFinished = false;
+    private boolean sessionFinished = false;
+    private int repetitions = 0;
+
+    /* CONSTANTS */
+    private final float animalInitialX = (float) GameHandler.WORLD_WIDTH/2+5;
+    private final float animalInitialY = 0f;
+
+
     public GameScreen(){
-        //setScreen(gameScreen);
         /*SCREEN*/
         camera = new OrthographicCamera();
         viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
@@ -59,14 +73,17 @@ public class GameScreen implements Screen {
         WinText = new GameText("¡Bien \nHecho!", Gdx.files.internal("Fonts/logros.fnt"), Gdx.files.internal("Fonts/logros.png"), false);
         WinText.setX(3);
         WinText.setY(50);
+        /*USER INTERFACE*/
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
         graphicsConstruct();
+        /*OBJECTS*/
+        sesionTimer = new Timer(Timer.Modes.TIME_MEASURE);
     }
     @Override
     public void show() {
         food = new Food[GameHandler.numHouseSteps/2];
-        animal = new Animal(GameHandler.WORLD_WIDTH/2+5, 0, 7, 10, 30);
+        animal = new Animal(animalInitialX, animalInitialY, 7, 10, 30);
         //Construct for the food
         for(int i = 0, j = 0; i < GameHandler.numHouseSteps/2; i++, j++) {
             if(j == Fruits.totalFruits) {
@@ -104,7 +121,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float deltaTime) {
         for(Food i : food) {
-            if(Intersector.overlaps(animal.hitbox, i.hitbox)) {
+            if(Intersector.overlaps(animal.hitbox, i.hitbox) && !i.isPicked()) {
                 System.out.println("Collide on " + i);
                 i.setPicked(true);
                 GameSounds.eat();
@@ -157,7 +174,7 @@ public class GameScreen implements Screen {
     }
 
     private void graphicsRender(float deltaTime) {
-        lblTime.setText(animal.timer.getStringMeasure());
+        lblTime.setText(animal.timer.getStringTime());
         Gdx.input.setInputProcessor(stage);
         stage.draw();
         stage.act(deltaTime);
@@ -165,7 +182,43 @@ public class GameScreen implements Screen {
 
     private void graphicsConstruct() {
         lblTime = new Label("", skin);
+        lblReps = new Label("Reps: 0", skin);
+        TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
+        TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
+
+        btnEndReps.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resetRepetition();
+                GameHandler.sessionReps++;
+                lblReps.setText("Reps: " + GameHandler.sessionReps);
+            }
+        });
+
+        btnEndSession.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+
+            }
+        });
+
         lblTime.setPosition(10, 10);
+        lblReps.setPosition(20, 430);
+        btnEndReps.setPosition(50, 180);
+        btnEndSession.setPosition(50, 150);
+
+
         stage.addActor(lblTime);
+        stage.addActor(lblReps);
+        stage.addActor(btnEndReps);
+        stage.addActor(btnEndSession);
+    }
+
+    private void resetRepetition() {
+        animal.reset();
+        //Reset Food
+        for(Food i : food) {
+            i.setPicked(false);
+        }
     }
 }

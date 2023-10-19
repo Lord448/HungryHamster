@@ -1,31 +1,19 @@
 package ca.crit.hungryhamster;
 
+import static com.badlogic.gdx.Input.Keys.A;
 import static com.badlogic.gdx.Input.Keys.B;
 import static com.badlogic.gdx.Input.Keys.C;
 import static com.badlogic.gdx.Input.Keys.D;
+import static com.badlogic.gdx.Input.Keys.E;
 import static com.badlogic.gdx.Input.Keys.F;
 import static com.badlogic.gdx.Input.Keys.G;
 import static com.badlogic.gdx.Input.Keys.H;
+import static com.badlogic.gdx.Input.Keys.I;
 import static com.badlogic.gdx.Input.Keys.J;
 import static com.badlogic.gdx.Input.Keys.K;
 import static com.badlogic.gdx.Input.Keys.L;
 import static com.badlogic.gdx.Input.Keys.M;
 import static com.badlogic.gdx.Input.Keys.N;
-import static com.badlogic.gdx.Input.Keys.Q;
-import static com.badlogic.gdx.Input.Keys.S;
-import static com.badlogic.gdx.Input.Keys.V;
-import static com.badlogic.gdx.Input.Keys.W;
-import static com.badlogic.gdx.Input.Keys.E;
-import static com.badlogic.gdx.Input.Keys.R;
-import static com.badlogic.gdx.Input.Keys.T;
-import static com.badlogic.gdx.Input.Keys.X;
-import static com.badlogic.gdx.Input.Keys.Y;
-import static com.badlogic.gdx.Input.Keys.U;
-import static com.badlogic.gdx.Input.Keys.I;
-import static com.badlogic.gdx.Input.Keys.O;
-import static com.badlogic.gdx.Input.Keys.P;
-import static com.badlogic.gdx.Input.Keys.A;
-import static com.badlogic.gdx.Input.Keys.Z;
 import static com.badlogic.gdx.Input.Keys.NUM_0;
 import static com.badlogic.gdx.Input.Keys.NUM_1;
 import static com.badlogic.gdx.Input.Keys.NUM_2;
@@ -36,15 +24,22 @@ import static com.badlogic.gdx.Input.Keys.NUM_6;
 import static com.badlogic.gdx.Input.Keys.NUM_7;
 import static com.badlogic.gdx.Input.Keys.NUM_8;
 import static com.badlogic.gdx.Input.Keys.NUM_9;
-
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import static com.badlogic.gdx.Input.Keys.O;
+import static com.badlogic.gdx.Input.Keys.P;
+import static com.badlogic.gdx.Input.Keys.Q;
+import static com.badlogic.gdx.Input.Keys.R;
+import static com.badlogic.gdx.Input.Keys.S;
+import static com.badlogic.gdx.Input.Keys.T;
+import static com.badlogic.gdx.Input.Keys.U;
+import static com.badlogic.gdx.Input.Keys.V;
+import static com.badlogic.gdx.Input.Keys.W;
+import static com.badlogic.gdx.Input.Keys.X;
+import static com.badlogic.gdx.Input.Keys.Y;
+import static com.badlogic.gdx.Input.Keys.Z;
 
 import java.util.Arrays;
 
-import ca.crit.hungryhamster.main.Food;
+import ca.crit.hungryhamster.time.Time;
 
 public class GameHandler {
     //Global definitions for debug
@@ -66,8 +61,8 @@ public class GameHandler {
     public static int maxStep;
     public static int minStep;
     public static int extraStep = 0;
-    public static float sessionTime;
-    public static int sessionReps;
+    public static Time sessionTime;
+    public static int sessionReps = 0;
     public static final double animHysteresis = 0.30;
     public static int WORLD_WIDTH = 72;
     public static int WORLD_HEIGHT = 128;
@@ -93,6 +88,7 @@ public class GameHandler {
     
     public static void init(float musicVolume, int env) {
         //Setting global variables
+        sessionTime = new Time();
         GameHandler.musicVolume = musicVolume;
         GameHandler.effectsVolume = musicVolume / 4;
         GameHandler.environment = env;

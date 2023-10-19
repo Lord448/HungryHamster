@@ -5,11 +5,11 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+
+import java.util.Arrays;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.time.Timer;
 
 public class Animal {
     protected final int REGION_MAX_LIM = 107;
@@ -18,7 +18,7 @@ public class Animal {
     private boolean isInHouse = false;
     private boolean isFinished = false;
     private boolean oneActionFlag = true;
-    private boolean move = false;
+    private boolean moveToUpHouse = false;
     private final int width;
     private final int height;
     private int animalCounter = 0;
@@ -33,7 +33,7 @@ public class Animal {
     public Circle hitbox;
     public final Timer timer;
 
-    public Animal (int x, int y, int width, int height, float speed) {
+    public Animal (float x, float y, int width, int height, float speed) {
         float positionSet = 0;
         this.x = x;
         this.y = y;
@@ -60,10 +60,17 @@ public class Animal {
                 j++;
             }
         }
+
+        timer.setSecondElapsedCallback(new Timer.SecondElapsedCallback() {
+            @Override
+            public void secondElapsedCallback() {
+                GameHandler.sessionTime = timer.getTime();
+            }
+        });
     }
     public void render(final SpriteBatch batch, float deltaTime){
         batch.draw(animal_texture, x, y, width, height);
-        timer.timerRender();
+        timer.update(true);
 
         hitbox.setPosition(x, y);
         if(GameHandler.environment == GameHandler.DESKTOP_ENV)
@@ -77,14 +84,14 @@ public class Animal {
         else if (isFinished) {
             winText.draw(batch);
             if(oneActionFlag) {
-                System.out.println(timer.getStringMeasure());
+                System.out.println(timer.getStringTime());
                 timer.stop();
                 oneActionFlag = false;
             }
         }
 
         //Quick an dirty zone
-        if(move) {
+        if(moveToUpHouse) {
             if(y < REGION_HOUSE-GameHandler.animHysteresis)
                 y += Gdx.graphics.getDeltaTime()*speed;
         }
@@ -99,7 +106,7 @@ public class Animal {
                     if(i == nextPin) {
                         nextPin++;
                         if(nextPin == GameHandler.countsToWin+GameHandler.extraStep) {
-                            move = true;
+                            moveToUpHouse = true;
                             isFinished = true;
                             isInHouse = false;
                             GameSounds.megaWin();
@@ -138,7 +145,7 @@ public class Animal {
                         animalCounter++;
                         System.out.println(animalCounter + " | " + (GameHandler.numHouseSteps));
                         if(animalCounter == GameHandler.numHouseSteps) { //Reached the house
-                            timer.getStringMeasure();
+                            timer.getStringTime();
                             isInHouse = true;
                             GameSounds.win();
                             isFinished = false;
@@ -155,7 +162,31 @@ public class Animal {
         }
     }
 
+    public void reset() {
+        x = (float) (GameHandler.WORLD_WIDTH/2)+5;
+        y = 0f;
+        Arrays.fill(GameHandler.touchPins, false);
+        nextPin = GameHandler.minStep;
+        moveToUpHouse = false;
+        isFinished = false;
+        isInHouse = false;
+        animalCounter = 0;
+        oneActionFlag = true;
+    }
+
     public void dispose(){
         victorySound.dispose();
     }
+
+    //Getters
+
+    //Setters
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
 }
