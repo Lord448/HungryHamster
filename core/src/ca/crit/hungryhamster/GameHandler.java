@@ -37,7 +37,9 @@ import static com.badlogic.gdx.Input.Keys.X;
 import static com.badlogic.gdx.Input.Keys.Y;
 import static com.badlogic.gdx.Input.Keys.Z;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import ca.crit.hungryhamster.time.Time;
 
@@ -61,8 +63,10 @@ public class GameHandler {
     public static int maxStep;
     public static int minStep;
     public static int extraStep = 0;
-    public static Time sessionTime;
+    public static Time sessionTime = new Time();
+    public static List<Time> repsTime = new ArrayList<Time>();
     public static int sessionReps = 0;
+    public static int sessionUncompletedReps;
     public static final double animHysteresis = 0.30;
     public static int WORLD_WIDTH = 72;
     public static int WORLD_HEIGHT = 128;

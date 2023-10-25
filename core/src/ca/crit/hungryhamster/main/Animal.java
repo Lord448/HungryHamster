@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Circle;
 import java.util.Arrays;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.Timer;
 
 public class Animal {
@@ -32,6 +33,7 @@ public class Animal {
     private final Sound victorySound;
     public Circle hitbox;
     public final Timer timer;
+    private Time repTime;
 
     public Animal (float x, float y, int width, int height, float speed) {
         float positionSet = 0;
@@ -50,6 +52,7 @@ public class Animal {
         extraText.setScaleX(0.1f);
         nextPin = GameHandler.minStep;
         timer = new Timer(Timer.Modes.TIME_MEASURE);
+        repTime = new Time();
         //Each position has a step of 7.5 units when we have a length of 8 positions
         for(int i = 0, j = 0; i < positions.length; i++) {
             positionSet += ((float) (REGION_MAX_LIM - REGION_MIN_LIM) / positions.length);
@@ -64,7 +67,7 @@ public class Animal {
         timer.setSecondElapsedCallback(new Timer.SecondElapsedCallback() {
             @Override
             public void secondElapsedCallback() {
-                GameHandler.sessionTime = timer.getTime();
+                repTime = timer.getTime();
             }
         });
     }
@@ -179,14 +182,20 @@ public class Animal {
     }
 
     //Getters
-
+    public boolean isFinished() {
+        return isFinished;
+    }
+    public Timer getTimer() {
+        return timer;
+    }
+    public Time getRepTime() {
+        return repTime;
+    }
     //Setters
     public void setX(float x) {
         this.x = x;
     }
-
     public void setY(float y) {
         this.y = y;
     }
-
 }

@@ -20,9 +20,16 @@ public class Timer {
     private SecondElapsedCallback secondElapsedCallback;
     private long timePast;
 
-    public Timer(Modes mode, int desiredMinutes, int desiredSeconds) {
+    public Timer(Modes mode, int desiredMinutes, int desiredSeconds) throws TimeFormatException{
         this.mode = mode;
         desiredTime = new Time(desiredMinutes, desiredSeconds);
+        currentTime = new Time();
+        timePast = System.currentTimeMillis();
+    }
+
+    public Timer(Modes mode, Time desiredTime) {
+        this.mode = mode;
+        this.desiredTime = desiredTime;
         currentTime = new Time();
         timePast = System.currentTimeMillis();
     }
@@ -40,7 +47,8 @@ public class Timer {
         if(state == States.RUNNING) {
             time = System.currentTimeMillis();
             if (time - timePast >= 1000) {
-                secondElapsedCallback.secondElapsedCallback();
+                if(secondElapsedCallback != null)
+                    secondElapsedCallback.secondElapsedCallback();
                 currentTime.addSecond();
                 timePast = time;
             }

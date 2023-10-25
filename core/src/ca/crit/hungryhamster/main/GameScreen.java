@@ -36,13 +36,14 @@ public class GameScreen implements Screen {
 
     /*OBJECTS*/
     private Food[] food;
-    private Timer sesionTimer;
+    private Timer sessionTimer;
 
     /*USER INTERFACE*/
     private Skin skin;
     private Stage stage;
     private Label lblTime;
     private Label lblReps;
+    private Label lblRepsUncompleted;
 
     /*TEXT*/
     //private final BitmapFont font;
@@ -50,9 +51,7 @@ public class GameScreen implements Screen {
     private final GameText WinText;
 
     /*FIXED TYPES*/
-    private boolean repetitionFinished = false;
     private boolean sessionFinished = false;
-    private int repetitions = 0;
 
     /* CONSTANTS */
     private final float animalInitialX = (float) GameHandler.WORLD_WIDTH/2+5;
@@ -78,7 +77,7 @@ public class GameScreen implements Screen {
         skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
         graphicsConstruct();
         /*OBJECTS*/
-        sesionTimer = new Timer(Timer.Modes.TIME_MEASURE);
+        sessionTimer = new Timer(Timer.Modes.TIME_MEASURE);
     }
     @Override
     public void show() {
@@ -143,6 +142,11 @@ public class GameScreen implements Screen {
 
         batch.end();
         graphicsRender(deltaTime);
+        sessionTimer.update(true);
+
+        if(sessionFinished) {
+            //Show Resume UI
+        }
     }
 
     @Override
@@ -183,22 +187,31 @@ public class GameScreen implements Screen {
     private void graphicsConstruct() {
         lblTime = new Label("", skin);
         lblReps = new Label("Reps: 0", skin);
+        lblRepsUncompleted = new Label("Reps incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
 
         btnEndReps.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                if(animal.isFinished()) {
+                    GameHandler.sessionReps++;
+                    lblReps.setText("Reps: " + GameHandler.sessionReps);
+                }
+                else {
+                    GameHandler.sessionUncompletedReps++;
+                    lblRepsUncompleted.setText("Reps incompletas: " + GameHandler.sessionUncompletedReps);
+                }
                 resetRepetition();
-                GameHandler.sessionReps++;
-                lblReps.setText("Reps: " + GameHandler.sessionReps);
+                GameHandler.sessionTime.add(animal.timer.getTime());
+                GameHandler.repsTime.add(animal.timer.getTime());
             }
         });
 
         btnEndSession.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-
+                sessionFinished = true;
             }
         });
 

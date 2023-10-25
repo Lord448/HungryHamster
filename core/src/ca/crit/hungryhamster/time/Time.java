@@ -1,11 +1,14 @@
 package ca.crit.hungryhamster.time;
 
+import java.util.List;
+
 public class Time {
     private int seconds;
     private int minutes;
     private final int[] compoundTime = new int[2];
 
-    public Time (int minutes, int seconds) {
+    public Time (int minutes, int seconds) throws TimeFormatException{
+        assertPositiveTime(minutes, seconds);
         this.minutes = minutes;
         this.seconds = seconds;
         setCompoundTime();
@@ -136,12 +139,69 @@ public class Time {
             minutes = 0;
         setCompoundTime();
     }
+
+    public void add(Time time) {
+        try {
+            add(time.getMinutes(), time.getSeconds());
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void add(int mins, int secs) throws TimeFormatException{
+        assertPositiveTime(mins, secs);
+        int tmp;
+        minutes += mins;
+        for(tmp = secs + seconds; tmp > 59; tmp-=59)
+            minutes++;
+        seconds = tmp;
+    }
+
+    public void subtract(Time time) throws TimeFormatException{
+        subtract(time.getMinutes(), time.getSeconds());
+    }
+    /* !NOT TESTED! */
+    public void subtract(int mins, int secs) throws TimeFormatException {
+        assertPositiveTime(mins, secs);
+        for(; secs > 59; secs-=59)
+            mins++;
+        mins = minutes - mins;
+        if(mins >= 0) {
+            secs = seconds - secs;
+            if(secs < 0) {
+                if(mins != 0)
+                    mins--;
+                //Taking the complement to 60 (time is in base 60)
+                secs += 60;
+            }
+        }
+        else
+            mins = 0;
+        //Assignments at the end in order to avoid NegativeTimeException
+        assertPositiveTime(mins, secs);
+        minutes = mins;
+        seconds = secs;
+    }
+
     public void setZeros() {
         seconds = 0;
         minutes = 0;
     }
 
+    public void setTime(int minutes, int seconds) throws TimeFormatException{
+        assertPositiveTime(minutes, seconds);
+        while(seconds >= 60) {
+            seconds -= 60;
+            this.minutes++;
+        }
+        this.minutes = minutes;
+        this.seconds = seconds;
+        setCompoundTime();
+    }
+
     public void setSeconds(int seconds) throws TimeFormatException {
+        assertPositiveTime(0, seconds);
         if(seconds < 60) {
             throw TimeFormatException.SecondsOutLimitException();
         }
@@ -150,7 +210,10 @@ public class Time {
         }
     }
 
-    public void setMinutes(int minutes) {
+    public void setMinutes(int minutes) throws TimeFormatException {
+        assertPositiveTime(minutes, 0);
+        if(minutes < 0)
+            throw TimeFormatException.NegativeTimeException();
         this.minutes = minutes;
     }
 
@@ -170,18 +233,15 @@ public class Time {
         return seconds;
     }
 
-    public void setTime(int minutes, int seconds) {
-        while(seconds >= 60) {
-            seconds -= 60;
-            this.minutes++;
-        }
-        this.minutes = minutes;
-        this.seconds = seconds;
-        setCompoundTime();
-    }
-
     private void setCompoundTime() {
         compoundTime[0] = minutes;
         compoundTime[1] = seconds;
+    }
+
+    private void assertPositiveTime(int mins, int secs) throws TimeFormatException {
+        if(mins < 0)
+            throw TimeFormatException.NegativeTimeException();
+        if(secs < 0)
+            throw TimeFormatException.NegativeTimeException();
     }
 }
