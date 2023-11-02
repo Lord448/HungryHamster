@@ -1,7 +1,5 @@
 package ca.crit.hungryhamster.time;
 
-import java.util.List;
-
 public class Time {
     private int seconds;
     private int minutes;
@@ -140,16 +138,16 @@ public class Time {
         setCompoundTime();
     }
 
-    public void add(Time time) {
+    public void addTime(Time time) {
         try {
-            add(time.getMinutes(), time.getSeconds());
+            addTime(time.getMinutes(), time.getSeconds());
         }
         catch (TimeFormatException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    public void add(int mins, int secs) throws TimeFormatException{
+    public void addTime(int mins, int secs) throws TimeFormatException{
         assertPositiveTime(mins, secs);
         int tmp;
         minutes += mins;
@@ -198,6 +196,12 @@ public class Time {
         this.minutes = minutes;
         this.seconds = seconds;
         setCompoundTime();
+    }
+
+    public void setTime(Time time) throws TimeFormatException{
+        assertPositiveTime(time.getMinutes(), time.getSeconds());
+        minutes = time.getMinutes();
+        seconds = time.getSeconds();
     }
 
     public void setSeconds(int seconds) throws TimeFormatException {

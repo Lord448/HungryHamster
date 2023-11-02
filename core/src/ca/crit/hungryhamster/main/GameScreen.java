@@ -3,6 +3,7 @@ package ca.crit.hungryhamster.main;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.Timer;
 
 public class GameScreen implements Screen {
@@ -40,10 +42,12 @@ public class GameScreen implements Screen {
 
     /*USER INTERFACE*/
     private Skin skin;
+    private Skin shadeSkin;
     private Stage stage;
     private Label lblTime;
     private Label lblReps;
     private Label lblRepsUncompleted;
+    private Label lblTimeSession;
 
     /*TEXT*/
     //private final BitmapFont font;
@@ -75,6 +79,7 @@ public class GameScreen implements Screen {
         /*USER INTERFACE*/
         stage = new Stage();
         skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
+        shadeSkin = new Skin(Gdx.files.internal("ShadeUISkin/uiskin.json"));
         graphicsConstruct();
         /*OBJECTS*/
         sessionTimer = new Timer(Timer.Modes.TIME_MEASURE);
@@ -178,33 +183,49 @@ public class GameScreen implements Screen {
     }
 
     private void graphicsRender(float deltaTime) {
-        lblTime.setText(animal.timer.getStringTime());
+        Time time = new Time();
+        time.addTime(animal.timer.getTime());
+        time.addTime(GameHandler.sessionTime);
+
+        lblTime.setText("Tiempo de repeticion " + animal.timer.getStringTime());
+        lblTimeSession.setText("Tiempo de sesion " + time);
         Gdx.input.setInputProcessor(stage);
         stage.draw();
         stage.act(deltaTime);
     }
 
     private void graphicsConstruct() {
-        lblTime = new Label("", skin);
-        lblReps = new Label("Reps: 0", skin);
-        lblRepsUncompleted = new Label("Reps incompletas: 0", skin);
+        final int xREPS = 15;
+        final int xTIME = 430;
+
+
+        lblTime = new Label("Tiempo de repeticion ", skin);
+        lblTimeSession = new Label("Tiempo de sesion ", skin);
+        lblReps = new Label("Reps Completas: 0", skin);
+        lblRepsUncompleted = new Label("Reps Incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
+
+        lblTime.setColor(Color.BLACK);
+        lblTimeSession.setColor(Color.BLACK);
+        lblReps.setColor(Color.BLACK);
+        lblRepsUncompleted.setColor(Color.BLACK);
 
         btnEndReps.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if(animal.isFinished()) {
                     GameHandler.sessionReps++;
-                    lblReps.setText("Reps: " + GameHandler.sessionReps);
+                    lblReps.setText("Reps Completas: " + GameHandler.sessionReps);
                 }
                 else {
                     GameHandler.sessionUncompletedReps++;
-                    lblRepsUncompleted.setText("Reps incompletas: " + GameHandler.sessionUncompletedReps);
+                    lblRepsUncompleted.setText("Reps Incompletas: " + GameHandler.sessionUncompletedReps);
                 }
                 resetRepetition();
-                GameHandler.sessionTime.add(animal.timer.getTime());
+                GameHandler.sessionTime.addTime(animal.timer.getTime());
                 GameHandler.repsTime.add(animal.timer.getTime());
+                animal.timer.reset();
             }
         });
 
@@ -215,14 +236,17 @@ public class GameScreen implements Screen {
             }
         });
 
-        lblTime.setPosition(10, 10);
-        lblReps.setPosition(20, 430);
+        lblRepsUncompleted.setPosition(xREPS, 450);
+        lblReps.setPosition(xREPS, 430);
+        lblTimeSession.setPosition(xTIME, 450);
+        lblTime.setPosition(xTIME, 430);
         btnEndReps.setPosition(50, 180);
         btnEndSession.setPosition(50, 150);
 
-
         stage.addActor(lblTime);
+        stage.addActor(lblTimeSession);
         stage.addActor(lblReps);
+        stage.addActor(lblRepsUncompleted);
         stage.addActor(btnEndReps);
         stage.addActor(btnEndSession);
     }
