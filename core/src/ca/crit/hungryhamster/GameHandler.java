@@ -57,6 +57,8 @@ public class GameHandler {
     public static final int LEFT_HAND = 2;
     public static final int RIGHT_HAND = 3;
     public static final int BOTH_HANDS = 4;
+    public static int WORLD_WIDTH = 72;
+    public static int WORLD_HEIGHT = 128;
     //Global variables
     public static int environment;
     public static int numHouseSteps = 11;
@@ -68,8 +70,6 @@ public class GameHandler {
     public static int sessionReps = 0;
     public static int sessionUncompletedReps;
     public static final double animHysteresis = 0.30;
-    public static int WORLD_WIDTH = 72;
-    public static int WORLD_HEIGHT = 128;
     public static float musicVolume;
     public static float effectsVolume;
     public static boolean wizardSpell  = false;

@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.menu;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -24,6 +25,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
+import javax.swing.text.View;
+
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.main.GameText;
@@ -42,6 +45,7 @@ public class MainMenu implements Screen{
     //SCREEN
     private final Camera camera;
     private final Viewport viewport;
+    private final Viewport mobileViewport;
     //GRAPHICS
     private final SpriteBatch batch;
     private final Background background;
@@ -49,17 +53,26 @@ public class MainMenu implements Screen{
     private final Skin shadeSkin;
     private final String mainSkinDir = "UISkin/uiskin.json";
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
-    private final Stage mainStage, loginStage, registerStage, configStage;
+    private Stage mainStage, loginStage, registerStage, configStage;
     private final GameText titleText, whoPlaysText, registerText, configText;
     //private final Sound clickButtonSound;
 
     public MainMenu() {
-        mainStage = new Stage();
-        loginStage = new Stage();
-        registerStage = new Stage();
-        configStage = new Stage();
         camera = new OrthographicCamera();
         viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
+        mobileViewport = new StretchViewport(400, 580, new OrthographicCamera());
+        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
+            mainStage = new Stage();
+            loginStage = new Stage();
+            registerStage = new Stage();
+            configStage = new Stage();
+        }
+        else if(GameHandler.environment == GameHandler.MOBILE_ENV) {
+            mainStage = new Stage(mobileViewport);
+            loginStage = new Stage(mobileViewport);
+            registerStage = new Stage(mobileViewport);
+            configStage = new Stage(mobileViewport);
+        }
         batch = new SpriteBatch();
         background = new Background();
         skin = new Skin(Gdx.files.internal(mainSkinDir));

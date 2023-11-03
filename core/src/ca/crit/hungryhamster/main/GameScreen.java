@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.main;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -12,8 +13,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -77,7 +81,13 @@ public class GameScreen implements Screen {
         WinText.setX(3);
         WinText.setY(50);
         /*USER INTERFACE*/
-        stage = new Stage();
+        /* QUICK AND DIRTY */
+        if(GameHandler.environment == GameHandler.DESKTOP_ENV)
+            stage = new Stage();
+        else if(GameHandler.environment == GameHandler.MOBILE_ENV)
+            stage = new Stage(new StretchViewport(400, 580, new OrthographicCamera()));
+        //stage = new Stage(viewport);
+        //stage = new Stage();
         skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
         shadeSkin = new Skin(Gdx.files.internal("ShadeUISkin/uiskin.json"));
         graphicsConstruct();
@@ -157,6 +167,11 @@ public class GameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
+        stage.getCamera().viewportWidth = GameHandler.WORLD_WIDTH;
+        stage.getCamera().viewportHeight = (float) GameHandler.WORLD_HEIGHT * height / width;
+        //stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
+        stage.getCamera().update();
         batch.setProjectionMatrix(camera.combined);
     }
 
@@ -190,21 +205,30 @@ public class GameScreen implements Screen {
         lblTime.setText("Tiempo de repeticion " + animal.timer.getStringTime());
         lblTimeSession.setText("Tiempo de sesion " + time);
         Gdx.input.setInputProcessor(stage);
+        stage.getViewport().apply();
         stage.draw();
         stage.act(deltaTime);
     }
 
     private void graphicsConstruct() {
-        final int xREPS = 15;
-        final int xTIME = 430;
-
-
+        int xREPS = 10;
+        int xTIME = 200;
+        int xBtn = 10;
+        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
+            xREPS = 15;
+            xTIME = 430;
+            xBtn = 15;
+        }
         lblTime = new Label("Tiempo de repeticion ", skin);
         lblTimeSession = new Label("Tiempo de sesion ", skin);
         lblReps = new Label("Reps Completas: 0", skin);
         lblRepsUncompleted = new Label("Reps Incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
+        Table table = new Table();
+
+
+        //lblRepsUncompleted.setFontScale(1.30f, 1);
 
         lblTime.setColor(Color.BLACK);
         lblTimeSession.setColor(Color.BLACK);
@@ -236,13 +260,25 @@ public class GameScreen implements Screen {
             }
         });
 
-        lblRepsUncompleted.setPosition(xREPS, 450);
-        lblReps.setPosition(xREPS, 430);
-        lblTimeSession.setPosition(xTIME, 450);
-        lblTime.setPosition(xTIME, 430);
-        btnEndReps.setPosition(50, 180);
-        btnEndSession.setPosition(50, 150);
+        lblRepsUncompleted.setPosition(xREPS, 550);
+        lblReps.setPosition(xREPS, 530);
+        lblTimeSession.setPosition(xTIME, 550);
+        lblTime.setPosition(xTIME, 530);
+        btnEndReps.setPosition(xBtn, 230);
+        btnEndSession.setPosition(xBtn, 200);
+        table.add(lblReps);
 
+        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
+            lblRepsUncompleted.setPosition(xREPS, 450);
+            lblReps.setPosition(xREPS, 430);
+            lblTimeSession.setPosition(xTIME, 450);
+            lblTime.setPosition(xTIME, 430);
+            btnEndReps.setPosition(xBtn, 190);
+            btnEndSession.setPosition(xBtn, 160);
+            table.add(lblReps);
+        }
+
+        stage.addActor(table);
         stage.addActor(lblTime);
         stage.addActor(lblTimeSession);
         stage.addActor(lblReps);
