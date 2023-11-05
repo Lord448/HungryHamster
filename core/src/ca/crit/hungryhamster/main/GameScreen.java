@@ -16,10 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.util.List;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
@@ -42,7 +45,7 @@ public class GameScreen implements Screen {
 
     /*OBJECTS*/
     private Food[] food;
-    private Timer sessionTimer;
+    private Timer stepTimer;
 
     /*USER INTERFACE*/
     private Skin skin;
@@ -80,19 +83,13 @@ public class GameScreen implements Screen {
         WinText = new GameText("¡Bien \nHecho!", Gdx.files.internal("Fonts/logros.fnt"), Gdx.files.internal("Fonts/logros.png"), false);
         WinText.setX(3);
         WinText.setY(50);
-        /*USER INTERFACE*/
-        /* QUICK AND DIRTY */
-        if(GameHandler.environment == GameHandler.DESKTOP_ENV)
-            stage = new Stage();
-        else if(GameHandler.environment == GameHandler.MOBILE_ENV)
-            stage = new Stage(new StretchViewport(400, 580, new OrthographicCamera()));
-        //stage = new Stage(viewport);
-        //stage = new Stage();
+        /* STAGES AND UI */
+        stage = new Stage(new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera()));
         skin = new Skin(Gdx.files.internal("UISkin/uiskin.json"));
         shadeSkin = new Skin(Gdx.files.internal("ShadeUISkin/uiskin.json"));
         graphicsConstruct();
         /*OBJECTS*/
-        sessionTimer = new Timer(Timer.Modes.TIME_MEASURE);
+        stepTimer = new Timer(Timer.Modes.TIME_MEASURE);
     }
     @Override
     public void show() {
@@ -157,7 +154,7 @@ public class GameScreen implements Screen {
 
         batch.end();
         graphicsRender(deltaTime);
-        sessionTimer.update(true);
+        stepTimer.update(true);
 
         if(sessionFinished) {
             //Show Resume UI
@@ -168,10 +165,7 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
-        stage.getCamera().viewportWidth = GameHandler.WORLD_WIDTH;
-        stage.getCamera().viewportHeight = (float) GameHandler.WORLD_HEIGHT * height / width;
-        //stage.getCamera().position.set(stage.getCamera().viewportWidth / 2, stage.getCamera().viewportHeight / 2, 0);
-        stage.getCamera().update();
+        System.out.println(Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.combined);
     }
 
@@ -211,24 +205,17 @@ public class GameScreen implements Screen {
     }
 
     private void graphicsConstruct() {
-        int xREPS = 10;
-        int xTIME = 200;
-        int xBtn = 10;
-        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
-            xREPS = 15;
-            xTIME = 430;
-            xBtn = 15;
-        }
+        final int xREPS = 10;
+        final int xTIME = 280;
+        final int xBtn = 10;
+        final int yTOP_TEXT = 612;
+
         lblTime = new Label("Tiempo de repeticion ", skin);
         lblTimeSession = new Label("Tiempo de sesion ", skin);
         lblReps = new Label("Reps Completas: 0", skin);
         lblRepsUncompleted = new Label("Reps Incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
-        Table table = new Table();
-
-
-        //lblRepsUncompleted.setFontScale(1.30f, 1);
 
         lblTime.setColor(Color.BLACK);
         lblTimeSession.setColor(Color.BLACK);
@@ -259,26 +246,13 @@ public class GameScreen implements Screen {
                 sessionFinished = true;
             }
         });
+        lblRepsUncompleted.setPosition(xREPS, yTOP_TEXT);
+        lblReps.setPosition(xREPS, yTOP_TEXT - 22);
+        lblTimeSession.setPosition(xTIME, yTOP_TEXT);
+        lblTime.setPosition(xTIME, yTOP_TEXT - 22);
+        btnEndReps.setPosition(xBtn, 250);
+        btnEndSession.setPosition(xBtn, 220);
 
-        lblRepsUncompleted.setPosition(xREPS, 550);
-        lblReps.setPosition(xREPS, 530);
-        lblTimeSession.setPosition(xTIME, 550);
-        lblTime.setPosition(xTIME, 530);
-        btnEndReps.setPosition(xBtn, 230);
-        btnEndSession.setPosition(xBtn, 200);
-        table.add(lblReps);
-
-        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
-            lblRepsUncompleted.setPosition(xREPS, 450);
-            lblReps.setPosition(xREPS, 430);
-            lblTimeSession.setPosition(xTIME, 450);
-            lblTime.setPosition(xTIME, 430);
-            btnEndReps.setPosition(xBtn, 190);
-            btnEndSession.setPosition(xBtn, 160);
-            table.add(lblReps);
-        }
-
-        stage.addActor(table);
         stage.addActor(lblTime);
         stage.addActor(lblTimeSession);
         stage.addActor(lblReps);

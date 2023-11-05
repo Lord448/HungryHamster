@@ -57,7 +57,7 @@ public class Animal {
         for(int i = 0, j = 0; i < positions.length; i++) {
             positionSet += ((float) (REGION_MAX_LIM - REGION_MIN_LIM) / positions.length);
             positions[i] = positionSet;
-            System.out.println("Pos:" + i + " " + positions[i]);
+            //System.out.println("Pos:" + i + " " + positions[i]);
             if(i%2 == 0) { //If i is even
                 GameHandler.foodPositions[j] = positions[i];
                 j++;

@@ -41,7 +41,8 @@ public class AndroidLauncher extends AndroidApplication {
 			rojoRX = new RojoBLE(this, txChUUID, RojoBLE.ROJO_TYPE_NOTIFY, deviceMacAddress);
 			rojoRX.setOnCharacteristicNotificationListener(this::onCharacteristicNotificationListener);
 		}
-		GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
+		//GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
+		GameHandler.init(0.0f, GameHandler.MOBILE_ENV);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Main_hungryHamster(), config);
 	}

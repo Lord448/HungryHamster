@@ -49,7 +49,7 @@ public class GameHandler {
     public static final int DEBUG_MENU = 1;
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
-    public static final int DEBUG_MODE = DEBUG_NONE; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_GAME; //Debug constant
     //Global Constants
     public static final int LADDER_MAX_STEPS = 32;
     public static final int DESKTOP_ENV = 0;
@@ -59,6 +59,9 @@ public class GameHandler {
     public static final int BOTH_HANDS = 4;
     public static int WORLD_WIDTH = 72;
     public static int WORLD_HEIGHT = 128;
+    //Only applies on stages
+    public static int NATIVE_RES_WIDTH = 480;
+    public static int NATIVE_RES_HEIGHT = 640;
     //Global variables
     public static int environment;
     public static int numHouseSteps = 11;
@@ -66,6 +69,7 @@ public class GameHandler {
     public static int minStep;
     public static int extraStep = 0;
     public static Time sessionTime = new Time();
+    public static List<Time> meanTimeOnStep = new ArrayList<Time>();
     public static List<Time> repsTime = new ArrayList<Time>();
     public static int sessionReps = 0;
     public static int sessionUncompletedReps;
