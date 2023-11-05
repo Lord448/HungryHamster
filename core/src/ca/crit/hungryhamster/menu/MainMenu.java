@@ -78,7 +78,7 @@ public class MainMenu implements Screen{
         configText = new GameText("Configura", 20, 125);
         //menuState = MenuState.INIT;
         //Debug porpouses
-        menuState = MenuState.LOGIN;
+        menuState = MenuState.CONFIG;
     }
 
     @Override
@@ -479,7 +479,7 @@ public class MainMenu implements Screen{
         Table timeTable = new Table();
         //Tables characteristics
         mainTable.setFillParent(true);
-        mainTable.setPosition(0, -25);
+        mainTable.setPosition(0, 0);
         //Trying to rotate
         /*
         for(Button i : btnArrows) {
@@ -750,14 +750,14 @@ public class MainMenu implements Screen{
         mainTable.add(new Actor()); //Not null member for blank space
             timeTable.add(lblTime).padRight(25);
             timeTable.add(cbFreeTime);
-        mainTable.add(timeTable).padLeft(120);
+        mainTable.add(timeTable).padLeft(70);
         mainTable.row();
         mainTable.add(fieldMaxStep).width(fieldWidth).height(fieldHeight);
             upperArrowsTable.add(btnArrows[0]); //Up
             upperArrowsTable.row();
             upperArrowsTable.add(btnArrows[1]); //Down
         mainTable.add(upperArrowsTable).left();
-        mainTable.add(fieldTime).width(fieldWidth).height(fieldHeight).right();
+        mainTable.add(fieldTime).width(fieldWidth).height(fieldHeight).left();
             timeArrowsTable.add(btnArrows[2]); //Up
             timeArrowsTable.row();
             timeArrowsTable.add(btnArrows[3]); //Down
@@ -765,14 +765,14 @@ public class MainMenu implements Screen{
         mainTable.row();
         mainTable.add(lblMinStep);
         mainTable.add(new Actor()); //Not null member for blank space
-        mainTable.add(cbExtraFruit).padLeft(60);
+        mainTable.add(cbExtraFruit).padLeft(10);
         mainTable.row();
         mainTable.add(fieldMinStep).width(fieldWidth).height(fieldHeight);
             lowerArrowsTable.add(btnArrows[4]); //Up
             lowerArrowsTable.row();
             lowerArrowsTable.add(btnArrows[5]); //Down
-        mainTable.add(lowerArrowsTable).left().padRight(50);
-        mainTable.add(fieldExtra).width(fieldWidth).height(fieldHeight).right();
+        mainTable.add(lowerArrowsTable).left().padRight(10);
+        mainTable.add(fieldExtra).width(fieldWidth).height(fieldHeight).left();
             extraArrowsTable.add(btnArrows[6]);
             extraArrowsTable.row();
             extraArrowsTable.add(btnArrows[7]);
@@ -786,7 +786,8 @@ public class MainMenu implements Screen{
             repsArrowsTable.add(btnArrows[9]);
         mainTable.add(repsArrowsTable).left();
             handCheckTable.add(cbLeftHand);
-            handCheckTable.add(cbRightHand).padLeft(5);
+            handCheckTable.row();
+            handCheckTable.add(cbRightHand).padTop(10).padLeft(5);
             handCheckTable.row();
             handCheckTable.add(cbBothHands).padTop(10).center().colspan(2);
         mainTable.add(handCheckTable);
