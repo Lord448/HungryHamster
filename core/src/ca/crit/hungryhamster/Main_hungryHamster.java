@@ -17,6 +17,7 @@ public class Main_hungryHamster extends Game {
 
 		mainMenu = new MainMenu();
 		gameScreen = new GameScreen();
+
 		switch (GameHandler.DEBUG_MODE) {
 			case GameHandler.DEBUG_GAME:
 				GameHandler.maxStep = 10;

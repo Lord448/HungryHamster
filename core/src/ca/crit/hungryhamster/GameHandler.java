@@ -49,7 +49,7 @@ public class GameHandler {
     public static final int DEBUG_MENU = 1;
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
-    public static final int DEBUG_MODE = DEBUG_GAME; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_NONE; //Debug constant
     //Global Constants
     public static final int LADDER_MAX_STEPS = 32;
     public static final int DESKTOP_ENV = 0;

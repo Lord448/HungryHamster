@@ -45,7 +45,6 @@ dependencies {
     implementation project(path: ':core')
 }
 
-
 dist.dependsOn classes
 
 eclipse.project.name = appName + "-desktop"

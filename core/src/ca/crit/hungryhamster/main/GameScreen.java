@@ -165,7 +165,6 @@ public class GameScreen implements Screen {
     public void resize(int width, int height) {
         viewport.update(width, height, true);
         stage.getViewport().update(width, height, true);
-        System.out.println(Gdx.graphics.getWidth() + " : " + Gdx.graphics.getHeight());
         batch.setProjectionMatrix(camera.combined);
     }
 

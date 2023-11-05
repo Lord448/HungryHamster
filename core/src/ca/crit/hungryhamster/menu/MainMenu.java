@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.menu;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -22,10 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import java.text.DecimalFormat;
 import java.util.Objects;
-
-import javax.swing.text.View;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
@@ -45,7 +41,7 @@ public class MainMenu implements Screen{
     //SCREEN
     private final Camera camera;
     private final Viewport viewport;
-    private final Viewport mobileViewport;
+    private final Viewport uiViewport;
     //GRAPHICS
     private final SpriteBatch batch;
     private final Background background;
@@ -55,24 +51,15 @@ public class MainMenu implements Screen{
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
     private Stage mainStage, loginStage, registerStage, configStage;
     private final GameText titleText, whoPlaysText, registerText, configText;
-    //private final Sound clickButtonSound;
 
     public MainMenu() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
-        mobileViewport = new StretchViewport(400, 580, new OrthographicCamera());
-        if(GameHandler.environment == GameHandler.DESKTOP_ENV) {
-            mainStage = new Stage();
-            loginStage = new Stage();
-            registerStage = new Stage();
-            configStage = new Stage();
-        }
-        else if(GameHandler.environment == GameHandler.MOBILE_ENV) {
-            mainStage = new Stage(mobileViewport);
-            loginStage = new Stage(mobileViewport);
-            registerStage = new Stage(mobileViewport);
-            configStage = new Stage(mobileViewport);
-        }
+        uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
+        mainStage = new Stage(uiViewport);
+        loginStage = new Stage(uiViewport);
+        registerStage = new Stage(uiViewport);
+        configStage = new Stage(uiViewport);
         batch = new SpriteBatch();
         background = new Background();
         skin = new Skin(Gdx.files.internal(mainSkinDir));
@@ -82,8 +69,9 @@ public class MainMenu implements Screen{
         whoPlaysText.setScales(0.15f, 0.38f);
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
-        //clickButtonSound = Gdx.audio.newSound(Gdx.files.internal("Sounds"));
-        menuState = MenuState.INIT;
+        //menuState = MenuState.INIT;
+        //Ddebug porpouses
+        menuState = MenuState.LOGIN;
     }
 
     @Override
@@ -143,6 +131,7 @@ public class MainMenu implements Screen{
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
+        uiViewport.update(width, height, true);
         batch.setProjectionMatrix(camera.combined);
     }
 
@@ -238,20 +227,28 @@ public class MainMenu implements Screen{
         //Table
         Table table = new Table();
         table.setFillParent(true);
-        table.setPosition(0, -80);
+        table.setPosition(0, 50);
+        Table buttonsTable = new Table();
+        buttonsTable.setFillParent(true);
+        buttonsTable.setPosition(0, -150);
+
         //Table Interns
-        table.add(lblError).padBottom(10).colspan(2).center();
+        table.add(lblError).padBottom(10).colspan(2);
         table.row();
-        table.add(lblID).width(30).height(50).padBottom(10).right().padRight(60);
-        table.add(idField).width(300).height(50).padBottom(10).padRight(130);
-        table.row().padBottom(100);
+        table.add(lblID).width(95).height(50).padBottom(10).left();
+        table.add(idField).width(300).height(50).padBottom(10).left();
+        table.row();
         table.add(btnNext).width(150).height(50).colspan(2);
         table.row();
-        table.add(btnExit).width(150).height(50);
-        table.add(btnNewPatient).width(150).height(50).padLeft(50).right();
         //table.debug();
+
+        buttonsTable.add(btnExit).width(150).height(50).padRight(150);
+        buttonsTable.add(btnNewPatient).width(150).height(50).right();
+        //buttonsTable.debug();
+
         //Stage
         loginStage.addActor(table);
+        loginStage.addActor(buttonsTable);
     }
 
     private void registerMenuConstruct() {
@@ -331,7 +328,7 @@ public class MainMenu implements Screen{
         //Table
         Table table = new Table();
         table.setFillParent(true);
-        table.setPosition(-20, -50);
+        table.setPosition(-20, -10);
         //Table Interns
         table.add(lblError).height(50).width(50).padBottom(10).center();
         table.row();
@@ -350,7 +347,7 @@ public class MainMenu implements Screen{
         table.row();
         table.add(btnReturn).height(50).width(150).padRight(0);
         table.add(btnAccept).height(50).width(150).padLeft(270).colspan(2);
-        //table.debug();
+        table.debug();
         //Stage
         registerStage.addActor(table);
     }
