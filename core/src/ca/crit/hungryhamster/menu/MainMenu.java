@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import org.w3c.dom.Text;
+
 import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;
@@ -34,9 +36,11 @@ public class MainMenu implements Screen{
     //STATES
     private enum MenuState {
         INIT,
+        PATIENTS,
         LOGIN,
         REGISTER,
         CONFIG,
+
     }
     private static MenuState menuState;
     //SCREEN
@@ -50,8 +54,8 @@ public class MainMenu implements Screen{
     private final Skin shadeSkin;
     private final String mainSkinDir = "UISkin/uiskin.json";
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
-    private Stage mainStage, loginStage, registerStage, configStage;
-    private final GameText titleText, whoPlaysText, registerText, configText;
+    private final Stage mainStage, patientsStage, loginStage, registerStage, configStage;
+    private final GameText titleText, patientsText, whoPlaysText, registerText, configText;
 
     public MainMenu() {
         camera = new OrthographicCamera();
@@ -59,6 +63,7 @@ public class MainMenu implements Screen{
         uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
         mainStage = new Stage(uiViewport);
         loginStage = new Stage(uiViewport);
+        patientsStage = new Stage(uiViewport);
         registerStage = new Stage(uiViewport);
         configStage = new Stage(uiViewport);
         batch = new SpriteBatch();
@@ -66,13 +71,14 @@ public class MainMenu implements Screen{
         skin = new Skin(Gdx.files.internal(mainSkinDir));
         shadeSkin = new Skin(Gdx.files.internal(shadeSkinDir));
         titleText = new GameText("Hungry Hamster", 10, 115);
-        whoPlaysText = new GameText("¿Quién juega?", 16, 115);
+        patientsText = new GameText("Pacientes", 22, 115);
+        whoPlaysText = new GameText("¿Quién juega?", 17, 115);
         whoPlaysText.setScales(0.15f, 0.38f);
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
         //menuState = MenuState.INIT;
         //Debug porpouses
-        menuState = MenuState.REGISTER;
+        menuState = MenuState.LOGIN;
     }
 
     @Override
@@ -92,6 +98,9 @@ public class MainMenu implements Screen{
             case INIT:
                 titleText.draw(batch);
             break;
+            case PATIENTS:
+                patientsText.draw(batch);
+            break;
             case LOGIN:
                 whoPlaysText.draw(batch);
             break;
@@ -110,6 +119,11 @@ public class MainMenu implements Screen{
                 mainStage.draw();
                 mainStage.act(deltaTime);
             break;
+            case PATIENTS:
+                Gdx.input.setInputProcessor(patientsStage);
+                patientsStage.draw();
+                patientsStage.act(deltaTime);
+                break;
             case LOGIN:
                 Gdx.input.setInputProcessor(loginStage);
                 loginStage.draw();
@@ -186,7 +200,12 @@ public class MainMenu implements Screen{
         mainStage.addActor(table);
     }
 
+    private void patientsMenuConstruct() {
+
+    }
+
     private void loginMenuConstruct() {
+        final int btnWidth = 130;
         //Labels
         Label lblID = new Label("No. Carnet:", skin);
         Label lblError = new Label("", skin);
@@ -196,6 +215,7 @@ public class MainMenu implements Screen{
         TextButton btnNewPatient = new TextButton("Nuevo paciente", skin);
         TextButton btnNext = new TextButton("Siguiente", skin);
         TextButton btnExit = new TextButton("Salir", skin);
+        TextButton btnPatients = new TextButton("Pacientes", skin);
         //Listeners
         btnNewPatient.addListener(new ChangeListener() {
             @Override
@@ -224,6 +244,12 @@ public class MainMenu implements Screen{
                 System.exit(0);
             }
         });
+        btnPatients.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                menuState = MenuState.PATIENTS;
+            }
+        });
         //Table
         Table table = new Table();
         table.setFillParent(true);
@@ -241,8 +267,10 @@ public class MainMenu implements Screen{
         table.add(btnNext).width(150).height(50).colspan(2);
         table.row();
         //table.debug();
-        btnTable.add(btnExit).width(150).height(50).padRight(150);
-        btnTable.add(btnNewPatient).width(150).height(50).right();
+        //btnTable interns
+        btnTable.add(btnExit).width(btnWidth).height(50);
+        btnTable.add(btnPatients).width(btnWidth).height(50).padRight(25).padLeft(25);
+        btnTable.add(btnNewPatient).width(btnWidth).height(50).right();
         //buttonsTable.debug();
 
         //Stage
