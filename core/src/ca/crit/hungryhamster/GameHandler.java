@@ -95,6 +95,7 @@ public class GameHandler {
     public static final String[] strReceptions = new String[numHouseSteps];
     
     public static void init(float musicVolume, int env) {
+        //Extract the ID's
         //Setting global variables
         sessionTime = new Time();
         GameHandler.musicVolume = musicVolume;

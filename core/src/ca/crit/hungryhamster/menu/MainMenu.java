@@ -3,6 +3,7 @@ package ca.crit.hungryhamster.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -35,7 +36,7 @@ public class MainMenu implements Screen{
         INIT,
         LOGIN,
         REGISTER,
-        CONFIG
+        CONFIG,
     }
     private static MenuState menuState;
     //SCREEN
@@ -70,8 +71,8 @@ public class MainMenu implements Screen{
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
         //menuState = MenuState.INIT;
-        //Ddebug porpouses
-        menuState = MenuState.LOGIN;
+        //Debug porpouses
+        menuState = MenuState.REGISTER;
     }
 
     @Override
@@ -124,7 +125,6 @@ public class MainMenu implements Screen{
                 configStage.draw();
                 configStage.act(deltaTime);
             break;
-
         }
     }
 
@@ -228,9 +228,9 @@ public class MainMenu implements Screen{
         Table table = new Table();
         table.setFillParent(true);
         table.setPosition(0, 50);
-        Table buttonsTable = new Table();
-        buttonsTable.setFillParent(true);
-        buttonsTable.setPosition(0, -150);
+        Table btnTable = new Table();
+        btnTable.setFillParent(true);
+        btnTable.setPosition(0, -150);
 
         //Table Interns
         table.add(lblError).padBottom(10).colspan(2);
@@ -241,13 +241,13 @@ public class MainMenu implements Screen{
         table.add(btnNext).width(150).height(50).colspan(2);
         table.row();
         //table.debug();
-        buttonsTable.add(btnExit).width(150).height(50).padRight(150);
-        buttonsTable.add(btnNewPatient).width(150).height(50).right();
+        btnTable.add(btnExit).width(150).height(50).padRight(150);
+        btnTable.add(btnNewPatient).width(150).height(50).right();
         //buttonsTable.debug();
 
         //Stage
         loginStage.addActor(table);
-        loginStage.addActor(buttonsTable);
+        loginStage.addActor(btnTable);
     }
 
     private void registerMenuConstruct() {
@@ -260,6 +260,7 @@ public class MainMenu implements Screen{
         Label lblID = new Label("No.Carnet:", skin);
         Label lblGender = new Label("Sexo:", skin);
         Label lblError = new Label("", skin);
+        lblError.setColor(Color.BLACK);
         //Text Fields
         TextField fieldName = new TextField("", skin);
         TextField fieldAge = new TextField("", skin);
@@ -273,40 +274,62 @@ public class MainMenu implements Screen{
         btnAccept.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                //Check info
-                if(fieldName.getText() != null && !fieldName.getText().equals("") && !fieldName.getText().equals(" ")) {
+                //Name Check
+                if(fieldName.getText() != null && !fieldName.getText().equals("") && !fieldName.getText().equals(" "))
                     GameHandler.playerName = fieldName.getText().trim().toLowerCase();
-                }
                 else {
                     lblError.setText("Porfavor ingresa un nombre");
+                    return;
                 }
-                if(fieldID.getText() != null && !fieldID.getText().equals("")) {
-                    GameHandler.playerID = fieldName.getText().trim().toLowerCase();
-                }
-                else {
-                    lblError.setText("Porfavor ingresa un ID");
-                }
+                //Age Check
                 if(fieldAge.getText() != null && !fieldAge.getText().equals("")) {
                     try {
                         GameHandler.playerAge = Integer.parseInt(fieldAge.getText().trim());
                     }
                     catch (NumberFormatException ex) {
                         lblError.setText("Porfavor ingresa un numero en la edad");
+                        return;
                     }
                 }
                 else {
-                    lblError.setText("Porfavor ingresa un numero");
+                    lblError.setText("Porfavor ingresa la edad");
+                    return;
                 }
+                //ID Check
+                if(fieldID.getText() != null && !fieldID.getText().equals(""))
+                    GameHandler.playerID = fieldName.getText().trim().toLowerCase();
+                else {
+                    lblError.setText("Porfavor ingresa un ID");
+                    return;
+                }
+                //Gender Check
                 if(GameHandler.playerGender == null) {
                     lblError.setText("Porfavor selecciona un genero");
+                    return;
                 }
                 //Connect to database and send info
+                //Reset values
+                fieldName.setText("");
+                fieldAge.setText("");
+                fieldID.setText("");
+                btnMale.setChecked(false);
+                btnFemale.setChecked(false);
+                GameHandler.playerGender = null;
+                //Check if the profile exists
+                //TODO Perform write of the profile on a CSV File or database file
                 menuState = MenuState.CONFIG;
             }
         });
         btnReturn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                //Reset values
+                fieldName.setText("");
+                fieldAge.setText("");
+                fieldID.setText("");
+                btnMale.setChecked(false);
+                btnFemale.setChecked(false);
+                GameHandler.playerGender = null;
                 menuState = MenuState.LOGIN;
             }
         });
@@ -327,10 +350,11 @@ public class MainMenu implements Screen{
         //Table
         Table table = new Table();
         table.setFillParent(true);
-        table.setPosition(-20, -10);
+        table.setPosition(-20, 0);
+        Table btnTable = new Table();
+        btnTable.setFillParent(true);
+        btnTable.setPosition(0, -190);
         //Table Interns
-        table.add(lblError).height(50).width(50).padBottom(10).center();
-        table.row();
         table.add(lblName).height(50).width(75).padLeft(lblPadRight).right();
         table.add(fieldName).height(fieldHeight).width(fieldWidth).colspan(2).padRight(fieldPadRight).left();
         table.row();
@@ -343,12 +367,18 @@ public class MainMenu implements Screen{
         table.add(lblGender).height(50).width(75).padLeft(lblPadRight).right();
         table.add(btnMale).height(50).width(100).padLeft(20);
         table.add(btnFemale).height(50).width(100).padRight(120);
-        table.row();
-        table.add(btnReturn).height(50).width(150).padRight(0);
-        table.add(btnAccept).height(50).width(150).padLeft(270).colspan(2);
-        table.debug();
+        //table.debug();
+
+        btnTable.add(btnReturn).height(50).width(150).padRight(150);
+        btnTable.add(btnAccept).height(50).width(150).right();
+        //btnTable.debug();
+
+        lblError.setAlignment(Align.center);
+        lblError.setPosition((float) GameHandler.NATIVE_RES_WIDTH/2, (float) GameHandler.NATIVE_RES_HEIGHT/2+150);
         //Stage
         registerStage.addActor(table);
+        registerStage.addActor(btnTable);
+        registerStage.addActor(lblError);
     }
     private boolean fieldCheck(TextField fieldMaxStep, TextField fieldMinStep, Label lblError) {
         int fieldMaxCounts, fieldMinCounts;
