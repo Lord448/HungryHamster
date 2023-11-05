@@ -76,9 +76,7 @@ public class MainMenu implements Screen{
         whoPlaysText.setScales(0.15f, 0.38f);
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
-        //menuState = MenuState.INIT;
-        //Debug porpouses
-        menuState = MenuState.CONFIG;
+        menuState = MenuState.INIT;
     }
 
     @Override

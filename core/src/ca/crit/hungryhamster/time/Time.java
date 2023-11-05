@@ -1,9 +1,9 @@
 package ca.crit.hungryhamster.time;
 
 public class Time {
-    private int seconds;
-    private int minutes;
-    private final int[] compoundTime = new int[2];
+    protected int seconds;
+    protected int minutes;
+    protected final int[] compoundTime = new int[2];
 
     public Time (int minutes, int seconds) throws TimeFormatException{
         assertPositiveTime(minutes, seconds);
