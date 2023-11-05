@@ -241,7 +241,6 @@ public class MainMenu implements Screen{
         table.add(btnNext).width(150).height(50).colspan(2);
         table.row();
         //table.debug();
-
         buttonsTable.add(btnExit).width(150).height(50).padRight(150);
         buttonsTable.add(btnNewPatient).width(150).height(50).right();
         //buttonsTable.debug();
