@@ -12,13 +12,13 @@ public class Timer {
         FINISHED,
         STOP,
     }
-    private final Modes mode;
-    private final Time desiredTime;
-    private final Time currentTime;
-    private States state = States.STOP;
-    private PeriodElapsedCallback periodElapsedCallback;
-    private SecondElapsedCallback secondElapsedCallback;
-    private long timePast;
+    protected final Modes mode;
+    protected final Time desiredTime;
+    protected final Time currentTime;
+    protected States state = States.STOP;
+    protected PeriodElapsedCallback periodElapsedCallback;
+    protected SecondElapsedCallback secondElapsedCallback;
+    protected long timePast;
 
     public Timer(Modes mode, int desiredMinutes, int desiredSeconds) throws TimeFormatException{
         this.mode = mode;
@@ -111,6 +111,10 @@ public class Timer {
 
     public String getStringTime() {
         return currentTime.toString();
+    }
+
+    public States getState() {
+        return state;
     }
 
     public boolean isRunning() {

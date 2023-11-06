@@ -1,20 +1,18 @@
 package ca.crit.hungryhamster.time;
 
-public class Time {
-    protected int seconds;
-    protected int minutes;
-    protected final int[] compoundTime = new int[2];
+public class TimeMillis extends Time{
+    protected int milliseconds;
+    protected final int[] compoundTime = new int[3];
 
-    public Time (int minutes, int seconds) throws TimeFormatException{
-        assertPositiveTime(minutes, seconds);
-        this.minutes = minutes;
-        this.seconds = seconds;
-        setCompoundTime();
+    public TimeMillis(int minutes, int seconds, int milliseconds) throws TimeFormatException {
+        super(minutes, seconds);
+        assertPositiveTime(minutes, seconds, milliseconds);
+        this.milliseconds = milliseconds;
     }
-    public Time() {
-        this.minutes = 0;
-        this.seconds = 0;
-        setCompoundTime();
+
+    public TimeMillis() {
+        super();
+        milliseconds = 0;
     }
     @Override
     public boolean equals(Object obj) {
@@ -22,27 +20,34 @@ public class Time {
         if(obj == this) {
             return true;
         }
-
         //Check if the object is an instance of Time or not
-        if(!(obj instanceof Time)) {
+        if(!(obj instanceof TimeMillis)) {
             return false;
         }
-        Time time = (Time) obj;
+        TimeMillis millisTime = (TimeMillis) obj;
 
-        return (time.getSeconds() == this.getSeconds()) && (time.getMinutes() == this.getMinutes());
+        return (millisTime.getSeconds() == this.seconds)
+                && (millisTime.getMinutes() == this.minutes)
+                && (millisTime.getMilliseconds() == this.milliseconds);
     }
 
     @Override
     public String toString() {
         String secs;
+        String millis;
         if(seconds < 10)
             secs = "0" + seconds;
         else
             secs = String.valueOf(seconds);
-        return minutes + ":" + secs;
+        if(milliseconds < 10)
+            millis = "0" + milliseconds;
+        else
+            millis = String.valueOf(milliseconds);
+        return minutes + ":" + secs + ":" + millis;
     }
 
-    public static Time parseTime(String s) throws NumberFormatException, TimeFormatException {
+    //TODO Make parse of millis
+    public static TimeMillis parseTimeMillis(String s) throws NumberFormatException, TimeFormatException {
         if(s == null)
             throw new NumberFormatException("Cannot parse a null string");
         if(s.equals(""))
@@ -55,6 +60,7 @@ public class Time {
 
         int minutes = -1;
         int seconds = -1;
+        int milliseconds = -1;
         int middlePoint = -1;
         for(int i = 0; i < s.length(); i++) {
             if(s.charAt(i) == ':') {
@@ -85,83 +91,75 @@ public class Time {
         }
         if(middlePoint == -1)
             throw new TimeFormatException("Missing the delimiter (:)");
-        return new Time(minutes, seconds);
+        return new TimeMillis(minutes, seconds, milliseconds);
     }
 
-    public static Time parseTime(float value) throws TimeFormatException{
-        int integerPart;
-        int decimalPart;
-
-        if(value < 0)
-            throw TimeFormatException.NegativeTimeException();
-        integerPart = (int) value;
-        decimalPart = (int) ((float) value - integerPart) * 100;
-        if(decimalPart > 60)
-            throw TimeFormatException.SecondsOutLimitException();
-        return new Time(integerPart, decimalPart);
-    }
-
-    public void addSecond() {
-        seconds++;
-        if(seconds >= 60) {
-            seconds = 0;
-            minutes++;
+    public void addMilli() {
+        milliseconds++;
+        if(milliseconds >= 100) {
+            milliseconds = 0;
+            seconds++;
+            if(seconds >= 60) {
+                seconds = 0;
+                minutes++;
+            }
         }
         setCompoundTime();
     }
 
-    public void subtractSecond() {
-        seconds--;
-        if(seconds < 0) {
-            if(minutes > 0) {
+    public void subtractMilli() {
+        milliseconds--;
+        if(milliseconds < 0) {
+            if(seconds > 0) {
+                milliseconds = 99;
+                seconds--;
+            }
+            else if(seconds == 0 && minutes > 0) {
+                milliseconds = 99;
                 seconds = 59;
                 minutes--;
             }
             else {
                 minutes = 0;
                 seconds = 0;
+                milliseconds = 0;
             }
 
         }
         setCompoundTime();
     }
 
-    public void addMinute() {
-        minutes++;
-        setCompoundTime();
-    }
-
-    public void subtractMinute() {
-        minutes--;
-        if(minutes < 0)
-            minutes = 0;
-        setCompoundTime();
-    }
-
-    public void addTime(Time time) {
+    public void addTime(TimeMillis timeMillis) {
         try {
-            addTime(time.getMinutes(), time.getSeconds());
+            addTime(timeMillis.getMinutes(), timeMillis.getSeconds(), timeMillis.getMilliseconds());
         }
         catch (TimeFormatException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    public void addTime(int mins, int secs) throws TimeFormatException{
-        assertPositiveTime(mins, secs);
+    public void addTime(int mins, int secs, int millis) throws TimeFormatException{
+        assertPositiveTime(mins, secs, millis);
         int tmp;
         minutes += mins;
+        for(tmp = millis + milliseconds; tmp > 59; tmp-=59)
+            seconds++;
+        milliseconds = tmp;
         for(tmp = secs + seconds; tmp > 59; tmp-=59)
             minutes++;
         seconds = tmp;
     }
 
-    public void subtract(Time time) throws TimeFormatException{
-        subtract(time.getMinutes(), time.getSeconds());
+    //TODO Make compatible millis
+    public void subtract(TimeMillis timeMillis) throws TimeFormatException {
+        super.subtract(timeMillis);
+        milliseconds -= timeMillis.getMilliseconds();
     }
+
+    //TODO Make compatible millis
     /* !NOT TESTED! */
-    public void subtract(int mins, int secs) throws TimeFormatException {
-        assertPositiveTime(mins, secs);
+    public void subtract(int mins, int secs, int millis) throws TimeFormatException {
+        assertPositiveTime(mins, secs, millis);
         for(; secs > 59; secs-=59)
             mins++;
         mins = minutes - mins;
@@ -177,76 +175,63 @@ public class Time {
         else
             mins = 0;
         //Assignments at the end in order to avoid NegativeTimeException
-        assertPositiveTime(mins, secs);
+        assertPositiveTime(mins, secs, millis);
         minutes = mins;
         seconds = secs;
     }
 
+    @Override
     public void setZeros() {
-        seconds = 0;
-        minutes = 0;
+        super.setZeros();
+        milliseconds = 0;
     }
 
-    public void setTime(int minutes, int seconds) throws TimeFormatException{
-        assertPositiveTime(minutes, seconds);
+    public void setTime(int minutes, int seconds, int milliseconds) throws TimeFormatException {
+        assertPositiveTime(minutes, seconds, milliseconds);
+        while(milliseconds >= 100) {
+            milliseconds -= 100;
+            seconds++;
+        }
         while(seconds >= 60) {
             seconds -= 60;
             minutes++;
         }
         this.minutes = minutes;
         this.seconds = seconds;
+        this.milliseconds = milliseconds;
         setCompoundTime();
     }
 
-    public void setTime(Time time) throws TimeFormatException{
-        assertPositiveTime(time.getMinutes(), time.getSeconds());
-        minutes = time.getMinutes();
-        seconds = time.getSeconds();
+    public void setTime(TimeMillis timeMillis) throws TimeFormatException {
+        assertPositiveTime(timeMillis.getMinutes(), timeMillis.getSeconds(), timeMillis.getMilliseconds());
+        minutes = timeMillis.getMinutes();
+        seconds = timeMillis.getSeconds();
+        milliseconds = timeMillis.getMilliseconds();
         setCompoundTime();
     }
 
-    public void setSeconds(int seconds) throws TimeFormatException {
-        assertPositiveTime(0, seconds);
-        if(seconds < 60) {
-            throw TimeFormatException.SecondsOutLimitException();
-        }
-        else {
-            this.seconds = seconds;
-        }
+    public void setMilliseconds(int milliseconds) throws TimeFormatException {
+        assertPositiveTime(0, 0 , milliseconds);
+        this.milliseconds = milliseconds;
+        setCompoundTime();
     }
 
-    public void setMinutes(int minutes) throws TimeFormatException {
-        assertPositiveTime(minutes, 0);
-        if(minutes < 0)
-            throw TimeFormatException.NegativeTimeException();
-        this.minutes = minutes;
-    }
-
-    public float getFloatTime() {
-        return minutes + ((float)seconds /100);
-    }
-
-    public int[] getTime() {
-        return compoundTime;
-    }
-
-    public int getMinutes() {
-        return minutes;
-    }
-
-    public int getSeconds() {
-        return seconds;
+    public int getMilliseconds() {
+        return milliseconds;
     }
 
     private void setCompoundTime() {
         compoundTime[0] = minutes;
         compoundTime[1] = seconds;
+        compoundTime[2] = milliseconds;
     }
 
-    private void assertPositiveTime(int mins, int secs) throws TimeFormatException {
+    protected void assertPositiveTime(int mins, int secs, int millis) throws TimeFormatException {
         if(mins < 0)
             throw TimeFormatException.NegativeTimeException();
         if(secs < 0)
+            throw TimeFormatException.NegativeTimeException();
+        if(millis < 0)
             throw TimeFormatException.NegativeTimeException();
     }
 }
