@@ -10,7 +10,9 @@ import java.util.Arrays;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
+import ca.crit.hungryhamster.time.TimeMillis;
 import ca.crit.hungryhamster.time.Timer;
+import ca.crit.hungryhamster.time.TimerMillis;
 
 public class Animal {
     protected final int REGION_MAX_LIM = 107;
@@ -34,6 +36,8 @@ public class Animal {
     public Circle hitbox;
     public final Timer timer;
     private Time repTime;
+    private final TimerMillis timerMillis;
+    private TimeMillis stepTime;
 
     public Animal (float x, float y, int width, int height, float speed) {
         float positionSet = 0;
@@ -53,6 +57,8 @@ public class Animal {
         nextPin = GameHandler.minStep;
         timer = new Timer(Timer.Modes.TIME_MEASURE);
         repTime = new Time();
+        timerMillis = new TimerMillis(Timer.Modes.TIME_MEASURE);
+        stepTime = new TimeMillis();
         //Each position has a step of 7.5 units when we have a length of 8 positions
         for(int i = 0, j = 0; i < positions.length; i++) {
             positionSet += ((float) (REGION_MAX_LIM - REGION_MIN_LIM) / positions.length);
@@ -68,6 +74,13 @@ public class Animal {
             @Override
             public void secondElapsedCallback() {
                 repTime = timer.getTime();
+            }
+        });
+
+        timerMillis.setMillisecondElapsedCallback(new TimerMillis.MillisecondElapsedCallback() {
+            @Override
+            public void millisecondElapsedCallback() {
+                stepTime = timerMillis.getTime();
             }
         });
     }

@@ -5,8 +5,14 @@ public class Time {
     protected int minutes;
     protected final int[] compoundTime = new int[2];
 
-    public Time (int minutes, int seconds) throws TimeFormatException{
-        assertPositiveTime(minutes, seconds);
+    public Time (int minutes, int seconds) {
+        try {
+            assertPositiveTime(minutes, seconds);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         this.minutes = minutes;
         this.seconds = seconds;
         setCompoundTime();

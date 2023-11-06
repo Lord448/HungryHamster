@@ -158,8 +158,14 @@ public class TimeMillis extends Time{
 
     //TODO Make compatible millis
     /* !NOT TESTED! */
-    public void subtract(int mins, int secs, int millis) throws TimeFormatException {
-        assertPositiveTime(mins, secs, millis);
+    public void subtract(int mins, int secs, int millis) {
+        try {
+            assertPositiveTime(mins, secs, millis);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         for(; secs > 59; secs-=59)
             mins++;
         mins = minutes - mins;
@@ -175,7 +181,13 @@ public class TimeMillis extends Time{
         else
             mins = 0;
         //Assignments at the end in order to avoid NegativeTimeException
-        assertPositiveTime(mins, secs, millis);
+        try {
+            assertPositiveTime(mins, secs, millis);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         minutes = mins;
         seconds = secs;
     }
@@ -186,8 +198,14 @@ public class TimeMillis extends Time{
         milliseconds = 0;
     }
 
-    public void setTime(int minutes, int seconds, int milliseconds) throws TimeFormatException {
-        assertPositiveTime(minutes, seconds, milliseconds);
+    public void setTime(int minutes, int seconds, int milliseconds) {
+        try {
+            assertPositiveTime(minutes, seconds, milliseconds);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         while(milliseconds >= 100) {
             milliseconds -= 100;
             seconds++;
@@ -202,16 +220,28 @@ public class TimeMillis extends Time{
         setCompoundTime();
     }
 
-    public void setTime(TimeMillis timeMillis) throws TimeFormatException {
-        assertPositiveTime(timeMillis.getMinutes(), timeMillis.getSeconds(), timeMillis.getMilliseconds());
+    public void setTime(TimeMillis timeMillis) {
+        try {
+            assertPositiveTime(timeMillis.getMinutes(), timeMillis.getSeconds(), timeMillis.getMilliseconds());
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         minutes = timeMillis.getMinutes();
         seconds = timeMillis.getSeconds();
         milliseconds = timeMillis.getMilliseconds();
         setCompoundTime();
     }
 
-    public void setMilliseconds(int milliseconds) throws TimeFormatException {
-        assertPositiveTime(0, 0 , milliseconds);
+    public void setMilliseconds(int milliseconds) {
+        try {
+            assertPositiveTime(0, 0 , milliseconds);
+        }
+        catch (TimeFormatException ex){
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+        }
         this.milliseconds = milliseconds;
         setCompoundTime();
     }

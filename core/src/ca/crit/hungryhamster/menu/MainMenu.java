@@ -22,8 +22,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-import org.w3c.dom.Text;
-
 import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;

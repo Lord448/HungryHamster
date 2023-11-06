@@ -27,6 +27,7 @@ import java.util.List;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.Timer;
+import ca.crit.hungryhamster.time.TimerMillis;
 
 public class GameScreen implements Screen {
 
@@ -45,7 +46,7 @@ public class GameScreen implements Screen {
 
     /*OBJECTS*/
     private Food[] food;
-    private Timer stepTimer;
+    private TimerMillis stepTimer;
 
     /*USER INTERFACE*/
     private Skin skin;
@@ -55,6 +56,7 @@ public class GameScreen implements Screen {
     private Label lblReps;
     private Label lblRepsUncompleted;
     private Label lblTimeSession;
+    private Label lblTimeMills;
 
     /*TEXT*/
     //private final BitmapFont font;
@@ -89,7 +91,8 @@ public class GameScreen implements Screen {
         shadeSkin = new Skin(Gdx.files.internal("ShadeUISkin/uiskin.json"));
         graphicsConstruct();
         /*OBJECTS*/
-        stepTimer = new Timer(Timer.Modes.TIME_MEASURE);
+        stepTimer = new TimerMillis(Timer.Modes.TIME_MEASURE);
+        stepTimer.start();
     }
     @Override
     public void show() {
@@ -195,8 +198,9 @@ public class GameScreen implements Screen {
         time.addTime(animal.timer.getTime());
         time.addTime(GameHandler.sessionTime);
 
-        lblTime.setText("Tiempo de repeticion " + animal.timer.getStringTime());
+        lblTime.setText("Tiempo de repeticion " + animal.timer);
         lblTimeSession.setText("Tiempo de sesion " + time);
+        lblTimeMills.setText("T: " + stepTimer);
         Gdx.input.setInputProcessor(stage);
         stage.getViewport().apply();
         stage.draw();
@@ -215,6 +219,8 @@ public class GameScreen implements Screen {
         lblRepsUncompleted = new Label("Reps Incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
+
+        lblTimeMills = new Label("T: ", skin);
 
         lblTime.setColor(Color.BLACK);
         lblTimeSession.setColor(Color.BLACK);
@@ -251,6 +257,9 @@ public class GameScreen implements Screen {
         lblTime.setPosition(xTIME, yTOP_TEXT - 22);
         btnEndReps.setPosition(xBtn, 250);
         btnEndSession.setPosition(xBtn, 220);
+
+        lblTimeMills.setPosition(0, 0);
+        stage.addActor(lblTimeMills);
 
         stage.addActor(lblTime);
         stage.addActor(lblTimeSession);

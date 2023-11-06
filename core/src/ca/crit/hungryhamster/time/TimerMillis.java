@@ -3,12 +3,14 @@ package ca.crit.hungryhamster.time;
 public class TimerMillis extends Timer {
     protected final TimeMillis desiredTime;
     protected final TimeMillis currentTime;
+    protected MillisecondElapsedCallback millisecondElapsedCallback;
+    protected long milliPast;
 
     public TimerMillis(Modes mode, int desiredMinutes, int desiredSeconds, int desiredMillis) throws TimeFormatException {
         super(mode, desiredMinutes, desiredSeconds);
         this.desiredTime = new TimeMillis(desiredMinutes, desiredSeconds, desiredMillis);
         currentTime = new TimeMillis();
-        timePast = System.currentTimeMillis();
+        milliPast = System.currentTimeMillis();
     }
 
     public TimerMillis(Modes mode, TimeMillis desiredTime) {
@@ -30,6 +32,14 @@ public class TimerMillis extends Timer {
 
         if(state == States.RUNNING) {
             time = System.currentTimeMillis();
+            if(time - milliPast >= 1) {
+                if(millisecondElapsedCallback != null)
+                    millisecondElapsedCallback.millisecondElapsedCallback();
+                if(currentTime.getMilliseconds() >= 99)
+                    currentTime.setMilliseconds(0);
+                currentTime.addMilli();
+                milliPast = time;
+            }
             if (time - timePast >= 1000) {
                 if(secondElapsedCallback != null)
                     secondElapsedCallback.secondElapsedCallback();
@@ -48,5 +58,68 @@ public class TimerMillis extends Timer {
             }
             periodElapsedCallback.periodElapsedCallback();
         }
+    }
+
+    public void reset() {
+        switch (mode)
+        {
+            case ONE_SHOT:
+            case TIME_MEASURE:
+                state = States.STOP;
+                break;
+            case PERIODIC:
+                break;
+        }
+        currentTime.setZeros();
+    }
+
+    public void start() {
+        state = States.RUNNING;
+    }
+
+    public void stop() {
+        state = States.STOP;
+    }
+
+    public void end() {
+        state = States.STOP;
+        reset();
+    }
+
+    @Override
+    public String toString() {
+        return currentTime.toString();
+    }
+
+    public String getDesiredTime() {
+        return desiredTime.toString();
+    }
+
+    public TimeMillis getTime() {
+        return currentTime;
+    }
+
+    public float getFloatTime() {
+        return currentTime.getFloatTime();
+    }
+
+    public String getStringTime() {
+        return currentTime.toString();
+    }
+
+    public States getState() {
+        return state;
+    }
+
+    public boolean isRunning() {
+        return state == States.RUNNING;
+    }
+
+    public interface MillisecondElapsedCallback {
+        void millisecondElapsedCallback();
+    }
+
+    public void setMillisecondElapsedCallback(TimerMillis.MillisecondElapsedCallback eventHandler){
+        millisecondElapsedCallback = eventHandler;
     }
 }
