@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
@@ -13,16 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
-import java.util.List;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
@@ -30,25 +23,30 @@ import ca.crit.hungryhamster.time.Timer;
 import ca.crit.hungryhamster.time.TimerMillis;
 
 public class GameScreen implements Screen {
-
-    /*SCREEN*/
+    /**
+     *   SCREEN
+     */
     private final Camera camera;
     private final Viewport viewport;
-
-    /*GRAPHICS*/
+    /**
+     *   GRAPHICS
+     */
     private final SpriteBatch batch;
     private final Texture treeHouse;
     private final Background background;
-
-    /*CHARACTER*/
+    /**
+     *   CHARACTER
+     */
     private final Wizard wizard;
     private Animal animal;
-
-    /*OBJECTS*/
+    /**
+     *   GENERAL PURPOSE OBJECTS
+     */
     private Food[] food;
     private TimerMillis stepTimer;
-
-    /*USER INTERFACE*/
+    /**
+     *   USER INTERFACE
+     */
     private Skin skin;
     private Skin shadeSkin;
     private Stage stage;
@@ -57,19 +55,14 @@ public class GameScreen implements Screen {
     private Label lblRepsUncompleted;
     private Label lblTimeSession;
     private Label lblTimeMills;
-
-    /*TEXT*/
-    //private final BitmapFont font;
-
+    /**
+     *   TEXT
+     */
     private final GameText WinText;
-
-    /*FIXED TYPES*/
+    /**
+     *   GENERAL NON OBJECT FIXED TYPES
+     */
     private boolean sessionFinished = false;
-
-    /* CONSTANTS */
-    private final float animalInitialX = (float) GameHandler.WORLD_WIDTH/2+5;
-    private final float animalInitialY = 0f;
-
 
     public GameScreen(){
         /*SCREEN*/
@@ -96,8 +89,10 @@ public class GameScreen implements Screen {
     }
     @Override
     public void show() {
+        final float ANIMAL_INITIAL_Y = 0f;
+        final float ANIMAL_INITIAL_X = (float) GameHandler.WORLD_WIDTH/2+5;
         food = new Food[GameHandler.numHouseSteps/2];
-        animal = new Animal(animalInitialX, animalInitialY, 7, 10, 30);
+        animal = new Animal(ANIMAL_INITIAL_X, ANIMAL_INITIAL_Y, 7, 10, 30);
         //Construct for the food
         for(int i = 0, j = 0; i < GameHandler.numHouseSteps/2; i++, j++) {
             if(j == Fruits.totalFruits) {
