@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
+import ca.crit.hungryhamster.time.TimeMillis;
 import ca.crit.hungryhamster.time.Timer;
 import ca.crit.hungryhamster.time.TimerMillis;
 
@@ -43,7 +44,8 @@ public class GameScreen implements Screen {
      *   GENERAL PURPOSE OBJECTS
      */
     private Food[] food;
-    private TimerMillis stepTimer;
+    private final TimerMillis timerGameTime;
+    private TimeMillis repStepTime;
     /**
      *   USER INTERFACE
      */
@@ -84,8 +86,8 @@ public class GameScreen implements Screen {
         shadeSkin = new Skin(Gdx.files.internal("ShadeUISkin/uiskin.json"));
         graphicsConstruct();
         /*OBJECTS*/
-        stepTimer = new TimerMillis(Timer.Modes.TIME_MEASURE);
-        stepTimer.start();
+        timerGameTime = new TimerMillis(Timer.Modes.TIME_MEASURE);
+        timerGameTime.start();
     }
     @Override
     public void show() {
@@ -152,7 +154,7 @@ public class GameScreen implements Screen {
 
         batch.end();
         graphicsRender(deltaTime);
-        stepTimer.update(true);
+        timerGameTime.update(true);
 
         if(sessionFinished) {
             //Show Resume UI
@@ -195,7 +197,7 @@ public class GameScreen implements Screen {
 
         lblTime.setText("Tiempo de repeticion " + animal.timer);
         lblTimeSession.setText("Tiempo de sesion " + time);
-        lblTimeMills.setText("T: " + stepTimer);
+        lblTimeMills.setText("T: " + timerGameTime);
         Gdx.input.setInputProcessor(stage);
         stage.getViewport().apply();
         stage.draw();

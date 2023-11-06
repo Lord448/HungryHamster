@@ -55,7 +55,7 @@ public class GameHandler {
     public static final int DEBUG_MENU = 1;
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
-    public static final int DEBUG_MODE = DEBUG_GAME; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_NONE; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
@@ -99,9 +99,9 @@ public class GameHandler {
      *                        PATIENT PERFORMANCE MEASURES
      * --------------------------------------------------------------------------
      */
-    public static Time sessionTime = new Time(); //Time of the session
-    public static TimeMillis meanSessionTimeStep; //Time to complete a step per session
-    public static List<TimeMillis> meanRepTimeStep = new ArrayList<TimeMillis>(); //Time to complete step per Repetition
+    public static Time sessionTime = new Time(); //Mean time of the session
+    public static TimeMillis meanSessionTimeStep; //Mean time to complete a step per session
+    public static List<TimeMillis> meanRepTimeStep = new ArrayList<TimeMillis>(); //List of mean time to complete step per Repetition
     public static List<Time> repsTime = new ArrayList<Time>(); //Time to complete the repetition
     public static int sessionReps = 0; //Repetitions of the session
     public static int sessionUncompletedReps; //Uncompleted repetitions on the session
@@ -147,5 +147,18 @@ public class GameHandler {
         Arrays.fill(GameHandler.touchPins, false);
         for(int i = 0; i < numHouseSteps; i++)
             strReceptions[i] = "T" + i;
+    }
+
+    //TODO
+    public static Time calculateMeanOfList(List<Object> list) {
+        boolean isTime = true;
+        boolean isTimeMillis = true;
+        for(Object aList : list) {
+            if (!aList.getClass().getName().equals("Time")) {
+                isTime = false;
+                break;
+            }
+        }
+        return null;
     }
 }

@@ -86,6 +86,11 @@ public class TimerMillis extends Timer {
         reset();
     }
 
+    public void restart() {
+        state = States.RUNNING;
+        currentTime.setZeros();
+    }
+
     @Override
     public String toString() {
         return currentTime.toString();

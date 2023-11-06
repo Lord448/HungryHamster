@@ -500,7 +500,7 @@ public class MainMenu implements Screen{
                         GameHandler.maxStep = Integer.parseInt(fieldMaxStep.getText().trim());
                         GameHandler.minStep = Integer.parseInt(fieldMinStep.getText().trim());
                         GameHandler.numHouseSteps = GameHandler.maxStep - GameHandler.minStep;
-                        if(fieldTime.equals("Libre"))
+                        if(fieldTime.getText().equals("Libre"))
                             GameHandler.sessionTime = new Time(0, 0);
                         else
                             GameHandler.sessionTime = Time.parseTime(fieldTime.getText().trim());

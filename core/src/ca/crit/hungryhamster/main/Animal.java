@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.time.Time;
@@ -37,7 +39,7 @@ public class Animal {
     public final Timer timer;
     private Time repTime;
     private final TimerMillis timerMillis;
-    private TimeMillis stepTime;
+    private final List<TimeMillis> stepTimeList = new ArrayList<>();
 
     public Animal (float x, float y, int width, int height, float speed) {
         float positionSet = 0;
@@ -58,7 +60,6 @@ public class Animal {
         timer = new Timer(Timer.Modes.TIME_MEASURE);
         repTime = new Time();
         timerMillis = new TimerMillis(Timer.Modes.TIME_MEASURE);
-        stepTime = new TimeMillis();
         //Each position has a step of 7.5 units when we have a length of 8 positions
         for(int i = 0, j = 0; i < positions.length; i++) {
             positionSet += ((float) (REGION_MAX_LIM - REGION_MIN_LIM) / positions.length);
@@ -74,13 +75,6 @@ public class Animal {
             @Override
             public void secondElapsedCallback() {
                 repTime = timer.getTime();
-            }
-        });
-
-        timerMillis.setMillisecondElapsedCallback(new TimerMillis.MillisecondElapsedCallback() {
-            @Override
-            public void millisecondElapsedCallback() {
-                stepTime = timerMillis.getTime();
             }
         });
     }
@@ -132,6 +126,10 @@ public class Animal {
                 }
                 //Standard zone
                 if(i == nextPin){
+                    //Acquiring Measure
+                    stepTimeList.add(timerMillis.getTime());
+                    timerMillis.restart();
+                    //Game control
                     nextPin++;
                     GameHandler.touchPins[i] = true;
                     GameSounds.jump();
@@ -179,6 +177,7 @@ public class Animal {
     }
 
     public void reset() {
+
         x = (float) (GameHandler.WORLD_WIDTH/2)+5;
         y = 0f;
         Arrays.fill(GameHandler.touchPins, false);
