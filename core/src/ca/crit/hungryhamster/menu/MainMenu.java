@@ -27,20 +27,13 @@ import java.util.Objects;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.main.GameText;
+import ca.crit.hungryhamster.menu.stages.InitialMenu;
+import ca.crit.hungryhamster.menu.stages.MenuState;
 import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.TimeFormatException;
 
 public class MainMenu implements Screen{
-    //STATES
-    private enum MenuState {
-        INIT,
-        PATIENTS,
-        LOGIN,
-        REGISTER,
-        CONFIG,
-
-    }
-    private static MenuState menuState;
+    public static MenuState menuState;
     //SCREEN
     private final Camera camera;
     private final Viewport viewport;
@@ -54,6 +47,7 @@ public class MainMenu implements Screen{
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
     private final Stage mainStage, patientsStage, loginStage, registerStage, configStage;
     private final GameText titleText, patientsText, whoPlaysText, registerText, configText;
+    private final InitialMenu initialMenu;
 
     public MainMenu() {
         camera = new OrthographicCamera();
@@ -75,14 +69,18 @@ public class MainMenu implements Screen{
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
         menuState = MenuState.INIT;
+        //Experimental
+        initialMenu = new InitialMenu(skin, new Stage(uiViewport), titleText);
     }
 
     @Override
     public void show() {
-        mainMenuConstruct();
+        //mainMenuConstruct();
         registerMenuConstruct();
         loginMenuConstruct();
         configMenuConstruct();
+
+        initialMenu.uiConstruct();
     }
 
     @Override
@@ -92,7 +90,8 @@ public class MainMenu implements Screen{
         background.renderStaticBackground(batch);
         switch (menuState) {
             case INIT:
-                titleText.draw(batch);
+                //titleText.draw(batch);
+                initialMenu.render(batch);
             break;
             case PATIENTS:
                 patientsText.draw(batch);
@@ -111,9 +110,10 @@ public class MainMenu implements Screen{
 
         switch (menuState) {
             case INIT:
-                Gdx.input.setInputProcessor(mainStage);
-                mainStage.draw();
-                mainStage.act(deltaTime);
+                //Gdx.input.setInputProcessor(mainStage);
+                //mainStage.draw();
+                //mainStage.act(deltaTime);
+                initialMenu.stageRender(deltaTime);
             break;
             case PATIENTS:
                 Gdx.input.setInputProcessor(patientsStage);
