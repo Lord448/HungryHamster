@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.menu.stages;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -16,9 +15,19 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.GameText;
 import ca.crit.hungryhamster.main.PrintTag;
 import ca.crit.hungryhamster.menu.MainMenu;
-import jdk.tools.jmod.Main;
 
 public class LoginMenu extends Menus{
+    /**
+     * ---------------------------------------------------------------------
+     *                         BUTTONS WITH LISTENERS
+     * ---------------------------------------------------------------------
+     */
+    public enum btn{
+        btnNewPatient,
+        btnNext,
+        btnExit,
+        btnPatients
+    }
     /**
      * ---------------------------------------------------------------------
      *                                LABELS
@@ -41,12 +50,9 @@ public class LoginMenu extends Menus{
     private final TextButton btnNext;
     private final TextButton btnExit;
     private final TextButton btnPatients;
-    /**
-     * ---------------------------------------------------------------------
-     *                           CHANGE LISTENERS
-     * ---------------------------------------------------------------------
-     */
-    private btnNextListener btnNextListener; //TODO It results null
+    private Table table;
+    private Table btnTable;
+
     public LoginMenu(Skin skin, Stage stage, GameText titleText) {
         this.skin = skin;
         this.stage = stage;
@@ -62,51 +68,30 @@ public class LoginMenu extends Menus{
     }
     @Override
     public void uiConstruct() {
-        final int btnWidth = 130;
         //Listeners
-        btnNewPatient.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                MainMenu.menuState = MenuState.REGISTER;
-            }
-        });
-        /*
-        btnNext.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if(!Objects.equals(idField.getText(), "")) {
-                    //TODO Protect more the variable
-                    //TODO Search for the ID in database
-                    GameHandler.playerID = idField.getText();
-                    PrintTag.Print(TAG, "ID: " + GameHandler.playerID);
-                    MainMenu.menuState = MenuState.CONFIG;
-                }
-                else {
-                    lblError.setText("Coloca un No. de Carnet");
-                }
-            }
-        });
-         */
-        btnNext.addListener(btnNextListener);
-        btnExit.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.exit(0);
-            }
-        });
-        btnPatients.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                MainMenu.menuState = MenuState.PATIENTS;
-            }
-        });
-        //Table
-        Table table = new Table();
+        btnNewPatient.addListener(new Listener(btn.btnNewPatient));
+        btnNext.addListener(new Listener(btn.btnNext));
+        btnExit.addListener(new Listener(btn.btnExit));
+        btnPatients.addListener(new Listener(btn.btnPatients));
+
+        //Tables
+        table = new Table();
         table.setFillParent(true);
         table.setPosition(0, 50);
-        Table btnTable = new Table();
+        btnTable = new Table();
         btnTable.setFillParent(true);
         btnTable.setPosition(0, -150);
+        //------------------
+        //Table Organization
+        //------------------
+        tableOrganization();
+        //Stage
+        stage.addActor(table);
+        stage.addActor(btnTable);
+    }
+    @Override
+    protected void tableOrganization() {
+        final int btnWidth = 130;
 
         //Table Interns
         table.add(lblError).padBottom(10).colspan(2);
@@ -117,30 +102,66 @@ public class LoginMenu extends Menus{
         table.add(btnNext).width(150).height(50).colspan(2);
         table.row();
         //table.debug();
+
         //btnTable interns
         btnTable.add(btnExit).width(btnWidth).height(50);
         btnTable.add(btnPatients).width(btnWidth).height(50).padRight(25).padLeft(25);
         btnTable.add(btnNewPatient).width(btnWidth).height(50).right();
         //buttonsTable.debug();
-
-        //Stage
-        stage.addActor(table);
-        stage.addActor(btnTable);
     }
 
-    private class btnNextListener extends ChangeListener {
+    private class Listener extends ChangeListener {
+        private final btn button;
+        public Listener(btn button) {
+            this.button = button;
+        }
         @Override
         public void changed(ChangeEvent event, Actor actor) {
-            if(!Objects.equals(idField.getText(), "")) {
+            switch (button) {
+                case btnNewPatient:
+                    btnNewPatientListener();
+                    break;
+                case btnNext:
+                    btnNextListener();
+                    break;
+                case btnExit:
+                    btnExitListener();
+                    break;
+                case btnPatients:
+                    btnPatientsListener();
+                    break;
+            }
+        }
+        /**
+         * ---------------------------------------------------------------------
+         *                             LISTENERS
+         * ---------------------------------------------------------------------
+         */
+        private void btnNewPatientListener() {
+            MainMenu.menuState = MenuState.REGISTER;
+            lblError.setText("");
+        }
+
+        private void btnNextListener() {
+            if (!Objects.equals(idField.getText(), "")) {
                 //TODO Protect more the variable
                 //TODO Search for the ID in database
                 GameHandler.playerID = idField.getText();
                 PrintTag.Print(TAG, "ID: " + GameHandler.playerID);
                 MainMenu.menuState = MenuState.CONFIG;
-            }
-            else {
+                lblError.setText("");
+            } else {
                 lblError.setText("Coloca un No. de Carnet");
             }
+        }
+
+        private void btnExitListener() {
+            System.exit(0);
+        }
+
+        private void btnPatientsListener() {
+            MainMenu.menuState = MenuState.PATIENTS;
+            lblError.setText("");
         }
     }
 }

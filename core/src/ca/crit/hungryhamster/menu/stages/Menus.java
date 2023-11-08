@@ -13,6 +13,7 @@ public abstract class Menus {
     protected Stage stage;
     protected GameText titleText;
     public abstract void uiConstruct();
+    protected abstract void tableOrganization();
     public void stageRender(float deltaTime) {
         Gdx.input.setInputProcessor(stage);
         stage.draw();

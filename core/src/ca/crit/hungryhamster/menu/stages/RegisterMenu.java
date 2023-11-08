@@ -20,4 +20,9 @@ public class RegisterMenu extends Menus{
     public void uiConstruct() {
 
     }
+
+    @Override
+    protected void tableOrganization() {
+
+    }
 }

@@ -12,17 +12,9 @@ import ca.crit.hungryhamster.main.GameText;
 import ca.crit.hungryhamster.menu.MainMenu;
 
 public class InitialMenu extends Menus {
-    private TextButton btnPlay;
-    private TextButton btnFinish;
-    public InitialMenu(Skin skin, Stage stage, String titleText) {
-        this.skin = skin;
-        this.stage = stage;
-        this.titleText = new GameText(titleText, 10, 115);
-        TAG = "InitialMenu";
-        btnPlay = new TextButton("Jugar", skin);
-        btnFinish = new TextButton("Salir", skin);
-    }
-
+    private final TextButton btnPlay;
+    private final TextButton btnFinish;
+    private Table table;
     public InitialMenu(Skin skin, Stage stage, GameText titleText) {
         this.skin = skin;
         super.stage = stage;
@@ -48,16 +40,23 @@ public class InitialMenu extends Menus {
             }
         });
         //Table
-        Table table = new Table();
+        table = new Table();
         table.setFillParent(true);
         table.setPosition(0, -25);
+        //------------------
+        //Table Organization
+        //------------------
+        tableOrganization();
+        //Stage
+        stage.addActor(table);
+    }
+    @Override
+    protected void tableOrganization() {
         //Table interns
         table.row().padBottom(20);
         table.add(btnPlay).width(200).height(60).padBottom(20);
         table.row();
         table.add(btnFinish).width(200).height(60);
         //table.debug();
-        //Stage
-        stage.addActor(table);
     }
 }

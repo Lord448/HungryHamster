@@ -77,7 +77,6 @@ public class MainMenu implements Screen{
 
     @Override
     public void show() {
-        //loginMenuConstruct();
         registerMenuConstruct();
 
         configMenuConstruct();
