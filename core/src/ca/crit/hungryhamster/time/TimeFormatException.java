@@ -1,6 +1,8 @@
 package ca.crit.hungryhamster.time;
 
-public class TimeFormatException extends Exception{
+import java.util.IllegalFormatException;
+
+public class TimeFormatException extends IllegalArgumentException {
     public enum ExId{
         GENERIC,
         NEGATIVE_TIME,

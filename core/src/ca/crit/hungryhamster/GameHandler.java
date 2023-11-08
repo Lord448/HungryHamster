@@ -104,8 +104,8 @@ public class GameHandler {
     public static List<TimeMillis> meanRepTimeStep = new ArrayList<TimeMillis>(); //List of mean time to complete step per Repetition
     public static List<Time> repsTime = new ArrayList<Time>(); //Time to complete the repetition
     public static int sessionReps = 0; //Repetitions of the session
-    public static int sessionUncompletedReps; //Uncompleted repetitions on the session
-    public static int successfulSteps; //Successful steps on the session
+    public static int sessionUncompletedReps = 0; //Uncompleted repetitions on the session
+    public static int successfulSteps = 0; //Successful steps on the session
 
     /**
      * --------------------------------------------------------------------------
@@ -149,16 +149,25 @@ public class GameHandler {
             strReceptions[i] = "T" + i;
     }
 
-    //TODO
-    public static Time calculateMeanOfList(List<Object> list) {
-        boolean isTime = true;
-        boolean isTimeMillis = true;
-        for(Object aList : list) {
-            if (!aList.getClass().getName().equals("Time")) {
-                isTime = false;
-                break;
-            }
+    public static Time calculateMeanOfTime(List<Time> list) {
+        Time meanTime = new Time();
+        //Sum of all members
+        for(Time time : list)
+            meanTime.addTime(time);
+        //Dividing
+        for(int i = 0; i < list.size()-1; i++) {
+            meanTime.subtract(meanTime);
         }
-        return null;
+        return meanTime;
+    }
+
+    public static TimeMillis calculateMeanOfTimeMillis(List<TimeMillis> list) {
+        TimeMillis meanTime = new TimeMillis();
+        //Sum of all members
+        for(TimeMillis timeMillis : list)
+            meanTime.addTime(timeMillis);
+        //Dividing
+        meanTime.divide(list.size());
+        return meanTime;
     }
 }

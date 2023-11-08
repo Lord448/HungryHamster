@@ -109,7 +109,7 @@ public class Time {
 
     public void addSecond() {
         seconds++;
-        if(seconds >= 60) {
+        if(seconds > 60) {
             seconds = 0;
             minutes++;
         }
@@ -157,18 +157,27 @@ public class Time {
         assertPositiveTime(mins, secs);
         int tmp;
         minutes += mins;
-        for(tmp = secs + seconds; tmp > 59; tmp-=59)
+        for(tmp = secs + seconds; tmp > 60; tmp-=60)
             minutes++;
         seconds = tmp;
     }
 
-    public void subtract(Time time) throws TimeFormatException{
+    public void subtract(Time time) {
         subtract(time.getMinutes(), time.getSeconds());
     }
     /* !NOT TESTED! */
-    public void subtract(int mins, int secs) throws TimeFormatException {
-        assertPositiveTime(mins, secs);
-        for(; secs > 59; secs-=59)
+    public void subtract(int mins, int secs) {
+        try {
+            assertPositiveTime(mins, secs);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+        }
+        if(mins == minutes && secs == seconds) {
+            setZeros();
+            return;
+        }
+        for(; secs > 60; secs-=60)
             mins++;
         mins = minutes - mins;
         if(mins >= 0) {
@@ -183,9 +192,28 @@ public class Time {
         else
             mins = 0;
         //Assignments at the end in order to avoid NegativeTimeException
-        assertPositiveTime(mins, secs);
+        try {
+            assertPositiveTime(mins, secs);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+        }
         minutes = mins;
         seconds = secs;
+    }
+
+    public void divide(int denominator) {
+        if(denominator == 0)
+            throw new NumberFormatException("Cannot divide by zero");
+        if(denominator < 0)
+            throw new NumberFormatException("Cannot divide by a negative number");
+
+        int totalTime = translateToInt(this);
+        totalTime /= denominator;
+        Time tmp = translateToTime(totalTime);
+        assert tmp != null;
+        minutes = tmp.getMinutes();
+        seconds = tmp.getSeconds();
     }
 
     public void setZeros() {
@@ -242,6 +270,43 @@ public class Time {
 
     public int getSeconds() {
         return seconds;
+    }
+
+    public int translateToInt(Time time) {
+        int mins = time.getMinutes();
+        int totalTime = time.getSeconds();
+
+        if(mins > 0) {
+            for(; mins > 0; mins--)
+                totalTime += 60;
+        }
+        return totalTime;
+    }
+
+    public Time translateToTime(int number) {
+        if(number < 0)
+            throw new TimeFormatException("Cannot take a negative number");
+
+        int mins = 0;
+        if(number > 60) {
+            for(; number > 0; number -= 60)
+                mins++;
+            if(number < 0) {
+                number += 100;
+                if(mins > 0)
+                    mins--;
+                else
+                    mins = 0;
+            }
+        }
+        try {
+            return new Time(mins, number);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+            return null;
+        }
     }
 
     private void setCompoundTime() {

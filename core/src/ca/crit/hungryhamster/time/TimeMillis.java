@@ -14,6 +14,16 @@ public class TimeMillis extends Time{
         super();
         milliseconds = 0;
     }
+    public TimeMillis(TimeMillis timeMillis) {
+        super(timeMillis.getMinutes(), timeMillis.getSeconds());
+        milliseconds = timeMillis.getMilliseconds();
+    }
+
+    public TimeMillis(Time time) {
+        super(time.getMinutes(), time.getSeconds());
+        milliseconds = 0;
+    }
+
     @Override
     public boolean equals(Object obj) {
         //If the object is compared with itself it returns true
@@ -119,12 +129,8 @@ public class TimeMillis extends Time{
                 seconds = 59;
                 minutes--;
             }
-            else {
-                minutes = 0;
-                seconds = 0;
-                milliseconds = 0;
-            }
-
+            else
+                setZeros();
         }
         setCompoundTime();
     }
@@ -142,18 +148,36 @@ public class TimeMillis extends Time{
         assertPositiveTime(mins, secs, millis);
         int tmp;
         minutes += mins;
-        for(tmp = millis + milliseconds; tmp > 59; tmp-=59)
+        for(tmp = millis + milliseconds; tmp > 60; tmp-=60)
             seconds++;
         milliseconds = tmp;
-        for(tmp = secs + seconds; tmp > 59; tmp-=59)
+        for(tmp = secs + seconds; tmp > 60; tmp-=60)
             minutes++;
         seconds = tmp;
+        setCompoundTime();
     }
 
-    //TODO Make compatible millis
-    public void subtract(TimeMillis timeMillis) throws TimeFormatException {
+    public void subtract(TimeMillis timeMillis) {
+        if(timeMillis.equals(this)) {
+            setZeros();
+            return;
+        }
         super.subtract(timeMillis);
-        milliseconds -= timeMillis.getMilliseconds();
+        int millis = milliseconds - timeMillis.getMilliseconds();
+        if(millis <= 0) {
+            if(seconds > 0) {
+                milliseconds = 99;
+                seconds--;
+            }
+            else if(seconds == 0 && minutes > 0){
+                milliseconds = 99;
+                seconds = 59;
+                minutes--;
+            }
+            else
+                setZeros();
+        }
+        setCompoundTime();
     }
 
     //TODO Make compatible millis
@@ -166,7 +190,7 @@ public class TimeMillis extends Time{
             System.out.println(ex.getMessage());
             System.exit(-1);
         }
-        for(; secs > 59; secs-=59)
+        for(; secs > 60; secs-=60)
             mins++;
         mins = minutes - mins;
         if(mins >= 0) {
@@ -190,6 +214,22 @@ public class TimeMillis extends Time{
         }
         minutes = mins;
         seconds = secs;
+    }
+
+    public void divide(int denominator) {
+        if(denominator == 0)
+            throw new NumberFormatException("Cannot divide by zero");
+        if(denominator < 0)
+            throw new NumberFormatException("Cannot divide by a negative number");
+
+        int totalTime = translateToInt(this);
+        totalTime /= denominator;
+        TimeMillis tmp = translateToTime(totalTime);
+
+        assert tmp != null;
+        minutes = tmp.getMinutes();
+        seconds = tmp.getSeconds();
+        milliseconds = tmp.getMilliseconds();
     }
 
     @Override
@@ -248,6 +288,58 @@ public class TimeMillis extends Time{
 
     public int getMilliseconds() {
         return milliseconds;
+    }
+
+    public int translateToInt(TimeMillis timeMillis) {
+        int mins = timeMillis.minutes;
+        int secs = timeMillis.seconds;
+        int totalTime = timeMillis.milliseconds;
+
+        if(mins > 0) {
+            for (; mins > 0; mins--)
+                secs += 60;
+        }
+        if(secs > 0) {
+            for (; secs > 0; secs--)
+                totalTime += 100;
+        }
+        return totalTime;
+    }
+
+    public TimeMillis translateToTime(int number) {
+        if(number < 0)
+            throw new TimeFormatException("Cannot take a negative number");
+
+        int mins = 0;
+        int secs = 0;
+
+        if(number > 100) {
+            for (secs = 0; number > 0; number -= 100) {
+                secs++;
+                if (secs > 60) {
+                    secs = 0;
+                    mins++;
+                }
+            }
+            if(number < 0) {
+                number += 100; //Hundreds complement
+                if(secs > 0)
+                    secs--;
+                else {
+                    if(mins > 0)
+                        mins--;
+                }
+            }
+        }
+
+        try {
+            return new TimeMillis(mins, secs, number);
+        }
+        catch (TimeFormatException ex) {
+            System.out.println(ex.getMessage());
+            System.exit(-1);
+            return null;
+        }
     }
 
     private void setCompoundTime() {

@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.main;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import ca.crit.hungryhamster.time.Timer;
 import ca.crit.hungryhamster.time.TimerMillis;
 
 public class Animal {
+    private final String TAG = "Animal";
     protected final int REGION_MAX_LIM = 107;
     protected final int REGION_MIN_LIM = 20;
     protected final int REGION_HOUSE = 117;
@@ -81,6 +83,7 @@ public class Animal {
     public void render(final SpriteBatch batch, float deltaTime){
         batch.draw(animal_texture, x, y, width, height);
         timer.update(true);
+        timerMillis.update(true);
 
         hitbox.setPosition(x, y);
         if(GameHandler.environment == GameHandler.DESKTOP_ENV)
@@ -94,7 +97,7 @@ public class Animal {
         else if (isFinished) {
             winText.draw(batch);
             if(oneActionFlag) {
-                System.out.println(timer.getStringTime());
+                PrintTag.Print(TAG, "Finished " + timer);
                 timer.stop();
                 oneActionFlag = false;
             }
@@ -120,17 +123,27 @@ public class Animal {
                             isFinished = true;
                             isInHouse = false;
                             GameSounds.megaWin();
+                            GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
+                            PrintTag.Print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
                         }
-                        System.out.println("CTW " + nextPin + " | " + (GameHandler.countsToWin));
+                        //System.out.println("CTW " + nextPin + " | " + (GameHandler.countsToWin));
                     }
                 }
                 //Standard zone
                 if(i == nextPin){
                     //Acquiring Measure
-                    stepTimeList.add(timerMillis.getTime());
-                    timerMillis.restart();
+                    if (i == 0) {
+                        timerMillis.start();
+                        PrintTag.Print(TAG, "Timer Started");
+                    }
+                    else {
+                        PrintTag.Print(TAG, "Millis " + timerMillis.toString());
+                        stepTimeList.add(new TimeMillis(timerMillis.getTime()));
+                        timerMillis.restart();
+                    }
                     //Game control
                     nextPin++;
+                    GameHandler.successfulSteps++;
                     GameHandler.touchPins[i] = true;
                     GameSounds.jump();
                 }
@@ -157,14 +170,14 @@ public class Animal {
                     //Checking if we have reached the position
                     if(y >= positions[animalCounter] - GameHandler.animHysteresis) {
                         animalCounter++;
-                        System.out.println(animalCounter + " | " + (GameHandler.numHouseSteps));
+                        //System.out.println(animalCounter + " | " + (GameHandler.numHouseSteps));
                         if(animalCounter == GameHandler.numHouseSteps) { //Reached the house
                             timer.getStringTime();
                             isInHouse = true;
                             GameSounds.win();
                             isFinished = false;
                         }
-                        System.out.println("CTW " + animalCounter + " | " + (GameHandler.countsToWin));
+                        //System.out.println("CTW " + animalCounter + " | " + (GameHandler.countsToWin));
                         if(animalCounter == GameHandler.countsToWin) {
                             isFinished = true;
                             isInHouse = false;
