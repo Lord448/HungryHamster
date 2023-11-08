@@ -28,6 +28,7 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.main.GameText;
 import ca.crit.hungryhamster.menu.stages.InitialMenu;
+import ca.crit.hungryhamster.menu.stages.LoginMenu;
 import ca.crit.hungryhamster.menu.stages.MenuState;
 import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.TimeFormatException;
@@ -45,15 +46,15 @@ public class MainMenu implements Screen{
     private final Skin shadeSkin;
     private final String mainSkinDir = "UISkin/uiskin.json";
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
-    private final Stage mainStage, patientsStage, loginStage, registerStage, configStage;
+    private final Stage patientsStage, loginStage, registerStage, configStage;
     private final GameText titleText, patientsText, whoPlaysText, registerText, configText;
     private final InitialMenu initialMenu;
+    private final LoginMenu loginMenu;
 
     public MainMenu() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
         uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
-        mainStage = new Stage(uiViewport);
         loginStage = new Stage(uiViewport);
         patientsStage = new Stage(uiViewport);
         registerStage = new Stage(uiViewport);
@@ -71,16 +72,18 @@ public class MainMenu implements Screen{
         menuState = MenuState.INIT;
         //Experimental
         initialMenu = new InitialMenu(skin, new Stage(uiViewport), titleText);
+        loginMenu = new LoginMenu(skin, new Stage(uiViewport), whoPlaysText);
     }
 
     @Override
     public void show() {
-        //mainMenuConstruct();
+        //loginMenuConstruct();
         registerMenuConstruct();
-        loginMenuConstruct();
+
         configMenuConstruct();
 
         initialMenu.uiConstruct();
+        loginMenu.uiConstruct();
     }
 
     @Override
@@ -90,14 +93,14 @@ public class MainMenu implements Screen{
         background.renderStaticBackground(batch);
         switch (menuState) {
             case INIT:
-                //titleText.draw(batch);
                 initialMenu.render(batch);
             break;
             case PATIENTS:
                 patientsText.draw(batch);
             break;
             case LOGIN:
-                whoPlaysText.draw(batch);
+                //whoPlaysText.draw(batch);
+                loginMenu.render(batch);
             break;
             case REGISTER:
                 registerText.draw(batch);
@@ -110,9 +113,6 @@ public class MainMenu implements Screen{
 
         switch (menuState) {
             case INIT:
-                //Gdx.input.setInputProcessor(mainStage);
-                //mainStage.draw();
-                //mainStage.act(deltaTime);
                 initialMenu.stageRender(deltaTime);
             break;
             case PATIENTS:
@@ -121,9 +121,10 @@ public class MainMenu implements Screen{
                 patientsStage.act(deltaTime);
                 break;
             case LOGIN:
-                Gdx.input.setInputProcessor(loginStage);
-                loginStage.draw();
-                loginStage.act(deltaTime);
+                //Gdx.input.setInputProcessor(loginStage);
+                //loginStage.draw();
+                //loginStage.act(deltaTime);
+                loginMenu.stageRender(deltaTime);
             break;
             case REGISTER:
                 Gdx.input.setInputProcessor(registerStage);
@@ -162,42 +163,8 @@ public class MainMenu implements Screen{
 
     @Override
     public void dispose() {
-        titleText.dispose();
-    }
-
-    private void mainMenuConstruct() {
-        //Buttons
-        TextButton btnPlay = new TextButton("Jugar", skin);
-        TextButton btnFinish  = new TextButton("Salir", skin);
-        //Listeners
-        btnPlay.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                menuState = MenuState.LOGIN;
-            }
-        });
-        btnFinish.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.exit(0);
-            }
-        });
-        //Table
-        Table table = new Table();
-        table.setFillParent(true);
-        table.setPosition(0, -25);
-        //Table interns
-        table.row().padBottom(20);
-        table.add(btnPlay).width(200).height(60).padBottom(20);
-        table.row();
-        table.add(btnFinish).width(200).height(60);
-        //table.debug();
-        //Stage
-        mainStage.addActor(table);
-    }
-
-    private void patientsMenuConstruct() {
-
+        initialMenu.dispose();
+        loginMenu.dispose();
     }
 
     private void loginMenuConstruct() {

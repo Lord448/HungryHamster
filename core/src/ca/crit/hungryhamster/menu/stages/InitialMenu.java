@@ -12,29 +12,28 @@ import ca.crit.hungryhamster.main.GameText;
 import ca.crit.hungryhamster.menu.MainMenu;
 
 public class InitialMenu extends Menus {
-    private final String TAG = "InitialMenu";
-    private final Skin skin;
-    private final GameText titleText;
-
+    private TextButton btnPlay;
+    private TextButton btnFinish;
     public InitialMenu(Skin skin, Stage stage, String titleText) {
         this.skin = skin;
-        super.stage = stage;
+        this.stage = stage;
         this.titleText = new GameText(titleText, 10, 115);
+        TAG = "InitialMenu";
+        btnPlay = new TextButton("Jugar", skin);
+        btnFinish = new TextButton("Salir", skin);
     }
+
     public InitialMenu(Skin skin, Stage stage, GameText titleText) {
         this.skin = skin;
         super.stage = stage;
         this.titleText = titleText;
+        TAG = "InitialMenu";
+        btnPlay = new TextButton("Jugar", skin);
+        btnFinish = new TextButton("Salir", skin);
     }
-    @Override
-    public void render(SpriteBatch batch) {
-        titleText.draw(batch);
-    }
+
     @Override
     public void uiConstruct() {
-        //Buttons
-        TextButton btnPlay = new TextButton("Jugar", skin);
-        TextButton btnFinish  = new TextButton("Salir", skin);
         //Listeners
         btnPlay.addListener(new ChangeListener() {
             @Override
@@ -60,10 +59,5 @@ public class InitialMenu extends Menus {
         //table.debug();
         //Stage
         stage.addActor(table);
-    }
-
-    @Override
-    public void dispose() {
-        titleText.dispose();
     }
 }
