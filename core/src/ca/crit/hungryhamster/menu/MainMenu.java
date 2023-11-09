@@ -30,6 +30,7 @@ import ca.crit.hungryhamster.main.GameText;
 import ca.crit.hungryhamster.menu.stages.InitialMenu;
 import ca.crit.hungryhamster.menu.stages.LoginMenu;
 import ca.crit.hungryhamster.menu.stages.MenuState;
+import ca.crit.hungryhamster.menu.stages.RegisterMenu;
 import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.TimeFormatException;
 
@@ -46,16 +47,23 @@ public class MainMenu implements Screen{
     private final Skin shadeSkin;
     private final String mainSkinDir = "UISkin/uiskin.json";
     private final String shadeSkinDir = "ShadeUISkin/uiskin.json";
-    private final Stage patientsStage, loginStage, registerStage, configStage;
-    private final GameText titleText, patientsText, whoPlaysText, registerText, configText;
+    private final Stage patientsStage, registerStage, configStage;
+    private final GameText patientsText;
+    private final GameText registerText;
+    private final GameText configText;
+    /**
+     * ---------------------------------------------------------------------
+     *                               MENUS
+     * ---------------------------------------------------------------------
+     */
     private final InitialMenu initialMenu;
     private final LoginMenu loginMenu;
+    private final RegisterMenu registerMenu;
 
     public MainMenu() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
         uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
-        loginStage = new Stage(uiViewport);
         patientsStage = new Stage(uiViewport);
         registerStage = new Stage(uiViewport);
         configStage = new Stage(uiViewport);
@@ -63,9 +71,9 @@ public class MainMenu implements Screen{
         background = new Background();
         skin = new Skin(Gdx.files.internal(mainSkinDir));
         shadeSkin = new Skin(Gdx.files.internal(shadeSkinDir));
-        titleText = new GameText("Hungry Hamster", 10, 115);
+        GameText titleText = new GameText("Hungry Hamster", 10, 115);
         patientsText = new GameText("Pacientes", 22, 115);
-        whoPlaysText = new GameText("¿Quién juega?", 17, 115);
+        GameText whoPlaysText = new GameText("¿Quién juega?", 17, 115);
         whoPlaysText.setScales(0.15f, 0.38f);
         registerText = new GameText("Registro", 23, 115);
         configText = new GameText("Configura", 20, 125);
@@ -73,16 +81,17 @@ public class MainMenu implements Screen{
         //Experimental
         initialMenu = new InitialMenu(skin, new Stage(uiViewport), titleText);
         loginMenu = new LoginMenu(skin, new Stage(uiViewport), whoPlaysText);
+        registerMenu = new RegisterMenu(skin, new Stage(uiViewport), registerText);
     }
 
     @Override
     public void show() {
-        registerMenuConstruct();
 
         configMenuConstruct();
 
         initialMenu.uiConstruct();
         loginMenu.uiConstruct();
+        registerMenu.uiConstruct();
     }
 
     @Override
@@ -98,11 +107,10 @@ public class MainMenu implements Screen{
                 patientsText.draw(batch);
             break;
             case LOGIN:
-                //whoPlaysText.draw(batch);
                 loginMenu.render(batch);
             break;
             case REGISTER:
-                registerText.draw(batch);
+                registerMenu.render(batch);
             break;
             case CONFIG:
                 configText.draw(batch);
@@ -120,15 +128,10 @@ public class MainMenu implements Screen{
                 patientsStage.act(deltaTime);
                 break;
             case LOGIN:
-                //Gdx.input.setInputProcessor(loginStage);
-                //loginStage.draw();
-                //loginStage.act(deltaTime);
                 loginMenu.stageRender(deltaTime);
             break;
             case REGISTER:
-                Gdx.input.setInputProcessor(registerStage);
-                registerStage.draw();
-                registerStage.act(deltaTime);
+                registerMenu.stageRender(deltaTime);
             break;
             case CONFIG:
                 Gdx.input.setInputProcessor(configStage);
@@ -164,212 +167,9 @@ public class MainMenu implements Screen{
     public void dispose() {
         initialMenu.dispose();
         loginMenu.dispose();
+        registerMenu.dispose();
     }
 
-    private void loginMenuConstruct() {
-        final int btnWidth = 130;
-        //Labels
-        Label lblID = new Label("No. Carnet:", skin);
-        Label lblError = new Label("", skin);
-        //Text Fields
-        TextField idField = new TextField("", skin);
-        //Buttons
-        TextButton btnNewPatient = new TextButton("Nuevo paciente", skin);
-        TextButton btnNext = new TextButton("Siguiente", skin);
-        TextButton btnExit = new TextButton("Salir", skin);
-        TextButton btnPatients = new TextButton("Pacientes", skin);
-        //Listeners
-        btnNewPatient.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                menuState = MenuState.REGISTER;
-            }
-        });
-        btnNext.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                if(!Objects.equals(idField.getText(), "")) {
-                    //Protect more the variable
-                    //Search for the ID in database
-                    GameHandler.playerID = idField.getText();
-                    System.out.println("ID: " + GameHandler.playerID);
-                    menuState = MenuState.CONFIG;
-                }
-                else {
-                    lblError.setText("Coloca un No. de Carnet");
-                }
-            }
-        });
-        btnExit.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                System.exit(0);
-            }
-        });
-        btnPatients.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                menuState = MenuState.PATIENTS;
-            }
-        });
-        //Table
-        Table table = new Table();
-        table.setFillParent(true);
-        table.setPosition(0, 50);
-        Table btnTable = new Table();
-        btnTable.setFillParent(true);
-        btnTable.setPosition(0, -150);
-
-        //Table Interns
-        table.add(lblError).padBottom(10).colspan(2);
-        table.row();
-        table.add(lblID).width(95).height(50).padBottom(10).left();
-        table.add(idField).width(300).height(50).padBottom(10).left();
-        table.row();
-        table.add(btnNext).width(150).height(50).colspan(2);
-        table.row();
-        //table.debug();
-        //btnTable interns
-        btnTable.add(btnExit).width(btnWidth).height(50);
-        btnTable.add(btnPatients).width(btnWidth).height(50).padRight(25).padLeft(25);
-        btnTable.add(btnNewPatient).width(btnWidth).height(50).right();
-        //buttonsTable.debug();
-
-        //Stage
-        loginStage.addActor(table);
-        loginStage.addActor(btnTable);
-    }
-
-    private void registerMenuConstruct() {
-        final int lblPadRight = 100;
-        final int fieldPadRight = 100;
-        final int fieldHeight = 50, fieldWidth = 300;
-        //Labels
-        Label lblName = new Label("Nombre:", skin);
-        Label lblAge = new Label("Edad:", skin);
-        Label lblID = new Label("No.Carnet:", skin);
-        Label lblGender = new Label("Sexo:", skin);
-        Label lblError = new Label("", skin);
-        lblError.setColor(Color.BLACK);
-        //Text Fields
-        TextField fieldName = new TextField("", skin);
-        TextField fieldAge = new TextField("", skin);
-        TextField fieldID = new TextField("", skin);
-        //Buttons
-        TextButton btnAccept = new TextButton("Aceptar", skin);
-        TextButton btnReturn = new TextButton("Regresar", skin);
-        TextButton btnMale = new TextButton("Masculino", skin, "toggle");
-        TextButton btnFemale = new TextButton("Femenino", skin, "toggle");
-        //Listeners
-        btnAccept.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //Name Check
-                if(fieldName.getText() != null && !fieldName.getText().equals("") && !fieldName.getText().equals(" "))
-                    GameHandler.playerName = fieldName.getText().trim().toLowerCase();
-                else {
-                    lblError.setText("Porfavor ingresa un nombre");
-                    return;
-                }
-                //Age Check
-                if(fieldAge.getText() != null && !fieldAge.getText().equals("")) {
-                    try {
-                        GameHandler.playerAge = Integer.parseInt(fieldAge.getText().trim());
-                    }
-                    catch (NumberFormatException ex) {
-                        lblError.setText("Porfavor ingresa un numero en la edad");
-                        return;
-                    }
-                }
-                else {
-                    lblError.setText("Porfavor ingresa la edad");
-                    return;
-                }
-                //ID Check
-                if(fieldID.getText() != null && !fieldID.getText().equals(""))
-                    GameHandler.playerID = fieldName.getText().trim().toLowerCase();
-                else {
-                    lblError.setText("Porfavor ingresa un ID");
-                    return;
-                }
-                //Gender Check
-                if(GameHandler.playerGender == null) {
-                    lblError.setText("Porfavor selecciona un genero");
-                    return;
-                }
-                //Connect to database and send info
-                //Reset values
-                fieldName.setText("");
-                fieldAge.setText("");
-                fieldID.setText("");
-                btnMale.setChecked(false);
-                btnFemale.setChecked(false);
-                GameHandler.playerGender = null;
-                //Check if the profile exists
-                //TODO Perform write of the profile on a CSV File or database file
-                menuState = MenuState.CONFIG;
-            }
-        });
-        btnReturn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                //Reset values
-                fieldName.setText("");
-                fieldAge.setText("");
-                fieldID.setText("");
-                btnMale.setChecked(false);
-                btnFemale.setChecked(false);
-                GameHandler.playerGender = null;
-                menuState = MenuState.LOGIN;
-            }
-        });
-        btnMale.addListener(new ClickListener() {
-            @Override
-            public void clicked (InputEvent event, float x, float y) {
-                GameHandler.playerGender = "Male";
-                btnFemale.setChecked(false);
-            }
-        });
-        btnFemale.addListener(new ClickListener() {
-            @Override
-            public void clicked (InputEvent event, float x, float y) {
-                GameHandler.playerGender = "Female";
-                btnMale.setChecked(false);
-            }
-        });
-        //Table
-        Table table = new Table();
-        table.setFillParent(true);
-        table.setPosition(-20, 0);
-        Table btnTable = new Table();
-        btnTable.setFillParent(true);
-        btnTable.setPosition(0, -190);
-        //Table Interns
-        table.add(lblName).height(50).width(75).padLeft(lblPadRight).right();
-        table.add(fieldName).height(fieldHeight).width(fieldWidth).colspan(2).padRight(fieldPadRight).left();
-        table.row();
-        table.add(lblAge).height(50).width(75).padLeft(lblPadRight).right();
-        table.add(fieldAge).colspan(2).height(fieldHeight).width(fieldWidth).colspan(2).padRight(fieldPadRight).left();
-        table.row();
-        table.add(lblID).height(50).width(75).padLeft(lblPadRight).right().padRight(10);
-        table.add(fieldID).height(fieldHeight).width(fieldWidth).colspan(2).padRight(fieldPadRight).left();
-        table.row().padBottom(50);
-        table.add(lblGender).height(50).width(75).padLeft(lblPadRight).right();
-        table.add(btnMale).height(50).width(100).padLeft(20);
-        table.add(btnFemale).height(50).width(100).padRight(120);
-        //table.debug();
-
-        btnTable.add(btnReturn).height(50).width(150).padRight(150);
-        btnTable.add(btnAccept).height(50).width(150).right();
-        //btnTable.debug();
-
-        lblError.setAlignment(Align.center);
-        lblError.setPosition((float) GameHandler.NATIVE_RES_WIDTH/2, (float) GameHandler.NATIVE_RES_HEIGHT/2+150);
-        //Stage
-        registerStage.addActor(table);
-        registerStage.addActor(btnTable);
-        registerStage.addActor(lblError);
-    }
     private boolean fieldCheck(TextField fieldMaxStep, TextField fieldMinStep, Label lblError) {
         int fieldMaxCounts, fieldMinCounts;
         try {

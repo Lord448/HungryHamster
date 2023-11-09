@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.menu.stages;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,7 +13,6 @@ import ca.crit.hungryhamster.menu.MainMenu;
 public class InitialMenu extends Menus {
     private final TextButton btnPlay;
     private final TextButton btnFinish;
-    private Table table;
     public InitialMenu(Skin skin, Stage stage, GameText titleText) {
         this.skin = skin;
         super.stage = stage;
@@ -40,23 +38,23 @@ public class InitialMenu extends Menus {
             }
         });
         //Table
-        table = new Table();
-        table.setFillParent(true);
-        table.setPosition(0, -25);
+        parentTable = new Table();
+        parentTable.setFillParent(true);
+        parentTable.setPosition(0, -25);
         //------------------
         //Table Organization
         //------------------
         tableOrganization();
         //Stage
-        stage.addActor(table);
+        stage.addActor(parentTable);
     }
     @Override
     protected void tableOrganization() {
         //Table interns
-        table.row().padBottom(20);
-        table.add(btnPlay).width(200).height(60).padBottom(20);
-        table.row();
-        table.add(btnFinish).width(200).height(60);
+        parentTable.row().padBottom(20);
+        parentTable.add(btnPlay).width(200).height(60).padBottom(20);
+        parentTable.row();
+        parentTable.add(btnFinish).width(200).height(60);
         //table.debug();
     }
 }
