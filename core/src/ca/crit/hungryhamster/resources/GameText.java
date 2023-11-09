@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.main;
+package ca.crit.hungryhamster.resources;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

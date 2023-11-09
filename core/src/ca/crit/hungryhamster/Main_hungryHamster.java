@@ -4,7 +4,7 @@ package ca.crit.hungryhamster;
 import com.badlogic.gdx.Game;
 
 import ca.crit.hungryhamster.main.GameScreen;
-import ca.crit.hungryhamster.main.GameSounds;
+import ca.crit.hungryhamster.resources.GameSounds;
 import ca.crit.hungryhamster.menu.MainMenu;
 
 public class Main_hungryHamster extends Game {

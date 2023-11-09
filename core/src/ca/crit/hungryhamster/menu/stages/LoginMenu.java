@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -17,8 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;
-import ca.crit.hungryhamster.main.GameText;
-import ca.crit.hungryhamster.main.PrintTag;
+import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.PrintTag;
 import ca.crit.hungryhamster.menu.MainMenu;
 
 public class LoginMenu extends Menus{
@@ -82,11 +81,7 @@ public class LoginMenu extends Menus{
         btnPatients.addListener(new Listener(BTN_PATIENTS));
 
         //Tables
-        parentTable = new Table();
-        parentTable.setFillParent(true);
         parentTable.setPosition(0, 50);
-        btnTable = new Table();
-        btnTable.setFillParent(true);
         btnTable.setPosition(0, -150);
         //------------------
         //Table Organization

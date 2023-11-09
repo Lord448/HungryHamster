@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.resources.GameSounds;
 
 public class Wizard {
     private int width, height;

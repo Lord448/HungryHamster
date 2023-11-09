@@ -3,11 +3,10 @@ package ca.crit.hungryhamster.menu.stages;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import ca.crit.hungryhamster.main.GameText;
+import ca.crit.hungryhamster.resources.GameText;
 import ca.crit.hungryhamster.menu.MainMenu;
 
 public class InitialMenu extends Menus {
@@ -38,8 +37,6 @@ public class InitialMenu extends Menus {
             }
         });
         //Table
-        parentTable = new Table();
-        parentTable.setFillParent(true);
         parentTable.setPosition(0, -25);
         //------------------
         //Table Organization

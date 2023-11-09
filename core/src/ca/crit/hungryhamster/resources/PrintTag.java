@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.main;
+package ca.crit.hungryhamster.resources;
 
 
 public class PrintTag {
@@ -30,9 +30,10 @@ public class PrintTag {
     public static final String PURPLE_UNDERLINED = "\033[4;35m"; // PURPLE
     public static final String CYAN_UNDERLINED = "\033[4;36m";   // CYAN
     public static final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
+    public static final String defaultColor = CYAN;
 
     public static void Print(String TAG, String str) {
-        System.out.println(CYAN +  TAG + ": " + RESET + str);
+        System.out.println(defaultColor +  TAG + ": " + RESET + str);
     }
     public static void Print(String TAG, String str, String Color) {
         System.out.println(Color + TAG + ": " + RESET + str);

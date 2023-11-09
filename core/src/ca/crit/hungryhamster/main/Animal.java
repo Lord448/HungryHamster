@@ -1,6 +1,5 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -12,6 +11,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.resources.GameSounds;
+import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.PrintTag;
 import ca.crit.hungryhamster.time.Time;
 import ca.crit.hungryhamster.time.TimeMillis;
 import ca.crit.hungryhamster.time.Timer;

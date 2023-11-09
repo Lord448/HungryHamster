@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.main;
+package ca.crit.hungryhamster.resources;
 
 public enum TextAnimations {
     FADE(1),

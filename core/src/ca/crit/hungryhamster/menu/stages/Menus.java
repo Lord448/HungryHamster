@@ -6,15 +6,21 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import ca.crit.hungryhamster.main.GameText;
+import ca.crit.hungryhamster.resources.GameText;
 
 public abstract class Menus {
     protected String TAG;
     protected Skin skin;
     protected Stage stage;
     protected GameText titleText;
-    protected Table parentTable;
-    protected Table btnTable;
+    protected Table parentTable = new Table();
+    protected Table btnTable = new Table();
+    public Menus(){
+        parentTable.setFillParent(true);
+        parentTable.setPosition(0, 0);
+        btnTable.setFillParent(true);
+        btnTable.setPosition(0, 0);
+    }
     public abstract void uiConstruct();
     protected abstract void tableOrganization();
     public void stageRender(float deltaTime) {
