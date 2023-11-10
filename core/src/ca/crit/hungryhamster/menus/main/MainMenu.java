@@ -14,7 +14,7 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.menus.main.stages.ConfigMenu;
 import ca.crit.hungryhamster.menus.main.stages.PatientsMenu;
-import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.menus.main.stages.InitialMenu;
 import ca.crit.hungryhamster.menus.main.stages.LoginMenu;
 import ca.crit.hungryhamster.menus.main.stages.MenuState;

@@ -6,8 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import ca.crit.hungryhamster.menus.Menus;
-import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.text.GameText;
 
+//TODO PatientsMenu
 public class PatientsMenu extends Menus {
     /**
      * ---------------------------------------------------------------------
@@ -32,7 +33,6 @@ public class PatientsMenu extends Menus {
      *                               BUTTONS
      * ---------------------------------------------------------------------
      */
-
     public PatientsMenu(Skin skin, Stage stage, GameText titleText) {
         this.skin = skin;
         this.stage = stage;

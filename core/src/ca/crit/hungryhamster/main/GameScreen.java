@@ -19,8 +19,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.resources.GameSounds;
-import ca.crit.hungryhamster.resources.GameText;
-import ca.crit.hungryhamster.resources.PrintTag;
+import ca.crit.hungryhamster.resources.text.GameText;
+import ca.crit.hungryhamster.resources.text.PrintTag;
 import ca.crit.hungryhamster.resources.time.Time;
 import ca.crit.hungryhamster.resources.time.TimeMillis;
 import ca.crit.hungryhamster.resources.time.Timer;

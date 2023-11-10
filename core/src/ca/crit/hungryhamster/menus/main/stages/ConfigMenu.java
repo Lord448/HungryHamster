@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.Align;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.main.MainMenu;
 import ca.crit.hungryhamster.menus.Menus;
-import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.time.Time;
 import ca.crit.hungryhamster.resources.time.TimeFormatException;
 

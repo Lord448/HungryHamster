@@ -17,8 +17,8 @@ import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
-import ca.crit.hungryhamster.resources.GameText;
-import ca.crit.hungryhamster.resources.PrintTag;
+import ca.crit.hungryhamster.resources.text.GameText;
+import ca.crit.hungryhamster.resources.text.PrintTag;
 import ca.crit.hungryhamster.menus.main.MainMenu;
 
 public class LoginMenu extends Menus {

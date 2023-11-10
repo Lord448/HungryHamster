@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.resources;
+package ca.crit.hungryhamster.resources.text;
 
 
 public class PrintTag {

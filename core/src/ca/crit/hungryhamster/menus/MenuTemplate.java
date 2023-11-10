@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import ca.crit.hungryhamster.resources.GameText;
+import ca.crit.hungryhamster.resources.text.GameText;
 
 public class MenuTemplate extends Menus {
     /**
@@ -53,6 +53,7 @@ public class MenuTemplate extends Menus {
     protected void tableOrganization() {
 
     }
+
     private class Listener extends ChangeListener {
         BtnListeners btnListeners;
         public Listener(BtnListeners btnListeners) {
