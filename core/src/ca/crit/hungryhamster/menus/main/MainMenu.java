@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Background;
 import ca.crit.hungryhamster.menus.main.stages.ConfigMenu;
+import ca.crit.hungryhamster.menus.main.stages.PatientsMenu;
 import ca.crit.hungryhamster.resources.GameText;
 import ca.crit.hungryhamster.menus.main.stages.InitialMenu;
 import ca.crit.hungryhamster.menus.main.stages.LoginMenu;
@@ -21,15 +22,11 @@ import ca.crit.hungryhamster.menus.main.stages.RegisterMenu;
 
 public class MainMenu implements Screen{
     public static MenuState menuState;
-    //SCREEN
     private final Camera camera;
     private final Viewport viewport;
     private final Viewport uiViewport;
-    //GRAPHICS
     private final SpriteBatch batch;
     private final Background background;
-    private final Stage patientsStage, registerStage, configStage;
-    private final GameText patientsText;
     /**
      * ---------------------------------------------------------------------
      *                               MENUS
@@ -39,28 +36,30 @@ public class MainMenu implements Screen{
     private final LoginMenu loginMenu;
     private final RegisterMenu registerMenu;
     private final ConfigMenu configMenu;
+    private final PatientsMenu patientsMenu;
 
     public MainMenu() {
         final String mainSkinDir = "UISkin/uiskin.json";
         final String shadeSkinDir = "ShadeUISkin/uiskin.json";
+        //Skins
         Skin skin = new Skin(Gdx.files.internal(mainSkinDir));
         Skin shadeSkin = new Skin(Gdx.files.internal(shadeSkinDir));
-
-        camera = new OrthographicCamera();
-        viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
-        uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
-        patientsStage = new Stage(uiViewport);
-        registerStage = new Stage(uiViewport);
-        configStage = new Stage(uiViewport);
-        batch = new SpriteBatch();
-        background = new Background();
+        //Title Texts
         GameText titleText = new GameText("Hungry Hamster", 10, 115);
-        patientsText = new GameText("Pacientes", 22, 115);
+        GameText patientsText = new GameText("Pacientes", 22, 115);
         GameText whoPlaysText = new GameText("¿Quién juega?", 17, 115);
         whoPlaysText.setScales(0.15f, 0.38f);
         GameText registerText = new GameText("Registro", 23, 115);
         GameText configText = new GameText("Configura", 20, 125);
+        //General Graphics
+        camera = new OrthographicCamera();
+        viewport = new StretchViewport(GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT, camera);
+        uiViewport = new StretchViewport(GameHandler.NATIVE_RES_WIDTH, GameHandler.NATIVE_RES_HEIGHT, new OrthographicCamera());
+        batch = new SpriteBatch();
+        background = new Background();
+        //Menus
         initialMenu = new InitialMenu(skin, new Stage(uiViewport), titleText);
+        patientsMenu = new PatientsMenu(skin, new Stage(uiViewport), patientsText);
         loginMenu = new LoginMenu(skin, new Stage(uiViewport), whoPlaysText);
         registerMenu = new RegisterMenu(skin, new Stage(uiViewport), registerText);
         configMenu = new ConfigMenu(skin, shadeSkin, new Stage(uiViewport), configText);
@@ -70,6 +69,7 @@ public class MainMenu implements Screen{
     @Override
     public void show() {
         initialMenu.uiConstruct();
+        patientsMenu.uiConstruct();
         loginMenu.uiConstruct();
         registerMenu.uiConstruct();
         configMenu.uiConstruct();
@@ -85,7 +85,7 @@ public class MainMenu implements Screen{
                 initialMenu.render(batch);
             break;
             case PATIENTS:
-                patientsText.draw(batch);
+                patientsMenu.render(batch);
             break;
             case LOGIN:
                 loginMenu.render(batch);
@@ -104,9 +104,7 @@ public class MainMenu implements Screen{
                 initialMenu.stageRender(deltaTime);
             break;
             case PATIENTS:
-                Gdx.input.setInputProcessor(patientsStage);
-                patientsStage.draw();
-                patientsStage.act(deltaTime);
+                patientsMenu.stageRender(deltaTime);
                 break;
             case LOGIN:
                 loginMenu.stageRender(deltaTime);
@@ -145,6 +143,7 @@ public class MainMenu implements Screen{
     @Override
     public void dispose() {
         initialMenu.dispose();
+        patientsMenu.dispose();
         loginMenu.dispose();
         registerMenu.dispose();
         configMenu.dispose();

@@ -50,7 +50,6 @@ public class ConfigMenu extends Menus {
      *                                LABELS
      * ---------------------------------------------------------------------
      */
-    //Labels
     private final Label lblMaxStep;
     private final Label lblMinStep;
     private final Label lblTime;
@@ -61,7 +60,6 @@ public class ConfigMenu extends Menus {
      *                             TEXT FIELDS
      * ---------------------------------------------------------------------
      */
-    //Text Fields
     private final TextField fieldMaxStep;
     private final TextField fieldMinStep;
     private final TextField fieldTime;
@@ -72,7 +70,6 @@ public class ConfigMenu extends Menus {
      *                               BUTTONS
      * ---------------------------------------------------------------------
      */
-    //Buttons
     private final TextButton btnPlay;
     private final TextButton btnReturn;
     private final Button[] btnArrows = new Button[10];
@@ -81,7 +78,6 @@ public class ConfigMenu extends Menus {
      *                             CHECKBOXES
      * ---------------------------------------------------------------------
      */
-    //Checkboxes
     private final CheckBox cbExtraFruit;
     private final CheckBox cbRightHand;
     private final CheckBox cbLeftHand;
