@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus.main.stages;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -6,8 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.GameText;
-import ca.crit.hungryhamster.menu.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenu;
 
 public class InitialMenu extends Menus {
     private final TextButton btnPlay;

@@ -21,10 +21,10 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.resources.GameSounds;
 import ca.crit.hungryhamster.resources.GameText;
 import ca.crit.hungryhamster.resources.PrintTag;
-import ca.crit.hungryhamster.time.Time;
-import ca.crit.hungryhamster.time.TimeMillis;
-import ca.crit.hungryhamster.time.Timer;
-import ca.crit.hungryhamster.time.TimerMillis;
+import ca.crit.hungryhamster.resources.time.Time;
+import ca.crit.hungryhamster.resources.time.TimeMillis;
+import ca.crit.hungryhamster.resources.time.Timer;
+import ca.crit.hungryhamster.resources.time.TimerMillis;
 
 public class GameScreen implements Screen {
     /**

@@ -1,29 +1,43 @@
-package ca.crit.hungryhamster.time;
+package ca.crit.hungryhamster.resources.time;
 
-public class TimerMillis extends Timer {
-    protected final TimeMillis desiredTime;
-    protected final TimeMillis currentTime;
-    protected MillisecondElapsedCallback millisecondElapsedCallback;
-    protected long milliPast;
-
-    public TimerMillis(Modes mode, int desiredMinutes, int desiredSeconds, int desiredMillis) throws TimeFormatException {
-        super(mode, desiredMinutes, desiredSeconds);
-        this.desiredTime = new TimeMillis(desiredMinutes, desiredSeconds, desiredMillis);
-        currentTime = new TimeMillis();
-        milliPast = System.currentTimeMillis();
+public class Timer {
+    public enum Modes{
+        ONE_SHOT, //Calls one callback, then it stops
+        PERIODIC, //Calls a callback periodically
+        TIME_MEASURE //Just measure the time
     }
 
-    public TimerMillis(Modes mode, TimeMillis desiredTime) {
-        super(mode, desiredTime);
-        this.desiredTime = desiredTime;
-        this.currentTime = new TimeMillis();
+    public enum States{
+        RUNNING,
+        FINISHED,
+        STOP,
+    }
+    protected final Modes mode;
+    protected final Time desiredTime;
+    protected final Time currentTime;
+    protected States state = States.STOP;
+    protected PeriodElapsedCallback periodElapsedCallback;
+    protected SecondElapsedCallback secondElapsedCallback;
+    protected long timePast;
+
+    public Timer(Modes mode, int desiredMinutes, int desiredSeconds) throws TimeFormatException{
+        this.mode = mode;
+        desiredTime = new Time(desiredMinutes, desiredSeconds);
+        currentTime = new Time();
         timePast = System.currentTimeMillis();
     }
 
-    public TimerMillis (Modes mode) {
-        super(mode);
-        this.desiredTime = new TimeMillis();
-        this.currentTime = new TimeMillis();
+    public Timer(Modes mode, Time desiredTime) {
+        this.mode = mode;
+        this.desiredTime = desiredTime;
+        currentTime = new Time();
+        timePast = System.currentTimeMillis();
+    }
+
+    public Timer(Modes mode) {
+        this.mode = mode;
+        this.desiredTime = new Time();
+        this.currentTime = new Time();
         timePast = System.currentTimeMillis();
     }
 
@@ -32,14 +46,6 @@ public class TimerMillis extends Timer {
 
         if(state == States.RUNNING) {
             time = System.currentTimeMillis();
-            if(time - milliPast >= 1) {
-                if(millisecondElapsedCallback != null)
-                    millisecondElapsedCallback.millisecondElapsedCallback();
-                if(currentTime.getMilliseconds() >= 99)
-                    currentTime.setMilliseconds(0);
-                currentTime.addMilli();
-                milliPast = time;
-            }
             if (time - timePast >= 1000) {
                 if(secondElapsedCallback != null)
                     secondElapsedCallback.secondElapsedCallback();
@@ -100,7 +106,7 @@ public class TimerMillis extends Timer {
         return desiredTime.toString();
     }
 
-    public TimeMillis getTime() {
+    public Time getTime() {
         return currentTime;
     }
 
@@ -120,11 +126,19 @@ public class TimerMillis extends Timer {
         return state == States.RUNNING;
     }
 
-    public interface MillisecondElapsedCallback {
-        void millisecondElapsedCallback();
+    public interface PeriodElapsedCallback {
+        void periodElapsedCallback();
     }
 
-    public void setMillisecondElapsedCallback(TimerMillis.MillisecondElapsedCallback eventHandler){
-        millisecondElapsedCallback = eventHandler;
+    public void setPeriodElapsedCallback(PeriodElapsedCallback eventHandler) {
+        periodElapsedCallback = eventHandler;
+    }
+
+    public interface SecondElapsedCallback {
+        void secondElapsedCallback();
+    }
+
+    public void setSecondElapsedCallback(SecondElapsedCallback eventHandler) {
+        secondElapsedCallback = eventHandler;
     }
 }

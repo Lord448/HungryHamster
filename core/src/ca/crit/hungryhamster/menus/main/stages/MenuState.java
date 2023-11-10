@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus.main.stages;
 
 public enum MenuState {
         INIT,

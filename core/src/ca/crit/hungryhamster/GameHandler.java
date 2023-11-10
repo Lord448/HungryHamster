@@ -42,8 +42,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import ca.crit.hungryhamster.time.Time;
-import ca.crit.hungryhamster.time.TimeMillis;
+import ca.crit.hungryhamster.resources.time.Time;
+import ca.crit.hungryhamster.resources.time.TimeMillis;
 
 public class GameHandler {
     /**

@@ -1,9 +1,9 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus.main.stages;
 
-import static ca.crit.hungryhamster.menu.stages.LoginMenu.BtnListeners.BTN_EXIT;
-import static ca.crit.hungryhamster.menu.stages.LoginMenu.BtnListeners.BTN_NEW_PATIENT;
-import static ca.crit.hungryhamster.menu.stages.LoginMenu.BtnListeners.BTN_NEXT;
-import static ca.crit.hungryhamster.menu.stages.LoginMenu.BtnListeners.BTN_PATIENTS;
+import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_EXIT;
+import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_NEW_PATIENT;
+import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_NEXT;
+import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_PATIENTS;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -16,11 +16,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.GameText;
 import ca.crit.hungryhamster.resources.PrintTag;
-import ca.crit.hungryhamster.menu.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenu;
 
-public class LoginMenu extends Menus{
+public class LoginMenu extends Menus {
     /**
      * ---------------------------------------------------------------------
      *                         BUTTONS WITH LISTENERS

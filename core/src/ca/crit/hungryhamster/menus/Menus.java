@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;

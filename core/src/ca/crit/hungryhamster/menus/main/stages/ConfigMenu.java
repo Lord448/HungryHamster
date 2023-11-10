@@ -1,14 +1,13 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus.main.stages;
 
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.ARROW_BUTTONS;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.BTN_PLAY;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.BTN_RETURN;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.CB_BOTH_HANDS;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.CB_EXTRA_FRUIT;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.CB_FREE_TIME;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.CB_LEFT_HAND;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.CB_RIGHT_HAND;
-import static ca.crit.hungryhamster.menu.stages.ConfigMenu.BtnListeners.FIELD_EXTRA;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.BTN_PLAY;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.BTN_RETURN;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_BOTH_HANDS;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_EXTRA_FRUIT;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_FREE_TIME;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_LEFT_HAND;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_RIGHT_HAND;
+import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.FIELD_EXTRA;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -23,12 +22,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import ca.crit.hungryhamster.GameHandler;
-import ca.crit.hungryhamster.menu.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenu;
+import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.GameText;
-import ca.crit.hungryhamster.time.Time;
-import ca.crit.hungryhamster.time.TimeFormatException;
+import ca.crit.hungryhamster.resources.time.Time;
+import ca.crit.hungryhamster.resources.time.TimeFormatException;
 
-public class ConfigMenu extends Menus{
+public class ConfigMenu extends Menus {
     /**
      * ---------------------------------------------------------------------
      *                         BUTTONS WITH LISTENERS
@@ -241,9 +241,6 @@ public class ConfigMenu extends Menus{
         @Override
         public void changed(ChangeEvent event, Actor actor) {
             switch (btnListeners) {
-                case BTN_PLAY:
-
-                    break;
                 case BTN_RETURN:
                     btnReturnListener();
                     break;

@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster.time;
+package ca.crit.hungryhamster.resources.time;
 
 public class TimeMillis extends Time{
     protected int milliseconds;

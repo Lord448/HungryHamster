@@ -5,7 +5,7 @@ import com.badlogic.gdx.Game;
 
 import ca.crit.hungryhamster.main.GameScreen;
 import ca.crit.hungryhamster.resources.GameSounds;
-import ca.crit.hungryhamster.menu.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenu;
 
 public class Main_hungryHamster extends Game {
 	private GameSounds gameSounds;

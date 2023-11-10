@@ -1,9 +1,9 @@
-package ca.crit.hungryhamster.menu.stages;
+package ca.crit.hungryhamster.menus.main.stages;
 
-import static ca.crit.hungryhamster.menu.stages.RegisterMenu.BtnListeners.BTN_ACCEPT;
-import static ca.crit.hungryhamster.menu.stages.RegisterMenu.BtnListeners.BTN_RETURN;
-import static ca.crit.hungryhamster.menu.stages.RegisterMenu.BtnListeners.BTN_MALE;
-import static ca.crit.hungryhamster.menu.stages.RegisterMenu.BtnListeners.BTN_FEMALE;
+import static ca.crit.hungryhamster.menus.main.stages.RegisterMenu.BtnListeners.BTN_ACCEPT;
+import static ca.crit.hungryhamster.menus.main.stages.RegisterMenu.BtnListeners.BTN_RETURN;
+import static ca.crit.hungryhamster.menus.main.stages.RegisterMenu.BtnListeners.BTN_MALE;
+import static ca.crit.hungryhamster.menus.main.stages.RegisterMenu.BtnListeners.BTN_FEMALE;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -15,10 +15,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.GameText;
-import ca.crit.hungryhamster.menu.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenu;
 
-public class RegisterMenu extends Menus{
+public class RegisterMenu extends Menus {
     /**
      * ---------------------------------------------------------------------
      *                         BUTTONS WITH LISTENERS
