@@ -106,7 +106,7 @@ public class GameHandler {
     public static int sessionReps = 0; //Repetitions of the session
     public static int sessionUncompletedReps = 0; //Uncompleted repetitions on the session
     public static int successfulSteps = 0; //Successful steps on the session
-
+    public static List<List<TimeMillis>> totalTimeInSteps = new ArrayList<>(); //Have lists of all the times of the patient
     /**
      * --------------------------------------------------------------------------
      *                            PATIENT INFORMATION
