@@ -274,9 +274,9 @@ public class ConfigMenu extends Menus {
                         GameHandler.minStep = Integer.parseInt(fieldMinStep.getText().trim());
                         GameHandler.numHouseSteps = GameHandler.maxStep - GameHandler.minStep;
                         if(fieldTime.getText().equals("Libre"))
-                            GameHandler.sessionTime = new Time(0, 0);
+                            GameHandler.limitSessionTime = new Time(0, 0);
                         else
-                            GameHandler.sessionTime = Time.parseTime(fieldTime.getText().trim());
+                            GameHandler.limitSessionTime = Time.parseTime(fieldTime.getText().trim());
                         if(fieldReps.getText().equalsIgnoreCase("Libre"))
                             GameHandler.sessionReps = 0;
                         else

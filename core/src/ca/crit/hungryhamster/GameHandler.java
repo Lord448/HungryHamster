@@ -99,14 +99,16 @@ public class GameHandler {
      *                        PATIENT PERFORMANCE MEASURES
      * --------------------------------------------------------------------------
      */
-    public static Time sessionTime = new Time(); //Mean time of the session
+    public static Time limitSessionTime = new Time(); //Limit time of the session if it exists
+    public static Time sessionTime = new Time(); //Duration of the session
     public static TimeMillis meanSessionTimeStep; //Mean time to complete a step per session
     public static List<TimeMillis> meanRepTimeStep = new ArrayList<TimeMillis>(); //List of mean time to complete step per Repetition
     public static List<Time> repsTime = new ArrayList<Time>(); //Time to complete the repetition
     public static int sessionReps = 0; //Repetitions of the session
     public static int sessionUncompletedReps = 0; //Uncompleted repetitions on the session
     public static int successfulSteps = 0; //Successful steps on the session
-    public static List<List<TimeMillis>> totalTimeInSteps = new ArrayList<>(); //Have lists of all the times of the patient
+    public static List<List<TimeMillis>> allTimeInSteps = new ArrayList<>(); //Have lists of all the times of the patient
+
     /**
      * --------------------------------------------------------------------------
      *                            PATIENT INFORMATION
@@ -140,7 +142,7 @@ public class GameHandler {
     public static void init(float musicVolume, int env) {
         //Extract the ID's
         //Setting global variables
-        sessionTime = new Time();
+        limitSessionTime = new Time();
         GameHandler.musicVolume = musicVolume;
         GameHandler.effectsVolume = musicVolume / 4;
         GameHandler.environment = env;

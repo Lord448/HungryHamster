@@ -218,9 +218,9 @@ public class TimeMillis extends Time{
 
     public void divide(int denominator) {
         if(denominator == 0)
-            throw new NumberFormatException("Cannot divide by zero");
+            throw new TimeFormatException("Cannot divide by zero");
         if(denominator < 0)
-            throw new NumberFormatException("Cannot divide by a negative number");
+            throw new TimeFormatException("Cannot divide by a negative number");
 
         int totalTime = translateToInt(this);
         totalTime /= denominator;

@@ -2,6 +2,7 @@ package ca.crit.hungryhamster.main;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
@@ -28,6 +29,8 @@ public class Animal {
     private boolean isFinished = false;
     private boolean oneActionFlag = true;
     private boolean moveToUpHouse = false;
+    public boolean started = false;
+    private boolean meanIsCalculated = false;
     private final int width;
     private final int height;
     private int animalCounter = 0;
@@ -40,10 +43,11 @@ public class Animal {
     private final GameText extraText;
     private final Sound victorySound;
     public Circle hitbox;
+    public final Timer sessionTimer;
     public final Timer timer;
     private Time repTime;
     private final TimerMillis timerMillis;
-    private final List<TimeMillis> stepTimeList = new ArrayList<>();
+    public final List<TimeMillis> stepTimeList = new ArrayList<>();
 
     public Animal (float x, float y, int width, int height, float speed) {
         float positionSet = 0;
@@ -62,6 +66,7 @@ public class Animal {
         extraText.setScaleX(0.1f);
         nextPin = GameHandler.minStep;
         timer = new Timer(Timer.Modes.TIME_MEASURE);
+        sessionTimer = new Timer(Timer.Modes.TIME_MEASURE);
         repTime = new Time();
         timerMillis = new TimerMillis(Timer.Modes.TIME_MEASURE);
         //Each position has a step of 7.5 units when we have a length of 8 positions
@@ -86,6 +91,7 @@ public class Animal {
         batch.draw(animal_texture, x, y, width, height);
         timer.update(true);
         timerMillis.update(true);
+        sessionTimer.update(true);
 
         hitbox.setPosition(x, y);
         if(GameHandler.environment == GameHandler.DESKTOP_ENV)
@@ -99,7 +105,12 @@ public class Animal {
         else if (isFinished) {
             winText.draw(batch);
             if(oneActionFlag) {
-                PrintTag.Print(TAG, "Finished " + timer);
+                GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
+                GameHandler.allTimeInSteps.add(new ArrayList<>(stepTimeList));
+                PrintTag.print(TAG, "Added stepTimeList");
+                PrintTag.print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
+                stepTimeList.clear();
+                PrintTag.print(TAG, "Finished " + timer);
                 timer.stop();
                 oneActionFlag = false;
             }
@@ -116,6 +127,9 @@ public class Animal {
     private void checkKeyPressed(){
         for(int i = GameHandler.minStep; i < GameHandler.countsToWin+GameHandler.extraStep; i++) {
             if(Gdx.input.isKeyJustPressed(GameHandler.key[i])) {
+                PrintTag.print(TAG, "Key: " + i);
+                PrintTag.print(TAG, "Counts" + GameHandler.countsToWin);
+
                 //Quick and dirty zone
                 if(isInHouse) {
                     if(i == nextPin) {
@@ -125,21 +139,21 @@ public class Animal {
                             isFinished = true;
                             isInHouse = false;
                             GameSounds.megaWin();
-                            GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
-                            PrintTag.Print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
                         }
                         //System.out.println("CTW " + nextPin + " | " + (GameHandler.countsToWin));
                     }
                 }
                 //Standard zone
                 if(i == nextPin){
+                    PrintTag.print(TAG, "Nextpin: " + nextPin);
                     //Acquiring Measure
                     if (i == 0) {
                         timerMillis.start();
-                        PrintTag.Print(TAG, "Timer Started");
+                        PrintTag.print(TAG, "Timer Started");
+                        started = true;
                     }
                     else {
-                        PrintTag.Print(TAG, "Millis " + timerMillis.toString());
+                        PrintTag.print(TAG, "Millis " + timerMillis.toString());
                         stepTimeList.add(new TimeMillis(timerMillis.getTime()));
                         timerMillis.restart();
                     }
@@ -149,6 +163,7 @@ public class Animal {
                     GameHandler.touchPins[i] = true;
                     GameSounds.jump();
                 }
+                //TODO Solve movement bug when pressed a lot of keys
                 for(int j = 0; j < GameHandler.maxStep; j++) {
                     if(j != i)
                         GameHandler.touchPins[j] = false;
@@ -168,6 +183,7 @@ public class Animal {
                 }
                 else if(currentPos < positions[index]-GameHandler.animHysteresis){ //Moving up
                     timer.start();
+                    sessionTimer.start();
                     y += Gdx.graphics.getDeltaTime()*speed;
                     //Checking if we have reached the position
                     if(y >= positions[animalCounter] - GameHandler.animHysteresis) {

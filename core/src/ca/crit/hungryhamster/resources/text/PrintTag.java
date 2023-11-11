@@ -32,10 +32,10 @@ public class PrintTag {
     public static final String WHITE_UNDERLINED = "\033[4;37m";  // WHITE
     public static final String defaultColor = CYAN;
 
-    public static void Print(String TAG, String str) {
+    public static void print(String TAG, String str) {
         System.out.println(defaultColor +  TAG + ": " + RESET + str);
     }
-    public static void Print(String TAG, String str, String Color) {
+    public static void print(String TAG, String str, String Color) {
         System.out.println(Color + TAG + ": " + RESET + str);
     }
 }

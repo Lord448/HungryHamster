@@ -148,10 +148,9 @@ public class LoginMenu extends Menus {
 
         private void btnNextListener() {
             if (!Objects.equals(idField.getText(), "")) {
-                //TODO Protect more the variable
                 //TODO Search for the ID in database
                 GameHandler.playerID = idField.getText();
-                PrintTag.Print(TAG, "ID: " + GameHandler.playerID);
+                PrintTag.print(TAG, "ID: " + GameHandler.playerID);
                 MainMenu.menuState = MenuState.CONFIG;
                 lblError.setText("");
             } else {

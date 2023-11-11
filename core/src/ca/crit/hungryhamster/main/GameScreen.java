@@ -17,11 +17,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.resources.GameSounds;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.text.PrintTag;
-import ca.crit.hungryhamster.resources.time.Time;
 import ca.crit.hungryhamster.resources.time.TimeMillis;
 import ca.crit.hungryhamster.resources.time.Timer;
 import ca.crit.hungryhamster.resources.time.TimerMillis;
@@ -52,7 +53,6 @@ public class GameScreen implements Screen {
      */
     private Food[] food;
     private final TimerMillis timerGameTime;
-    private TimeMillis repStepTime;
     /**
      *   USER INTERFACE
      */
@@ -140,7 +140,6 @@ public class GameScreen implements Screen {
     public void render(float deltaTime) {
         for(Food i : food) {
             if(Intersector.overlaps(animal.hitbox, i.hitbox) && !i.isPicked()) {
-                //System.out.println("Collide on " + i);
                 i.setPicked(true);
                 GameSounds.eat();
             }
@@ -198,12 +197,10 @@ public class GameScreen implements Screen {
     }
 
     private void graphicsRender(float deltaTime) {
-        Time time = new Time();
-        time.addTime(animal.timer.getTime());
-        time.addTime(GameHandler.sessionTime); //TODO This is the limit time
+        GameHandler.sessionTime = animal.sessionTimer.getTime();
 
         lblTime.setText("Tiempo de repeticion " + animal.timer);
-        lblTimeSession.setText("Tiempo de sesion " + time);
+        lblTimeSession.setText("Tiempo de sesion " + GameHandler.sessionTime);
         lblTimeMills.setText("T: " + timerGameTime);
         Gdx.input.setInputProcessor(stage);
         stage.getViewport().apply();
@@ -240,14 +237,16 @@ public class GameScreen implements Screen {
                 }
                 else {
                     //TODO Handle time mean
-                    //TODO Fix Fruit bug when reset -- Posibly only when no UI
+                    //TODO Fix Fruit bug when reset -- Possibly only when no UI
+                    GameHandler.allTimeInSteps.add(new ArrayList<>(animal.stepTimeList));
+                    PrintTag.print(TAG, "Added animal.stepTimeList");
+                    animal.stepTimeList.clear();
                     GameHandler.sessionUncompletedReps++;
                     lblRepsUncompleted.setText("Reps Incompletas: " + GameHandler.sessionUncompletedReps);
                 }
-                resetRepetition();
-                GameHandler.sessionTime.addTime(animal.timer.getTime());
+                GameHandler.limitSessionTime.addTime(animal.timer.getTime());
                 GameHandler.repsTime.add(animal.timer.getTime());
-                animal.timer.reset();
+                resetRepetition();
             }
         });
 
@@ -255,9 +254,23 @@ public class GameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 sessionFinished = true;
-                GameHandler.meanSessionTimeStep = GameHandler.calculateMeanOfTimeMillis(GameHandler.meanRepTimeStep);
-                PrintTag.Print(TAG, "Mean session time Step: " + GameHandler.meanSessionTimeStep);
-                PrintTag.Print(TAG, "Successful steps: " + GameHandler.successfulSteps);
+                if(animal.started) {
+                    if(GameHandler.meanRepTimeStep.isEmpty()) {
+                        if(!animal.stepTimeList.isEmpty()) {
+                            GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(animal.stepTimeList)));
+                            animal.stepTimeList.clear();
+                            GameHandler.meanSessionTimeStep = GameHandler.calculateMeanOfTimeMillis(GameHandler.meanRepTimeStep);
+                        }
+                    }
+                    else
+                        GameHandler.meanSessionTimeStep = GameHandler.calculateMeanOfTimeMillis(GameHandler.meanRepTimeStep);
+                    animal.sessionTimer.stop();
+                    GameHandler.sessionTime = animal.sessionTimer.getTime();
+                    PrintTag.print(TAG, "Mean session time Step: " + GameHandler.meanSessionTimeStep);
+                    PrintTag.print(TAG, "Successful steps: " + GameHandler.successfulSteps);
+                }
+                else
+                    PrintTag.print(TAG, "No started session");
             }
         });
         lblRepsUncompleted.setPosition(xREPS, yTOP_TEXT);
@@ -280,6 +293,7 @@ public class GameScreen implements Screen {
 
     private void resetRepetition() {
         animal.reset();
+        animal.timer.reset();
         //Reset Food
         for(Food i : food) {
             i.setPicked(false);

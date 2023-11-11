@@ -146,6 +146,8 @@ public class Time {
 
     public void addTime(Time time) {
         try {
+            if(time.getMinutes() == 0 && time.getSeconds() == 0)
+                return;
             addTime(time.getMinutes(), time.getSeconds());
         }
         catch (TimeFormatException ex) {
@@ -155,6 +157,8 @@ public class Time {
 
     public void addTime(int mins, int secs) throws TimeFormatException{
         assertPositiveTime(mins, secs);
+        if(mins == 0 && secs == 0)
+            return;
         int tmp;
         minutes += mins;
         for(tmp = secs + seconds; tmp > 60; tmp-=60)
