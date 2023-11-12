@@ -103,7 +103,6 @@ public class ConfigMenu extends Menus {
     private final String initStringTime = "1:00";
     public ConfigMenu(Skin skin, Skin shadeSkin, Stage stage, GameText titleText) {
         this.skin = skin;
-        //this.skin = skin;
         this.stage = stage;
         this.titleText = titleText;
         //Labels

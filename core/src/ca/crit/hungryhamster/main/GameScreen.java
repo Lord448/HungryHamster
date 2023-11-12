@@ -187,6 +187,7 @@ public class GameScreen implements Screen {
         wizard.dispose();
         animal.dispose();
         WinText.dispose();
+        batch.dispose();
     }
 
     private void graphicsRender(float deltaTime) {

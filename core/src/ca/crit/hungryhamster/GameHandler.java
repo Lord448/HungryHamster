@@ -56,7 +56,7 @@ public class GameHandler {
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
     public static final int DEBUG_RESUME = 4;
-    public static final int DEBUG_MODE = DEBUG_GAME; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_RESUME; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
@@ -111,7 +111,7 @@ public class GameHandler {
     public static TimeMillis meanSessionTimeStep; //Mean time to complete a step per session
     public static List<TimeMillis> meanRepTimeStep = new ArrayList<TimeMillis>(); //List of mean time to complete step per Repetition
     public static List<Time> repsTime = new ArrayList<Time>(); //Time to complete the repetition
-    public static int sessionReps = 0; //Repetitions of the session
+    public static int sessionReps = 0; //Completed session repetitions
     public static int sessionUncompletedReps = 0; //Uncompleted repetitions on the session
     public static int successfulSteps = 0; //Successful steps on the session
     public static List<List<TimeMillis>> allTimeInSteps = new ArrayList<>(); //Have lists of all the times of the patient
@@ -126,7 +126,7 @@ public class GameHandler {
     public static String playerGender;
     public static int playerWorkingHand;
     public static int playerAge;
-    public static int playerLastNumSteps; //TODO Register the last step configurated
+    public static int playerLastNumSteps; //TODO Register the last step configuration
     public static Date currentDate; //TODO Get the current date
     /**
      * --------------------------------------------------------------------------
