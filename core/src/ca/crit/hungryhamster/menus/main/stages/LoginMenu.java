@@ -19,7 +19,7 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.text.PrintTag;
-import ca.crit.hungryhamster.menus.main.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 
 public class LoginMenu extends Menus {
     /**
@@ -142,7 +142,7 @@ public class LoginMenu extends Menus {
          * ---------------------------------------------------------------------
          */
         private void btnNewPatientListener() {
-            MainMenu.menuState = MenuState.REGISTER;
+            MainMenuScreen.mainMenuState = MainMenuState.REGISTER;
             lblError.setText("");
         }
 
@@ -151,7 +151,7 @@ public class LoginMenu extends Menus {
                 //TODO Search for the ID in database
                 GameHandler.playerID = idField.getText();
                 PrintTag.print(TAG, "ID: " + GameHandler.playerID);
-                MainMenu.menuState = MenuState.CONFIG;
+                MainMenuScreen.mainMenuState = MainMenuState.CONFIG;
                 lblError.setText("");
             } else {
                 lblError.setText("Coloca un No. de Carnet");
@@ -163,7 +163,7 @@ public class LoginMenu extends Menus {
         }
 
         private void btnPatientsListener() {
-            MainMenu.menuState = MenuState.PATIENTS;
+            MainMenuScreen.mainMenuState = MainMenuState.PATIENTS;
             lblError.setText("");
         }
     }

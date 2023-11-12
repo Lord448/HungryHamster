@@ -55,12 +55,19 @@ public class GameHandler {
     public static final int DEBUG_MENU = 1;
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
-    public static final int DEBUG_MODE = DEBUG_NONE; //Debug constant
+    public static final int DEBUG_RESUME = 4;
+    public static final int DEBUG_MODE = DEBUG_GAME; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
      * --------------------------------------------------------------------------
      */
+    public enum Screens {
+        MenuScreen,
+        GameScreen,
+        ResumeScreen,
+        IsSet
+    }
     public static final int LADDER_MAX_STEPS = 32;
     public static final int DESKTOP_ENV = 0;
     public static final int MOBILE_ENV = 1;
@@ -92,7 +99,7 @@ public class GameHandler {
     public static int environment;
     public static final double animHysteresis = 0.30;
     public static boolean wizardSpell  = false;
-    public static boolean startGame = false;
+    public static Screens currentScreen = Screens.IsSet;
     public static float[] foodPositions;
     /**
      * --------------------------------------------------------------------------
@@ -119,8 +126,8 @@ public class GameHandler {
     public static String playerGender;
     public static int playerWorkingHand;
     public static int playerAge;
-    public static int playerLastNumSteps;
-    public static Date currentDate;
+    public static int playerLastNumSteps; //TODO Register the last step configurated
+    public static Date currentDate; //TODO Get the current date
     /**
      * --------------------------------------------------------------------------
      *                         GAME INTERFACE & INTERACT

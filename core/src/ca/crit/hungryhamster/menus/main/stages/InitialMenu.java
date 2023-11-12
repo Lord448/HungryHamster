@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.text.GameText;
-import ca.crit.hungryhamster.menus.main.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 
 public class InitialMenu extends Menus {
     private final TextButton btnPlay;
@@ -28,7 +28,7 @@ public class InitialMenu extends Menus {
         btnPlay.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MainMenu.menuState = MenuState.LOGIN;
+                MainMenuScreen.mainMenuState = MainMenuState.LOGIN;
             }
         });
         btnFinish.addListener(new ChangeListener() {

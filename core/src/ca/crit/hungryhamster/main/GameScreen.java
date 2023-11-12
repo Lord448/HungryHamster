@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.ArrayList;
 
 import ca.crit.hungryhamster.GameHandler;
+import ca.crit.hungryhamster.menus.resume.ResumeMenu;
 import ca.crit.hungryhamster.resources.GameSounds;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.text.PrintTag;
@@ -56,9 +57,9 @@ public class GameScreen implements Screen {
     /**
      *   USER INTERFACE
      */
-    private Skin skin;
-    private Skin shadeSkin;
-    private Stage stage;
+    private final Skin skin;
+    private final Skin shadeSkin;
+    private final Stage stage;
     private Label lblTime;
     private Label lblReps;
     private Label lblRepsUncompleted;
@@ -68,10 +69,6 @@ public class GameScreen implements Screen {
      *   TEXT
      */
     private final GameText WinText;
-    /**
-     *   GENERAL NON OBJECT FIXED TYPES
-     */
-    private boolean sessionFinished = false;
 
     public GameScreen(){
         /*SCREEN*/
@@ -161,10 +158,6 @@ public class GameScreen implements Screen {
         batch.end();
         graphicsRender(deltaTime);
         timerGameTime.update(true);
-
-        if(sessionFinished) {
-            //Show Resume UI
-        }
     }
 
     @Override
@@ -253,7 +246,6 @@ public class GameScreen implements Screen {
         btnEndSession.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                sessionFinished = true;
                 if(animal.started) {
                     if(GameHandler.meanRepTimeStep.isEmpty()) {
                         if(!animal.stepTimeList.isEmpty()) {
@@ -271,6 +263,7 @@ public class GameScreen implements Screen {
                 }
                 else
                     PrintTag.print(TAG, "No started session");
+                GameHandler.currentScreen = GameHandler.Screens.ResumeScreen;
             }
         });
         lblRepsUncompleted.setPosition(xREPS, yTOP_TEXT);

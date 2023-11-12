@@ -17,7 +17,7 @@ import com.badlogic.gdx.utils.Align;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.text.GameText;
-import ca.crit.hungryhamster.menus.main.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 
 public class RegisterMenu extends Menus {
     /**
@@ -198,7 +198,7 @@ public class RegisterMenu extends Menus {
             GameHandler.playerGender = null;
             //Check if the profile exists
             //TODO Perform write of the profile on a CSV File or database file
-            MainMenu.menuState = MenuState.CONFIG;
+            MainMenuScreen.mainMenuState = MainMenuState.CONFIG;
         }
 
         private void btnReturnListener() {
@@ -209,7 +209,7 @@ public class RegisterMenu extends Menus {
             btnMale.setChecked(false);
             btnFemale.setChecked(false);
             GameHandler.playerGender = null;
-            MainMenu.menuState = MenuState.LOGIN;
+            MainMenuScreen.mainMenuState = MainMenuState.LOGIN;
         }
 
         private void btnMaleListener() {

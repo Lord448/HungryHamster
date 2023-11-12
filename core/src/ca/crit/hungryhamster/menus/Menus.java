@@ -17,10 +17,10 @@ public abstract class Menus {
     protected Skin skin;
     protected Stage stage;
     protected final Viewport uiViewport;
-    protected GameText titleText;
+    protected GameText titleText = null;
     protected Table parentTable = new Table();
     protected Table btnTable = new Table();
-    public Menus(){
+    protected Menus(){
         parentTable.setFillParent(true);
         parentTable.setPosition(0, 0);
         btnTable.setFillParent(true);
@@ -36,13 +36,15 @@ public abstract class Menus {
         stage.act(deltaTime);
     }
     public void render(SpriteBatch batch) {
-        titleText.draw(batch);
+        if(titleText != null)
+            titleText.draw(batch);
     }
     public void update(int width, int height, boolean centerCamera) {
         uiViewport.update(width, height, centerCamera);
     }
     public void dispose() {
-        titleText.dispose();
+        if(titleText != null)
+            titleText.dispose();
     }
     public Stage getStage() {
         return stage;

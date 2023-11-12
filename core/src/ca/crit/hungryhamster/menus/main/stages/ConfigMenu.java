@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import ca.crit.hungryhamster.GameHandler;
-import ca.crit.hungryhamster.menus.main.MainMenu;
+import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.time.Time;
@@ -289,7 +289,7 @@ public class ConfigMenu extends Menus {
                             notReachingMaxSteps = (GameHandler.maxStep + GameHandler.extraStep) < GameHandler.LADDER_MAX_STEPS;
                         //Start the game
                         if(fieldCheck(fieldMaxStep, fieldMinStep, lblError) && isAllCBChecked && notReachingMaxSteps)
-                            GameHandler.startGame = true;
+                            GameHandler.currentScreen = GameHandler.Screens.GameScreen;
                         else if(!isAllCBChecked)
                             lblError.setText("Seleccione que manos se usaran");
                         else if(!notReachingMaxSteps)
@@ -323,7 +323,7 @@ public class ConfigMenu extends Menus {
         }
 
         private void btnReturnListener() {
-            MainMenu.menuState = MenuState.LOGIN;
+            MainMenuScreen.mainMenuState = MainMenuState.LOGIN;
         }
 
         private void fieldExtraListener() {

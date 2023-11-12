@@ -1,6 +1,6 @@
 package ca.crit.hungryhamster.menus.main.stages;
 
-public enum MenuState {
+public enum MainMenuState {
         INIT,
         PATIENTS,
         LOGIN,
