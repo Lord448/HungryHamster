@@ -17,14 +17,12 @@ public class ResumeScreen extends MenusScreen {
      *   CHARACTERS & OBJECTS
      */
     private final Wizard wizard;
-    private final Texture treeHouse;
     /**
      *   MENUS & GRAPHICS
      */
     private final ResumeMenu resumeMenu;
     public ResumeScreen() {
-        treeHouse = new Texture("Background/tree_house.png");
-        wizard = new Wizard(GameHandler.WORLD_WIDTH/2 - 25 , 2, 26, 25, 1/10f);
+        wizard = new Wizard(GameHandler.WORLD_WIDTH/2 - 30 , 2, 26, 25, 1/10f);
         GameText titleText = new GameText("Resumen", 0, 100); //TODO Adjust position
 
         titleText.setScales(0.15f, 0.38f);
@@ -43,8 +41,6 @@ public class ResumeScreen extends MenusScreen {
 
         superClassRender(delta, batch);
 
-        //TreeHouse render
-        batch.draw(treeHouse, (float) GameHandler.WORLD_WIDTH/2 - 27, 0, GameHandler.WORLD_WIDTH, GameHandler.WORLD_HEIGHT+30);
         //Characters
         wizard.render(batch);
         batch.end();

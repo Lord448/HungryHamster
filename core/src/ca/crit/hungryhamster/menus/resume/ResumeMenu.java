@@ -1,9 +1,10 @@
 package ca.crit.hungryhamster.menus.resume;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
+import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_DG_NO;
+import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_DG_YES;
+import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_RESTART;
+import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_SAVE_FILE;
+
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -21,6 +22,7 @@ import java.util.List;
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
 import ca.crit.hungryhamster.resources.text.GameText;
+import ca.crit.hungryhamster.resources.text.PrintTag;
 import ca.crit.hungryhamster.resources.time.Time;
 
 //TODO Resume Menu
@@ -31,7 +33,10 @@ public class ResumeMenu extends Menus {
      * ---------------------------------------------------------------------
      */
     enum BtnListeners{
-
+        BTN_SAVE_FILE,
+        BTN_RESTART,
+        BTN_DG_YES,
+        BTN_DG_NO,
     }
     /**
      * ---------------------------------------------------------------------
@@ -40,6 +45,9 @@ public class ResumeMenu extends Menus {
      */
     private final Label lblCurrentDate;
     private final Label lblPutFileName;
+    private final Label lblDialogMessageSave;
+    private final Label lblDialogMessageExit;
+    private final Label lblDialogMessageOut;
     /**
      * ---------------------------------------------------------------------
      *                             TEXT FIELDS
@@ -52,6 +60,13 @@ public class ResumeMenu extends Menus {
      * ---------------------------------------------------------------------
      */
     private final TextButton btnSaveFile;
+    private final TextButton btnRestart;
+    private final TextButton btnDgSaveYes;
+    private final TextButton btnDgSaveNo;
+    private final TextButton btnDgResetYes;
+    private final TextButton btnDgResetNo;
+    private final TextButton btnDgOutYes;
+    private final TextButton btnDgOutNo;
     /**
      * ---------------------------------------------------------------------
      *                              TABLES
@@ -60,6 +75,9 @@ public class ResumeMenu extends Menus {
     private final Table infoTable;
     private final Table performanceTable;
     private final Table saveFileTable;
+    private final Table dialogSaveTable;
+    private final Table dialogExitTable;
+    private final Table dialogOutTable;
     /**
      * ---------------------------------------------------------------------
      *                               INTERNS
@@ -67,16 +85,25 @@ public class ResumeMenu extends Menus {
      */
     private List<Label> playerInfo = new ArrayList<Label>();
     private List<Label> playerPerformance = new ArrayList<Label>();
-    private final Dialog dgNoFileName;
+    private final Dialog dgSaveFile;
+    private final Dialog dgExit;
+    private final Dialog dgOut;
     private final Skin shadeSkin;
     public ResumeMenu(Skin skin, Skin shadeSkin, Stage stage, GameText titleText) {
+        TAG = "ResumeMenu";
         this.skin = skin;
         this.shadeSkin = shadeSkin;
         this.stage = stage;
         this.titleText = titleText;
         //Labels
-        lblPutFileName = new Label("Coloca el nombre del archivo", skin);
+        lblPutFileName = new Label("Nombre del archivo", skin);
         lblCurrentDate = new Label("Fecha: " + GameHandler.currentDate, skin);
+        lblDialogMessageSave = new Label("", skin);
+        lblDialogMessageSave.setAlignment(Align.center);
+        lblDialogMessageExit = new Label("", skin);
+        lblDialogMessageExit.setAlignment(Align.center);
+        lblDialogMessageOut = new Label("", skin);
+        lblDialogMessageOut.setAlignment(Align.center);
         lblInfoConstruct();
         lblPerformanceConstruct();
         //TextField
@@ -86,21 +113,50 @@ public class ResumeMenu extends Menus {
         infoTable = new Table();
         performanceTable = new Table();
         saveFileTable = new Table();
+        dialogSaveTable = new Table();
+        dialogExitTable = new Table();
+        dialogOutTable = new Table();
         //Buttons
         btnSaveFile = new TextButton("Guardar Archivo", skin);
+        btnRestart = new TextButton("Reiniciar", skin);
+        btnDgSaveYes = new TextButton("Si", shadeSkin);
+        btnDgSaveNo = new TextButton("No", shadeSkin);
+        btnDgResetYes = new TextButton("Si", skin);
+        btnDgResetNo = new TextButton("No", skin);
+        btnDgOutYes = new TextButton("Si", skin);
+        btnDgOutNo = new TextButton("No", skin);
         //Dialog
-        dgNoFileName = new Dialog("Sample", shadeSkin);
+        dgSaveFile = new Dialog("Advertencia", skin);
+        dgExit = new Dialog("Reiniciar", skin);
+        dgOut = new Dialog("Salir", skin);
     }
 
     @Override
     public void uiConstruct() {
         //Listeners
+        btnSaveFile.addListener(new Listener(BTN_SAVE_FILE));
+        btnRestart.addListener(new Listener(BTN_RESTART));
+        btnDgSaveYes.addListener(new Listener(BTN_DG_YES, dgSaveFile));
+        btnDgSaveNo.addListener(new Listener(BTN_DG_NO, dgSaveFile));
+        btnDgResetYes.addListener(new Listener(BTN_DG_YES, dgExit));
+        btnDgResetNo.addListener(new Listener(BTN_DG_NO, dgExit));
+        btnDgOutYes.addListener(new Listener(BTN_DG_YES, dgOut));
+        btnDgOutNo.addListener(new Listener(BTN_DG_NO, dgOut));
         //Single Objects
-        lblCurrentDate.setPosition(GameHandler.NATIVE_RES_WIDTH-100, GameHandler.NATIVE_RES_HEIGHT-20);
-        lblPutFileName.setPosition((float) (GameHandler.NATIVE_RES_WIDTH/2)-105, 210);
+        dialogConfigs(dgSaveFile);
+        dialogConfigs(dgExit);
+        dialogConfigs(dgOut);
+        btnRestart.setSize(90, 40);
+        btnRestart.setPosition(GameHandler.NATIVE_RES_WIDTH - (btnRestart.getWidth()+20), 20);
+        lblCurrentDate.setPosition(20, GameHandler.NATIVE_RES_HEIGHT-30);
+        lblPutFileName.setPosition((float) (GameHandler.NATIVE_RES_WIDTH/2)-70, 200);
+
         //Tables Characteristics
         infoTable.setBackground(skin.getDrawable("dialogDim"));
         performanceTable.setBackground(skin.getDrawable("dialogDim"));
+        dialogSaveTable.setFillParent(true);
+        dialogExitTable.setFillParent(true);
+        dialogOutTable.setFillParent(true);
         parentTable.setPosition(0, 20);
         //------------------
         //Table Organization
@@ -108,8 +164,12 @@ public class ResumeMenu extends Menus {
         tableOrganization();
         //Stage
         stage.addActor(parentTable);
+        stage.addActor(btnRestart);
         stage.addActor(lblCurrentDate);
         stage.addActor(lblPutFileName);
+        stage.addActor(dialogSaveTable);
+        stage.addActor(dialogExitTable);
+        stage.addActor(dialogOutTable);
     }
 
     @Override
@@ -129,16 +189,21 @@ public class ResumeMenu extends Menus {
             performanceTable.row();
         }
         //performanceTable.debug();
-        parentTable.add(performanceTable).padBottom(60);
+        parentTable.add(performanceTable).padBottom(80);
         parentTable.row();
 
         /** Save file Table **/
-        saveFileTable.add(fieldFileName).width(300).height(50).padBottom(10);
+        saveFileTable.add(fieldFileName).width(300).height(50).padBottom(5);
         saveFileTable.row();
         saveFileTable.add(btnSaveFile).width(130).height(50);
 
         parentTable.add(saveFileTable);
-        parentTable.debug();
+
+        /** Dialogs Tables **/
+        dialogSaveTable.add(dgSaveFile);
+        dialogExitTable.add(dgExit);
+        dialogOutTable.add(dgOut);
+        //parentTable.debug();
     }
 
     private void lblInfoConstruct() {
@@ -196,13 +261,129 @@ public class ResumeMenu extends Menus {
         playerPerformance.add(lblSessionNoCompReps);
     }
 
+    private void dialogConfigs(Dialog dialog) {
+        if(dialog == null)
+            return;
+        dialog.setModal(true);
+        dialog.setModal(true);
+        dialog.setResizable(false);
+        if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
+            dialog.getContentTable().add(lblDialogMessageSave).colspan(2);
+            dialog.getContentTable().row();
+            dialog.getContentTable().add(btnDgSaveYes).width(50);
+            dialog.getContentTable().add(btnDgSaveNo).width(50);
+            //dialog.getContentTable().debug();
+        }
+        else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
+            dialog.getContentTable().add(lblDialogMessageExit).colspan(2);
+            dialog.getContentTable().row();
+            dialog.getContentTable().add(btnDgResetYes).width(50);
+            dialog.getContentTable().add(btnDgResetNo).width(50);
+        }
+        else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
+            dialog.getContentTable().add(lblDialogMessageOut).colspan(2);
+            dialog.getContentTable().row();
+            dialog.getContentTable().add(btnDgOutYes).width(50);
+            dialog.getContentTable().add(btnDgOutNo).width(50);
+        }
+        dialog.setVisible(false);
+        dialog.hide();
+    }
+
     private class Listener extends ChangeListener {
-        BtnListeners btnListeners;
+        private final BtnListeners btnListeners;
+        private final Dialog dialog;
         public Listener(BtnListeners btnListeners) {
             this.btnListeners = btnListeners;
+            this.dialog = null;
+        }
+        public Listener(BtnListeners btnListeners, Dialog dialog) {
+            this.btnListeners = btnListeners;
+            this.dialog = dialog;
         }
         @Override
         public void changed(ChangeEvent event, Actor actor) {
+            switch (btnListeners) {
+                case BTN_SAVE_FILE:
+                    btnSaveFileListener();
+                    break;
+                case BTN_RESTART:
+                    btnRestartListener();
+                    break;
+                case BTN_DG_YES:
+                    btnDgYesListener();
+                    break;
+                case BTN_DG_NO:
+                    btnDgNoListener();
+                    break;
+            }
+        }
+
+        private void btnSaveFileListener() {
+            if(fieldFileName.getText().equals("")) {
+                lblDialogMessageSave.setText(
+                        "El archivo no tiene nombre\n" +
+                        "Se va a generar el siguiente\n"+
+                        GameHandler.dataFileName);
+            }
+            else {
+                lblDialogMessageSave.setText(
+                        "Esta seguro de querer guardar\n el archivo con el nombre:\n " +
+                        fieldFileName.getText() + ".csv");
+            }
+            if(!dgSaveFile.isVisible())
+                dgSaveFile.setVisible(true);
+            dgSaveFile.show(stage);
+        }
+
+        private void btnRestartListener() {
+            if(!dgExit.isVisible())
+                dgExit.setVisible(true);
+            lblDialogMessageExit.setText("Esta seguro que desea reiniciar?");
+            dgExit.show(stage);
+        }
+
+        private void btnDgYesListener() {
+            if(dialog == null)
+                return;
+            if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
+                //TODO Make CSV file
+                PrintTag.print(TAG, "Corresponde Si Adv");
+                dgOut.show(stage);
+            }
+            else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
+                //TODO Make restart
+                PrintTag.print(TAG, "Corresponde Si Reiniti");
+            }
+            else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
+                PrintTag.print(TAG, "Corresponde Si Salir");
+                System.exit(0);
+            }
+            dialog.hide();
+            dialog.cancel();
+        }
+
+        private void btnDgNoListener() {
+            if(dialog == null)
+                return;
+            if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
+                PrintTag.print(TAG, "Corresponde NO Adv");
+            }
+            else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
+                PrintTag.print(TAG, "Corresponde NO Reinicar");
+            }
+            else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
+                PrintTag.print(TAG, "Corresponde NO Salir");
+            }
+            dialog.cancel();
+            dialog.hide();
+        }
+
+        private void btnDgResetYesListener() {
+
+        }
+
+        private void btnDgResetNoListener() {
 
         }
     }
