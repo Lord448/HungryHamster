@@ -393,8 +393,8 @@ public class ConfigMenu extends Menus {
                         if(finalI < 2) {
                             counter = Integer.parseInt(fieldMaxStep.getText().trim());
                             counter++;
-                            if (counter >= 32)
-                                counter = 32;
+                            if (counter >= GameHandler.NUMBER_OF_STEPS_IN_LADDER)
+                                counter = GameHandler.NUMBER_OF_STEPS_IN_LADDER;
                             fieldMaxStep.setText(String.valueOf(counter));
                         }
                         else if (finalI < 4) {
@@ -449,6 +449,8 @@ public class ConfigMenu extends Menus {
                             counter--;
                             if(counter <= 1)
                                 counter = 1;
+                            else if(counter >= GameHandler.NUMBER_OF_STEPS_IN_LADDER)
+                                counter = GameHandler.NUMBER_OF_STEPS_IN_LADDER;
                             fieldMaxStep.setText(String.valueOf(counter));
 
                         }
@@ -509,6 +511,10 @@ public class ConfigMenu extends Menus {
             fieldMaxCounts = Integer.parseInt(fieldMaxStep.getText().trim());
             fieldMinCounts = Integer.parseInt(fieldMinStep.getText().trim());
 
+            if(fieldMaxCounts > GameHandler.NUMBER_OF_STEPS_IN_LADDER) {
+                lblError.setText("Escoja un valor menor a 15");
+                return false;
+            }
             if(fieldMinCounts >= fieldMaxCounts) {
                 lblError.setText("El escalon inferior no puede ser mayor o igual al superior");
                 fieldMinCounts = fieldMaxCounts - 1;

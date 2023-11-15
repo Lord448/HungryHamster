@@ -56,7 +56,8 @@ public class GameHandler {
     public static final int DEBUG_DB = 2;
     public static final int DEBUG_NONE = 3;
     public static final int DEBUG_RESUME = 4;
-    public static final int DEBUG_MODE = DEBUG_RESUME; //Debug constant
+    public static final int DEBUG_DEMO = 5;
+    public static final int DEBUG_MODE = DEBUG_DEMO; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
@@ -66,6 +67,7 @@ public class GameHandler {
         MenuScreen,
         GameScreen,
         ResumeScreen,
+        DemoScreen,
         IsSet
     }
     public static final int LADDER_MAX_STEPS = 32;
@@ -79,6 +81,7 @@ public class GameHandler {
     //Only applies on stages
     public static int NATIVE_RES_WIDTH = 480;
     public static int NATIVE_RES_HEIGHT = 640;
+    public static int NUMBER_OF_STEPS_IN_LADDER = 15; //Considers the zero
     /**
      * --------------------------------------------------------------------------
      *                       CONFIGURATION GLOBAL VARIABLES
@@ -86,7 +89,7 @@ public class GameHandler {
      */
     public static float musicVolume;
     public static float effectsVolume;
-    public static int numHouseSteps = 11;
+    public static int numHouseSteps = 15;
     public static int maxStep;
     public static int minStep;
     public static int extraStep = 0;
@@ -156,7 +159,7 @@ public class GameHandler {
         GameHandler.environment = env;
         Arrays.fill(GameHandler.touchPins, false);
         for(int i = 0; i < numHouseSteps; i++)
-            strReceptions[i] = "T" + i;
+            strReceptions[i] = "T:" + i;
     }
 
     public static Time calculateMeanOfTime(List<Time> list) {
@@ -179,5 +182,9 @@ public class GameHandler {
         //Dividing
         meanTime.divide(list.size());
         return meanTime;
+    }
+
+    public static void disposeAll() {
+        //TODO Destroy all classes
     }
 }

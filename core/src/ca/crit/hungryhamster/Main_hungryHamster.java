@@ -4,6 +4,7 @@ package ca.crit.hungryhamster;
 import com.badlogic.gdx.Game;
 
 import ca.crit.hungryhamster.main.GameScreen;
+import ca.crit.hungryhamster.menus.demo.DemoScreen;
 import ca.crit.hungryhamster.menus.resume.ResumeScreen;
 import ca.crit.hungryhamster.resources.GameSounds;
 import ca.crit.hungryhamster.menus.main.MainMenuScreen;
@@ -13,6 +14,7 @@ public class Main_hungryHamster extends Game {
 	private MainMenuScreen mainMenuScreen;
 	private GameScreen gameScreen;
 	private ResumeScreen resumeScreen;
+	private DemoScreen demoScreen;
 
 	@Override
 	public void create () {
@@ -20,10 +22,12 @@ public class Main_hungryHamster extends Game {
 		mainMenuScreen = new MainMenuScreen();
 		gameScreen = new GameScreen();
 		resumeScreen = new ResumeScreen();
+		demoScreen = new DemoScreen();
 
 		switch (GameHandler.DEBUG_MODE) {
 			case GameHandler.DEBUG_MENU:
 			case GameHandler.DEBUG_NONE:
+			case GameHandler.DEBUG_DEMO:
 				setScreen(mainMenuScreen);
 				break;
 			case GameHandler.DEBUG_GAME:
@@ -59,6 +63,9 @@ public class Main_hungryHamster extends Game {
 				setScreen(resumeScreen);
 				GameHandler.currentScreen = GameHandler.Screens.IsSet;
 				break;
+			case DemoScreen:
+				setScreen(demoScreen);
+				GameHandler.currentScreen = GameHandler.Screens.IsSet;
 		}
 	}
 

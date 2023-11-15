@@ -105,10 +105,11 @@ public class Animal {
         else if (isFinished) {
             winText.draw(batch);
             if(oneActionFlag) {
-                GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
-                GameHandler.allTimeInSteps.add(new ArrayList<>(stepTimeList));
+                //TODO Check tablet error
+                //GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
+                //GameHandler.allTimeInSteps.add(new ArrayList<>(stepTimeList));
                 PrintTag.print(TAG, "Added stepTimeList");
-                PrintTag.print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
+                //PrintTag.print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
                 stepTimeList.clear();
                 PrintTag.print(TAG, "Finished " + timer);
                 timer.stop();

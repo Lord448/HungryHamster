@@ -65,6 +65,7 @@ public class GameScreen implements Screen {
     private Label lblRepsUncompleted;
     private Label lblTimeSession;
     private Label lblTimeMills;
+    public static Label lblBLEData = new Label("", new Skin(Gdx.files.internal("UISkin/uiskin.json")));
     /**
      *   TEXT
      */
@@ -264,13 +265,17 @@ public class GameScreen implements Screen {
                 }
                 else
                     PrintTag.print(TAG, "No started session");
-                GameHandler.currentScreen = GameHandler.Screens.ResumeScreen;
+                if(GameHandler.DEBUG_MODE != GameHandler.DEBUG_DEMO)
+                    GameHandler.currentScreen = GameHandler.Screens.ResumeScreen;
+                else
+                    GameHandler.currentScreen = GameHandler.Screens.DemoScreen;
             }
         });
         lblRepsUncompleted.setPosition(xREPS, yTOP_TEXT);
         lblReps.setPosition(xREPS, yTOP_TEXT - 22);
         lblTimeSession.setPosition(xTIME, yTOP_TEXT);
         lblTime.setPosition(xTIME, yTOP_TEXT - 22);
+        lblBLEData.setPosition(400, 0);
         btnEndReps.setPosition(xBtn, 250);
         btnEndSession.setPosition(xBtn, 220);
 

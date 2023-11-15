@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -9,7 +10,10 @@ import javax.management.monitor.Monitor;
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
 	public static void main (String[] arg) {
-		GameHandler.init(0, GameHandler.DESKTOP_ENV);
+		if(GameHandler.DEBUG_MODE == GameHandler.DEBUG_DEMO)
+			GameHandler.init(0, GameHandler.DESKTOP_ENV);
+		else
+			GameHandler.init(0, GameHandler.DESKTOP_ENV);
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		//Only valid when 2 monitors connected
 		Graphics.Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();

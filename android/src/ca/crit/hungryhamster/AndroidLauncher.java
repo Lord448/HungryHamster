@@ -10,6 +10,8 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
 import java.util.UUID;
 
+import ca.crit.hungryhamster.main.GameScreen;
+
 public class AndroidLauncher extends AndroidApplication {
 
 	public final UUID txChUUID = UUID.fromString("058804de-0a45-11ee-be56-0242ac120002");
@@ -35,18 +37,25 @@ public class AndroidLauncher extends AndroidApplication {
 			Toast.makeText(getApplicationContext(), "ESP32 not paired", Toast.LENGTH_LONG).show();
 		}
 		else {
+			if(GameHandler.DEBUG_MODE != GameHandler.DEBUG_NONE)
+				Toast.makeText(getApplicationContext(), "ESP32 paired", Toast.LENGTH_LONG).show();
 			rojoTX = new RojoBLE(this, rxChUUID, RojoBLE.ROJO_TYPE_WRITE, deviceMacAddress);
 			rojoRX = new RojoBLE(this, txChUUID, RojoBLE.ROJO_TYPE_NOTIFY, deviceMacAddress);
 			rojoRX.setOnCharacteristicNotificationListener(this::onCharacteristicNotificationListener);
 		}
 		//GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
-		GameHandler.init(0.0f, GameHandler.MOBILE_ENV);
+		if(GameHandler.DEBUG_MODE == GameHandler.DEBUG_DEMO)
+			GameHandler.init(0.5f, GameHandler.DESKTOP_ENV);
+		else
+			GameHandler.init(0.0f, GameHandler.MOBILE_ENV);
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Main_hungryHamster(), config);
 	}
 
 	public void onCharacteristicNotificationListener(byte[] value) {
+		strValue = RojoBLE.getString(value);
 		Log.i(TAG, "Received: " + strValue);
+		GameScreen.lblBLEData.setText(strValue);
 		for(int i = 0; i <= GameHandler.numHouseSteps; i++) {
 			if(strValue.toLowerCase().trim().equals(GameHandler.strReceptions[i].toLowerCase().trim())) {
 				GameHandler.touchPins[i] = true;
