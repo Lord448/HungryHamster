@@ -188,8 +188,11 @@ public class RojoBLE {
     }
 
     public static boolean compareIncomingData(byte[] value, String dataToCompare) {
-        String strValue = new String(value, StandardCharsets.UTF_8);
-        return compareStrings(strValue, dataToCompare);
+        return compareStrings(getString(value), dataToCompare);
+    }
+
+    public static String getString(byte[] value) {
+        return new String(value, StandardCharsets.UTF_8);
     }
 
     public boolean sendData(String dataBuffer) {
