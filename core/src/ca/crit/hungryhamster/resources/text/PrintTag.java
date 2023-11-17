@@ -1,5 +1,10 @@
 package ca.crit.hungryhamster.resources.text;
 
+import static com.badlogic.gdx.Application.ApplicationType.Android;
+
+import com.badlogic.gdx.Game;
+
+import ca.crit.hungryhamster.GameHandler;
 
 public class PrintTag {
     private static final String RESET = "\033[0m";  // Text Reset
@@ -33,9 +38,15 @@ public class PrintTag {
     public static final String defaultColor = CYAN;
 
     public static void print(String TAG, String str) {
-        System.out.println(defaultColor +  TAG + ": " + RESET + str);
+        if(GameHandler.environment == GameHandler.MOBILE_ENV)
+            System.out.println(TAG + ": " + str);
+        else
+            System.out.println(defaultColor +  TAG + ": " + RESET + str);
     }
     public static void print(String TAG, String str, String Color) {
-        System.out.println(Color + TAG + ": " + RESET + str);
+        if(GameHandler.environment == GameHandler.MOBILE_ENV)
+            System.out.println(TAG + ": " + str);
+        else
+            System.out.println(Color + TAG + ": " + RESET + str);
     }
 }

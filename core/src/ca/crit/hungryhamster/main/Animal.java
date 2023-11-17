@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.main;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -34,7 +35,6 @@ public class Animal {
     private final int width;
     private final int height;
     private int animalCounter = 0;
-    private int nextPin;
     private float x, y;
     private final float speed;
     private final float[] positions = new float[GameHandler.numHouseSteps];
@@ -64,7 +64,7 @@ public class Animal {
         winText.setScales(0.2f, 0.3f);
         extraText = new GameText("¡Tu puedes \n un poco más!", 3, 80);
         extraText.setScaleX(0.1f);
-        nextPin = GameHandler.minStep;
+        GameHandler.nextStep = GameHandler.minStep;
         timer = new Timer(Timer.Modes.TIME_MEASURE);
         sessionTimer = new Timer(Timer.Modes.TIME_MEASURE);
         repTime = new Time();
@@ -94,8 +94,7 @@ public class Animal {
         sessionTimer.update(true);
 
         hitbox.setPosition(x, y);
-        if(GameHandler.environment == GameHandler.DESKTOP_ENV)
-            checkKeyPressed(); //Only for desktop environment
+        checkKeyPressed();
 
         climb();
 
@@ -127,15 +126,15 @@ public class Animal {
     //Quick and dirty
     private void checkKeyPressed(){
         for(int i = GameHandler.minStep; i < GameHandler.countsToWin+GameHandler.extraStep; i++) {
-            if(Gdx.input.isKeyJustPressed(GameHandler.key[i])) {
+            if(Gdx.input.isKeyJustPressed(GameHandler.key[i]) || GameHandler.espTouch[i]) {
                 PrintTag.print(TAG, "Key: " + i);
-                PrintTag.print(TAG, "Counts" + GameHandler.countsToWin);
+                PrintTag.print(TAG, "CountsToWin: " + GameHandler.countsToWin);
 
                 //Quick and dirty zone
                 if(isInHouse) {
-                    if(i == nextPin) {
-                        nextPin++;
-                        if(nextPin == GameHandler.countsToWin+GameHandler.extraStep) {
+                    if(i == GameHandler.nextStep) {
+                        GameHandler.nextStep++;
+                        if(GameHandler.nextStep == GameHandler.countsToWin+GameHandler.extraStep) {
                             moveToUpHouse = true;
                             isFinished = true;
                             isInHouse = false;
@@ -145,8 +144,8 @@ public class Animal {
                     }
                 }
                 //Standard zone
-                if(i == nextPin){
-                    PrintTag.print(TAG, "Nextpin: " + nextPin);
+                if(i == GameHandler.nextStep) {
+                    PrintTag.print(TAG, "Nextpin: " + GameHandler.nextStep);
                     //Acquiring Measure
                     if (i == 0) {
                         timerMillis.start();
@@ -159,15 +158,21 @@ public class Animal {
                         timerMillis.restart();
                     }
                     //Game control
-                    nextPin++;
-                    GameHandler.successfulSteps++;
+                    GameHandler.nextStep++;
+                    GameHandler.successfulSteps += 2;
                     GameHandler.touchPins[i] = true;
                     GameSounds.jump();
                 }
                 //TODO Solve movement bug when pressed a lot of keys
+                /*
+                When pressed to fast the touch pin is in false,
+                need to synchronize with the arrive event
+                Possible sol: Use a FIFO to handle and process the incoming data
+                 */
                 for(int j = 0; j < GameHandler.maxStep; j++) {
                     if(j != i)
                         GameHandler.touchPins[j] = false;
+                    GameHandler.espTouch[i] = false;
                 }
             }
         }
@@ -213,7 +218,7 @@ public class Animal {
         x = (float) (GameHandler.WORLD_WIDTH/2)+5;
         y = 0f;
         Arrays.fill(GameHandler.touchPins, false);
-        nextPin = GameHandler.minStep;
+        GameHandler.nextStep = GameHandler.minStep;
         moveToUpHouse = false;
         isFinished = false;
         isInHouse = false;

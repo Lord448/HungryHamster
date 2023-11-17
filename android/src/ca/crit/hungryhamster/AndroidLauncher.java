@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
@@ -56,13 +58,14 @@ public class AndroidLauncher extends AndroidApplication {
 		strValue = RojoBLE.getString(value);
 		Log.i(TAG, "Received: " + strValue);
 		GameScreen.lblBLEData.setText(strValue);
-		for(int i = 0; i <= GameHandler.numHouseSteps; i++) {
-			if(strValue.toLowerCase().trim().equals(GameHandler.strReceptions[i].toLowerCase().trim())) {
-				GameHandler.touchPins[i] = true;
+		for(int i = 0; i <= GameHandler.LADDER_MAX_STEPS; i++) {
+			Log.i(TAG, "StrRecept: " + GameHandler.strReceptions[i]);
+			if(strValue.toLowerCase().trim().equals(GameHandler.strReceptions[i].toLowerCase().trim() )) {
+				GameHandler.espTouch[i] = true;
 				GameHandler.wizardSpell = true;
 				for(int j = 0; j < GameHandler.numHouseSteps; j++) {
 					if(j != i) {
-						GameHandler.touchPins[j] = false;
+						GameHandler.espTouch[j] = false;
 					}
 				}
 				return;

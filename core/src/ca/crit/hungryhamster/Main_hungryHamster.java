@@ -1,7 +1,9 @@
 package ca.crit.hungryhamster;
 
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 
 import ca.crit.hungryhamster.main.GameScreen;
 import ca.crit.hungryhamster.menus.demo.DemoScreen;
@@ -18,7 +20,6 @@ public class Main_hungryHamster extends Game {
 
 	@Override
 	public void create () {
-
 		mainMenuScreen = new MainMenuScreen();
 		gameScreen = new GameScreen();
 		resumeScreen = new ResumeScreen();

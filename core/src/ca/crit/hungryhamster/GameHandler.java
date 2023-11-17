@@ -48,6 +48,12 @@ import ca.crit.hungryhamster.resources.time.TimeMillis;
 public class GameHandler {
     /**
      * --------------------------------------------------------------------------
+     *                           COMMUNICATION TO LOGCAT
+     * --------------------------------------------------------------------------
+     */
+
+    /**
+     * --------------------------------------------------------------------------
      *                        GLOBAL DEFINITIONS FOR DEBUG
      * --------------------------------------------------------------------------
     */
@@ -70,7 +76,7 @@ public class GameHandler {
         DemoScreen,
         IsSet
     }
-    public static final int LADDER_MAX_STEPS = 32;
+    public static final int LADDER_MAX_STEPS = 16;
     public static final int DESKTOP_ENV = 0;
     public static final int MOBILE_ENV = 1;
     public static final int LEFT_HAND = 2;
@@ -105,6 +111,7 @@ public class GameHandler {
     public static boolean wizardSpell  = false;
     public static Screens currentScreen = Screens.IsSet;
     public static float[] foodPositions;
+    public static int nextStep = 0;
     /**
      * --------------------------------------------------------------------------
      *                        PATIENT PERFORMANCE MEASURES
@@ -138,13 +145,14 @@ public class GameHandler {
      * --------------------------------------------------------------------------
      */
     public static boolean[] touchPins = new boolean[LADDER_MAX_STEPS];
+    public static boolean[] espTouch = new boolean[LADDER_MAX_STEPS];
     public static final int[] key = {
             NUM_0, NUM_1, NUM_2, NUM_3, NUM_4, NUM_5, NUM_6, NUM_7, NUM_8, NUM_9,
             Q, W, E, R, T, Y, U, I, O, P,
             A, S, D, F, G, H, J, K, L,
             Z, X, C, V, B, N, M
     };
-    public static final String[] strReceptions = new String[numHouseSteps];
+    public static final String[] strReceptions = new String[LADDER_MAX_STEPS];
     /**
      * --------------------------------------------------------------------------
      *                                 METHODS
@@ -158,7 +166,8 @@ public class GameHandler {
         GameHandler.effectsVolume = musicVolume / 4;
         GameHandler.environment = env;
         Arrays.fill(GameHandler.touchPins, false);
-        for(int i = 0; i < numHouseSteps; i++)
+        Arrays.fill(GameHandler.espTouch, false);
+        for(int i = 0; i < LADDER_MAX_STEPS; i++)
             strReceptions[i] = "T:" + i;
     }
 
