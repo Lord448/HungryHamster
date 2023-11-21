@@ -5,6 +5,8 @@ import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
+import java.util.Date;
+
 import javax.management.monitor.Monitor;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
@@ -14,6 +16,7 @@ public class DesktopLauncher {
 			GameHandler.init(0, GameHandler.DESKTOP_ENV);
 		else
 			GameHandler.init(0, GameHandler.DESKTOP_ENV);
+		GameHandler.currentDate = new Date();
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		//Only valid when 2 monitors connected
 		Graphics.Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();

@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.badlogic.gdx.Application;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
+import java.util.Date;
 import java.util.UUID;
 
 import ca.crit.hungryhamster.main.GameScreen;
@@ -46,10 +45,11 @@ public class AndroidLauncher extends AndroidApplication {
 			rojoRX.setOnCharacteristicNotificationListener(this::onCharacteristicNotificationListener);
 		}
 		//GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
-		if(GameHandler.DEBUG_MODE == GameHandler.DEBUG_DEMO)
+		if(GameHandler.DEBUG_MODE == GameHandler.DEBUG_DEMO || !GameHandler.NO_SOUND)
 			GameHandler.init(0.5f, GameHandler.DESKTOP_ENV);
 		else
 			GameHandler.init(0.0f, GameHandler.MOBILE_ENV);
+		GameHandler.currentDate = new Date(); //Getting the current date
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Main_hungryHamster(), config);
 	}

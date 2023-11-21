@@ -9,6 +9,7 @@ import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB
 import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.CB_RIGHT_HAND;
 import static ca.crit.hungryhamster.menus.main.stages.ConfigMenu.BtnListeners.FIELD_EXTRA;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -235,6 +236,7 @@ public class ConfigMenu extends Menus {
 
         @Override
         public void changed(ChangeEvent event, Actor actor) {
+            Gdx.input.setOnscreenKeyboardVisible(false);
             switch (btnListeners) {
                 case BTN_RETURN:
                     btnReturnListener();
@@ -264,6 +266,7 @@ public class ConfigMenu extends Menus {
             public BtnAcceptListener() {}
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                Gdx.input.setOnscreenKeyboardVisible(false);
                 if(!fieldTime.getText().equalsIgnoreCase("") && !fieldTime.getText().equalsIgnoreCase("")) {
                     try {
                         boolean isAllCBChecked = cbBothHands.isChecked() || cbLeftHand.isChecked() || cbRightHand.isChecked();

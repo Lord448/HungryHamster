@@ -5,6 +5,7 @@ import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN
 import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_NEXT;
 import static ca.crit.hungryhamster.menus.main.stages.LoginMenu.BtnListeners.BTN_PATIENTS;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,9 +18,9 @@ import java.util.Objects;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
+import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.text.PrintTag;
-import ca.crit.hungryhamster.menus.main.MainMenuScreen;
 
 public class LoginMenu extends Menus {
     /**
@@ -121,6 +122,7 @@ public class LoginMenu extends Menus {
         }
         @Override
         public void changed(ChangeEvent event, Actor actor) {
+            Gdx.input.setOnscreenKeyboardVisible(false);
             switch (btnListeners) {
                 case BTN_NEW_PATIENT:
                     btnNewPatientListener();
@@ -152,6 +154,7 @@ public class LoginMenu extends Menus {
                 GameHandler.playerID = idField.getText();
                 PrintTag.print(TAG, "ID: " + GameHandler.playerID);
                 MainMenuScreen.mainMenuState = MainMenuState.CONFIG;
+                Gdx.input.setOnscreenKeyboardVisible(false);
                 lblError.setText("");
             } else {
                 lblError.setText("Coloca un No. de Carnet");

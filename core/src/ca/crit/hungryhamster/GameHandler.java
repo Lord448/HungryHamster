@@ -42,7 +42,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import ca.crit.hungryhamster.resources.text.PrintTag;
 import ca.crit.hungryhamster.resources.time.Time;
+import ca.crit.hungryhamster.resources.time.TimeFormatException;
 import ca.crit.hungryhamster.resources.time.TimeMillis;
 
 public class GameHandler {
@@ -63,7 +65,7 @@ public class GameHandler {
     public static final int DEBUG_NONE = 3;
     public static final int DEBUG_RESUME = 4;
     public static final int DEBUG_DEMO = 5;
-    public static final int DEBUG_MODE = DEBUG_DEMO; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_RESUME; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
@@ -88,6 +90,7 @@ public class GameHandler {
     public static int NATIVE_RES_WIDTH = 480;
     public static int NATIVE_RES_HEIGHT = 640;
     public static int NUMBER_OF_STEPS_IN_LADDER = 15; //Considers the zero
+    public static boolean NO_SOUND = true;
     /**
      * --------------------------------------------------------------------------
      *                       CONFIGURATION GLOBAL VARIABLES
@@ -189,7 +192,15 @@ public class GameHandler {
         for(TimeMillis timeMillis : list)
             meanTime.addTime(timeMillis);
         //Dividing
-        meanTime.divide(list.size());
+
+        try {
+            meanTime.divide(list.size());
+        }
+        catch (TimeFormatException ex) {
+            //return new TimeMillis(0, 0, 0);
+            PrintTag.print("MeanCalc: ", ex.getMessage());
+            return null;
+        }
         return meanTime;
     }
 

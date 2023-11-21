@@ -2,9 +2,11 @@ package ca.crit.hungryhamster.menus.resume;
 
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_DG_NO;
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_DG_YES;
+import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_EXIT;
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_RESTART;
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_SAVE_FILE;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -35,6 +37,7 @@ public class ResumeMenu extends Menus {
     enum BtnListeners{
         BTN_SAVE_FILE,
         BTN_RESTART,
+        BTN_EXIT,
         BTN_DG_YES,
         BTN_DG_NO,
     }
@@ -46,8 +49,8 @@ public class ResumeMenu extends Menus {
     private final Label lblCurrentDate;
     private final Label lblPutFileName;
     private final Label lblDialogMessageSave;
+    private final Label lblDialogMessageRestart;
     private final Label lblDialogMessageExit;
-    private final Label lblDialogMessageOut;
     /**
      * ---------------------------------------------------------------------
      *                             TEXT FIELDS
@@ -61,6 +64,7 @@ public class ResumeMenu extends Menus {
      */
     private final TextButton btnSaveFile;
     private final TextButton btnRestart;
+    private final TextButton btnExit;
     private final TextButton btnDgSaveYes;
     private final TextButton btnDgSaveNo;
     private final TextButton btnDgResetYes;
@@ -86,8 +90,8 @@ public class ResumeMenu extends Menus {
     private List<Label> playerInfo = new ArrayList<Label>();
     private List<Label> playerPerformance = new ArrayList<Label>();
     private final Dialog dgSaveFile;
+    private final Dialog dgRestart;
     private final Dialog dgExit;
-    private final Dialog dgOut;
     private final Skin shadeSkin;
     public ResumeMenu(Skin skin, Skin shadeSkin, Stage stage, GameText titleText) {
         TAG = "ResumeMenu";
@@ -100,10 +104,10 @@ public class ResumeMenu extends Menus {
         lblCurrentDate = new Label("Fecha: " + GameHandler.currentDate, skin);
         lblDialogMessageSave = new Label("", skin);
         lblDialogMessageSave.setAlignment(Align.center);
+        lblDialogMessageRestart = new Label("", skin);
+        lblDialogMessageRestart.setAlignment(Align.center);
         lblDialogMessageExit = new Label("", skin);
         lblDialogMessageExit.setAlignment(Align.center);
-        lblDialogMessageOut = new Label("", skin);
-        lblDialogMessageOut.setAlignment(Align.center);
         lblInfoConstruct();
         lblPerformanceConstruct();
         //TextField
@@ -119,6 +123,7 @@ public class ResumeMenu extends Menus {
         //Buttons
         btnSaveFile = new TextButton("Guardar Archivo", skin);
         btnRestart = new TextButton("Reiniciar", skin);
+        btnExit = new TextButton("Salir", skin);
         btnDgSaveYes = new TextButton("Si", shadeSkin);
         btnDgSaveNo = new TextButton("No", shadeSkin);
         btnDgResetYes = new TextButton("Si", skin);
@@ -127,8 +132,8 @@ public class ResumeMenu extends Menus {
         btnDgOutNo = new TextButton("No", skin);
         //Dialog
         dgSaveFile = new Dialog("Advertencia", skin);
-        dgExit = new Dialog("Reiniciar", skin);
-        dgOut = new Dialog("Salir", skin);
+        dgRestart = new Dialog("Reiniciar", skin);
+        dgExit = new Dialog("Salir", skin);
     }
 
     @Override
@@ -136,18 +141,21 @@ public class ResumeMenu extends Menus {
         //Listeners
         btnSaveFile.addListener(new Listener(BTN_SAVE_FILE));
         btnRestart.addListener(new Listener(BTN_RESTART));
+        btnExit.addListener(new Listener(BTN_EXIT));
         btnDgSaveYes.addListener(new Listener(BTN_DG_YES, dgSaveFile));
         btnDgSaveNo.addListener(new Listener(BTN_DG_NO, dgSaveFile));
-        btnDgResetYes.addListener(new Listener(BTN_DG_YES, dgExit));
-        btnDgResetNo.addListener(new Listener(BTN_DG_NO, dgExit));
-        btnDgOutYes.addListener(new Listener(BTN_DG_YES, dgOut));
-        btnDgOutNo.addListener(new Listener(BTN_DG_NO, dgOut));
+        btnDgResetYes.addListener(new Listener(BTN_DG_YES, dgRestart));
+        btnDgResetNo.addListener(new Listener(BTN_DG_NO, dgRestart));
+        btnDgOutYes.addListener(new Listener(BTN_DG_YES, dgExit));
+        btnDgOutNo.addListener(new Listener(BTN_DG_NO, dgExit));
         //Single Objects
         dialogConfigs(dgSaveFile);
+        dialogConfigs(dgRestart);
         dialogConfigs(dgExit);
-        dialogConfigs(dgOut);
         btnRestart.setSize(90, 40);
         btnRestart.setPosition(GameHandler.NATIVE_RES_WIDTH - (btnRestart.getWidth()+20), 20);
+        btnExit.setSize(90, 40);
+        btnExit.setPosition(btnExit.getWidth()-70, 20);
         lblCurrentDate.setPosition(20, GameHandler.NATIVE_RES_HEIGHT-30);
         lblPutFileName.setPosition((float) (GameHandler.NATIVE_RES_WIDTH/2)-70, 200);
 
@@ -165,6 +173,7 @@ public class ResumeMenu extends Menus {
         //Stage
         stage.addActor(parentTable);
         stage.addActor(btnRestart);
+        stage.addActor(btnExit);
         stage.addActor(lblCurrentDate);
         stage.addActor(lblPutFileName);
         stage.addActor(dialogSaveTable);
@@ -201,8 +210,8 @@ public class ResumeMenu extends Menus {
 
         /** Dialogs Tables **/
         dialogSaveTable.add(dgSaveFile);
-        dialogExitTable.add(dgExit);
-        dialogOutTable.add(dgOut);
+        dialogExitTable.add(dgRestart);
+        dialogOutTable.add(dgExit);
         //parentTable.debug();
     }
 
@@ -275,13 +284,13 @@ public class ResumeMenu extends Menus {
             //dialog.getContentTable().debug();
         }
         else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
-            dialog.getContentTable().add(lblDialogMessageExit).colspan(2);
+            dialog.getContentTable().add(lblDialogMessageRestart).colspan(2);
             dialog.getContentTable().row();
             dialog.getContentTable().add(btnDgResetYes).width(50);
             dialog.getContentTable().add(btnDgResetNo).width(50);
         }
         else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
-            dialog.getContentTable().add(lblDialogMessageOut).colspan(2);
+            dialog.getContentTable().add(lblDialogMessageExit).colspan(2);
             dialog.getContentTable().row();
             dialog.getContentTable().add(btnDgOutYes).width(50);
             dialog.getContentTable().add(btnDgOutNo).width(50);
@@ -310,6 +319,9 @@ public class ResumeMenu extends Menus {
                 case BTN_RESTART:
                     btnRestartListener();
                     break;
+                case BTN_EXIT:
+                    btnExitListener();
+                    break;
                 case BTN_DG_YES:
                     btnDgYesListener();
                     break;
@@ -323,7 +335,7 @@ public class ResumeMenu extends Menus {
             if(fieldFileName.getText().equals("")) {
                 lblDialogMessageSave.setText(
                         "El archivo no tiene nombre\n" +
-                        "Se va a generar el siguiente\n"+
+                        "Usar el siguiente?\n"+
                         GameHandler.dataFileName);
             }
             else {
@@ -337,9 +349,16 @@ public class ResumeMenu extends Menus {
         }
 
         private void btnRestartListener() {
+            if(!dgRestart.isVisible())
+                dgRestart.setVisible(true);
+            lblDialogMessageRestart.setText("Esta seguro que desea reiniciar?");
+            dgRestart.show(stage);
+        }
+
+        private void btnExitListener() {
             if(!dgExit.isVisible())
                 dgExit.setVisible(true);
-            lblDialogMessageExit.setText("Esta seguro que desea reiniciar?");
+            lblDialogMessageExit.setText("Esta seguro que desea salir?");
             dgExit.show(stage);
         }
 
@@ -349,11 +368,12 @@ public class ResumeMenu extends Menus {
             if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
                 //TODO Make CSV file
                 PrintTag.print(TAG, "Corresponde Si Adv");
-                dgOut.show(stage);
             }
             else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
                 //TODO Make restart
                 PrintTag.print(TAG, "Corresponde Si Reiniti");
+                //GameHandler.currentScreen = GameHandler.Screens.MenuScreen; //TODO Manage return to menu
+                //GameHandler.disposeAll();
             }
             else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
                 PrintTag.print(TAG, "Corresponde Si Salir");
