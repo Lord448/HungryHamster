@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster;
+package ca.crit.hungryhamster.rojoble;
 
 import android.Manifest;
 import android.annotation.SuppressLint;

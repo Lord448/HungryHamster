@@ -1,4 +1,4 @@
-package ca.crit.hungryhamster;
+package ca.crit.hungryhamster.rojoble;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothGatt;

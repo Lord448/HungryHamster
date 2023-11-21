@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import ca.crit.hungryhamster.main.GameScreen;
+import ca.crit.hungryhamster.rojoble.RojoBLE;
 
 public class AndroidLauncher extends AndroidApplication {
 
