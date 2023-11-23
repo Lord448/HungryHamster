@@ -65,7 +65,7 @@ public class GameHandler {
     public static final int DEBUG_NONE = 3;
     public static final int DEBUG_RESUME = 4;
     public static final int DEBUG_DEMO = 5;
-    public static final int DEBUG_MODE = DEBUG_RESUME; //Debug constant
+    public static final int DEBUG_MODE = DEBUG_DEMO; //Debug constant
     /**
      * --------------------------------------------------------------------------
      *                              GLOBAL CONSTANTS
@@ -90,7 +90,7 @@ public class GameHandler {
     public static int NATIVE_RES_WIDTH = 480;
     public static int NATIVE_RES_HEIGHT = 640;
     public static int NUMBER_OF_STEPS_IN_LADDER = 15; //Considers the zero
-    public static boolean NO_SOUND = true;
+    public static boolean NO_SOUND = false;
     /**
      * --------------------------------------------------------------------------
      *                       CONFIGURATION GLOBAL VARIABLES

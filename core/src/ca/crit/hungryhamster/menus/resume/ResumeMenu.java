@@ -274,7 +274,6 @@ public class ResumeMenu extends Menus {
         if(dialog == null)
             return;
         dialog.setModal(true);
-        dialog.setModal(true);
         dialog.setResizable(false);
         if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
             dialog.getContentTable().add(lblDialogMessageSave).colspan(2);

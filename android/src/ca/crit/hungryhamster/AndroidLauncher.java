@@ -15,7 +15,6 @@ import ca.crit.hungryhamster.main.GameScreen;
 import ca.crit.hungryhamster.rojoble.RojoBLE;
 
 public class AndroidLauncher extends AndroidApplication {
-
 	public final UUID txChUUID = UUID.fromString("058804de-0a45-11ee-be56-0242ac120002");
 	public final UUID rxChUUID = UUID.fromString("006e861c-0a45-11ee-be56-0242ac120002");
 	private static final String TAG = "AndroidLauncher";
@@ -24,6 +23,7 @@ public class AndroidLauncher extends AndroidApplication {
 	private String deviceMacAddress;
 	private RojoBLE rojoTX, rojoRX;
 	private String strValue;
+	public static DBHandler dbHandler;
 
 	@Override
 	protected void onCreate (Bundle savedInstanceState) {
@@ -45,11 +45,9 @@ public class AndroidLauncher extends AndroidApplication {
 			rojoRX = new RojoBLE(this, txChUUID, RojoBLE.ROJO_TYPE_NOTIFY, deviceMacAddress);
 			rojoRX.setOnCharacteristicNotificationListener(this::onCharacteristicNotificationListener);
 		}
-		//GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
-		if(GameHandler.DEBUG_MODE == GameHandler.DEBUG_DEMO || !GameHandler.NO_SOUND)
-			GameHandler.init(0.5f, GameHandler.DESKTOP_ENV);
-		else
-			GameHandler.init(0.0f, GameHandler.MOBILE_ENV);
+		dbHandler = new DBHandler(this);
+
+		GameHandler.init(0.5f, GameHandler.MOBILE_ENV);
 		GameHandler.currentDate = new Date(); //Getting the current date
 		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
 		initialize(new Main_hungryHamster(), config);
