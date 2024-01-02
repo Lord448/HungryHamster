@@ -1,9 +1,7 @@
 package ca.crit.hungryhamster.main;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Circle;
@@ -104,7 +102,7 @@ public class Animal {
         else if (isFinished) {
             winText.draw(batch);
             if(oneActionFlag) {
-                GameHandler.meanRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
+                GameHandler.avgRepTimeStep.add(new TimeMillis(GameHandler.calculateMeanOfTimeMillis(stepTimeList)));
                 GameHandler.allTimeInSteps.add(new ArrayList<>(stepTimeList));
                 PrintTag.print(TAG, "Added stepTimeList");
                 PrintTag.print(TAG, "Mean: " + GameHandler.calculateMeanOfTimeMillis(stepTimeList));
@@ -126,8 +124,8 @@ public class Animal {
     private void checkKeyPressed(){
         for(int i = GameHandler.minStep; i < GameHandler.countsToWin+GameHandler.extraStep; i++) {
             if(Gdx.input.isKeyJustPressed(GameHandler.key[i]) || GameHandler.espTouch[i]) {
-                PrintTag.print(TAG, "Key: " + i);
-                PrintTag.print(TAG, "CountsToWin: " + GameHandler.countsToWin);
+                //PrintTag.print(TAG, "Key: " + i);
+                //PrintTag.print(TAG, "CountsToWin: " + GameHandler.countsToWin);
 
                 //Quick and dirty zone
                 if(isInHouse) {
@@ -144,7 +142,7 @@ public class Animal {
                 }
                 //Standard zone
                 if(i == GameHandler.nextStep) {
-                    PrintTag.print(TAG, "Nextpin: " + GameHandler.nextStep);
+                    //PrintTag.print(TAG, "Nextpin: " + GameHandler.nextStep);
                     //Acquiring Measure
                     if (i == 0) {
                         timerMillis.start();

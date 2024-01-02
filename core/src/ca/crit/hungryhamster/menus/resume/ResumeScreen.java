@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.menus.resume;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -7,6 +8,7 @@ import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.main.Wizard;
 import ca.crit.hungryhamster.menus.MenusScreen;
 import ca.crit.hungryhamster.resources.text.GameText;
+import ca.crit.hungryhamster.resources.time.Timer;
 
 public class ResumeScreen extends MenusScreen {
     /**
@@ -32,6 +34,7 @@ public class ResumeScreen extends MenusScreen {
     @Override
     public void show() {
         resumeMenu.uiConstruct();
+        resumeMenu.setLabelsText();
     }
 
     @Override

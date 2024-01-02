@@ -1,5 +1,8 @@
 package ca.crit.hungryhamster.resources.time;
 
+/**
+ * @note milliseconds are on base 100
+ */
 public class TimeMillis extends Time{
     protected int milliseconds;
     protected final int[] compoundTime = new int[3];
@@ -45,6 +48,11 @@ public class TimeMillis extends Time{
     public String toString() {
         String secs;
         String millis;
+        String mins;
+        if(minutes < 10)
+            mins = "0" + minutes;
+        else
+            mins = String.valueOf(minutes);
         if(seconds < 10)
             secs = "0" + seconds;
         else
@@ -53,7 +61,7 @@ public class TimeMillis extends Time{
             millis = "0" + milliseconds;
         else
             millis = String.valueOf(milliseconds);
-        return minutes + ":" + secs + ":" + millis;
+        return mins + ":" + secs + ":" + millis;
     }
 
     //TODO Make parse of millis
@@ -340,6 +348,10 @@ public class TimeMillis extends Time{
             System.exit(-1);
             return null;
         }
+    }
+
+    public boolean isEmpty() {
+        return this.minutes == 0 && this.seconds == 0 && this.milliseconds == 0;
     }
 
     private void setCompoundTime() {

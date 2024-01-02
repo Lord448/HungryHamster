@@ -6,9 +6,10 @@ import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_EXI
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_RESTART;
 import static ca.crit.hungryhamster.menus.resume.ResumeMenu.BtnListeners.BTN_SAVE_FILE;
 
-import com.badlogic.gdx.Game;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,10 +20,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.Menus;
+import ca.crit.hungryhamster.resources.csv.CSVWriter;
 import ca.crit.hungryhamster.resources.text.GameText;
 import ca.crit.hungryhamster.resources.text.PrintTag;
 import ca.crit.hungryhamster.resources.time.Time;
@@ -51,6 +54,17 @@ public class ResumeMenu extends Menus {
     private final Label lblDialogMessageSave;
     private final Label lblDialogMessageRestart;
     private final Label lblDialogMessageExit;
+    private final Label lblTimeFormat;
+    /**
+     * ---------------------------------------------------------------------
+     *                          PERFORMANCE LABELS
+     * ---------------------------------------------------------------------
+     */
+    private Label lblLimitSessionTime;
+    private Label lblSessionTime;
+    private Label lblMeanTimeStep;
+    private Label lblSessionCompReps;
+    private Label lblSessionNoCompReps;
     /**
      * ---------------------------------------------------------------------
      *                             TEXT FIELDS
@@ -93,12 +107,16 @@ public class ResumeMenu extends Menus {
     private final Dialog dgRestart;
     private final Dialog dgExit;
     private final Skin shadeSkin;
+    private final CheckBox cbSeparateTimeCells;
+    private final CSVWriter csvWriter;
     public ResumeMenu(Skin skin, Skin shadeSkin, Stage stage, GameText titleText) {
         TAG = "ResumeMenu";
         this.skin = skin;
         this.shadeSkin = shadeSkin;
         this.stage = stage;
         this.titleText = titleText;
+        this.cbSeparateTimeCells = new CheckBox("Tiempo en una sola celda", skin);
+        csvWriter = new CSVWriter();
         //Labels
         lblPutFileName = new Label("Nombre del archivo", skin);
         lblCurrentDate = new Label("Fecha: " + GameHandler.currentDate, skin);
@@ -107,6 +125,8 @@ public class ResumeMenu extends Menus {
         lblDialogMessageRestart = new Label("", skin);
         lblDialogMessageRestart.setAlignment(Align.center);
         lblDialogMessageExit = new Label("", skin);
+        lblTimeFormat = new Label(GameHandler.timeFormat, skin);
+        lblTimeFormat.setAlignment(Align.center);
         lblDialogMessageExit.setAlignment(Align.center);
         lblInfoConstruct();
         lblPerformanceConstruct();
@@ -156,7 +176,7 @@ public class ResumeMenu extends Menus {
         btnRestart.setPosition(GameHandler.NATIVE_RES_WIDTH - (btnRestart.getWidth()+20), 20);
         btnExit.setSize(90, 40);
         btnExit.setPosition(btnExit.getWidth()-70, 20);
-        lblCurrentDate.setPosition(20, GameHandler.NATIVE_RES_HEIGHT-30);
+        lblCurrentDate.setPosition(15, GameHandler.NATIVE_RES_HEIGHT-40);
         lblPutFileName.setPosition((float) (GameHandler.NATIVE_RES_WIDTH/2)-70, 200);
 
         //Tables Characteristics
@@ -165,7 +185,7 @@ public class ResumeMenu extends Menus {
         dialogSaveTable.setFillParent(true);
         dialogExitTable.setFillParent(true);
         dialogOutTable.setFillParent(true);
-        parentTable.setPosition(0, 20);
+        parentTable.setPosition(0, 0);
         //------------------
         //Table Organization
         //------------------
@@ -181,6 +201,28 @@ public class ResumeMenu extends Menus {
         stage.addActor(dialogOutTable);
     }
 
+    public void setLabelsText()
+    {
+        if(!GameHandler.limitSessionTime.equals(new Time(0, 0)))
+            lblLimitSessionTime.setText("Tiempo limite de la sesion: " + GameHandler.limitSessionTime);
+        lblSessionTime.setText("Tiempo de la sesion: " + GameHandler.sessionTime);
+        if(GameHandler.avgRepTimeStep == null || GameHandler.avgRepTimeStep.isEmpty())
+            lblMeanTimeStep.setText("No hay tiempo promedio por escalon");
+        else
+            lblMeanTimeStep.setText("Tiempo promedio por escalon: " + GameHandler.avgSessionTimeStep);
+        lblSessionCompReps.setText("Repeticiones completas: " + GameHandler.sessionReps);
+        lblSessionNoCompReps.setText("Repeticiones incompletas: " + GameHandler.sessionUncompletedReps);
+
+        try {
+            fieldFileName.setText(GameHandler.playerName.replaceAll("\\s", "")+
+                    GameHandler.playerID.replaceAll("\\s", "")+
+                    GameHandler.filenameF.format(GameHandler.calendar.getTime()));
+        }
+        catch (NullPointerException ex) {
+            fieldFileName.setText("");
+        }
+    }
+
     @Override
     protected void tableOrganization() {
         /** Information Table **/
@@ -189,7 +231,11 @@ public class ResumeMenu extends Menus {
             infoTable.row();
         }
         //infoTable.debug();
-        parentTable.add(infoTable).padBottom(35);
+        parentTable.add(infoTable).padBottom(20);
+        parentTable.row();
+
+        /** Time Format label **/
+        parentTable.add(lblTimeFormat).padBottom(20);
         parentTable.row();
 
         /** Performance Table **/
@@ -198,11 +244,13 @@ public class ResumeMenu extends Menus {
             performanceTable.row();
         }
         //performanceTable.debug();
-        parentTable.add(performanceTable).padBottom(80);
+        parentTable.add(performanceTable).padBottom(60);
         parentTable.row();
 
         /** Save file Table **/
         saveFileTable.add(fieldFileName).width(300).height(50).padBottom(5);
+        saveFileTable.row();
+        saveFileTable.add(cbSeparateTimeCells).padBottom(10);
         saveFileTable.row();
         saveFileTable.add(btnSaveFile).width(130).height(50);
 
@@ -213,6 +261,14 @@ public class ResumeMenu extends Menus {
         dialogExitTable.add(dgRestart);
         dialogOutTable.add(dgExit);
         //parentTable.debug();
+    }
+
+    @Override
+    public void render(SpriteBatch batch) {
+        super.render(batch);
+        GameHandler.calendar = Calendar.getInstance();
+        lblCurrentDate.setText("Fecha: " + GameHandler.dateF.format(GameHandler.calendar.getTime()) +
+                "\n" + "Hora: " + GameHandler.timeF.format(GameHandler.calendar.getTime()));
     }
 
     private void lblInfoConstruct() {
@@ -253,15 +309,14 @@ public class ResumeMenu extends Menus {
 
     private void lblPerformanceConstruct() {
         /** PERFORMANCE INFORMATION **/
-        Label lblLimitSessionTime;
-        if(GameHandler.limitSessionTime.equals(new Time(0, 0)))
-            lblLimitSessionTime = new Label("Sin tiempo limite en la sesion", skin);
-        else
+        if(!GameHandler.limitSessionTime.equals(new Time(0, 0)))
             lblLimitSessionTime = new Label("Tiempo limite de la sesion: " + GameHandler.limitSessionTime, skin);
-        Label lblSessionTime = new Label("Tiempo de la sesion: " + GameHandler.sessionTime, skin);
-        Label lblMeanTimeStep = new Label("Tiempo promedio por escalon: " + GameHandler.meanSessionTimeStep, skin);
-        Label lblSessionCompReps = new Label("Repeticiones completas: " + GameHandler.sessionReps, skin);
-        Label lblSessionNoCompReps = new Label("Repeticiones incompletas: " + GameHandler.sessionUncompletedReps, skin);
+        else
+            lblLimitSessionTime = new Label("Sin tiempo limite en la sesion", skin);
+        lblSessionTime = new Label("Tiempo de la sesion: " + GameHandler.sessionTime, skin);
+        lblMeanTimeStep = new Label("Tiempo promedio por escalon: " + GameHandler.avgSessionTimeStep, skin);
+        lblSessionCompReps = new Label("Repeticiones completas: " + GameHandler.sessionReps, skin);
+        lblSessionNoCompReps = new Label("Repeticiones incompletas: " + GameHandler.sessionUncompletedReps, skin);
         //List
         playerPerformance.add(lblLimitSessionTime);
         playerPerformance.add(lblSessionTime);
@@ -366,7 +421,12 @@ public class ResumeMenu extends Menus {
                 return;
             if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
                 //TODO Make CSV file
-                PrintTag.print(TAG, "Corresponde Si Adv");
+                PrintTag.print(TAG, "Generando archivo CSV");
+                csvWriter.setSeparateCells(cbSeparateTimeCells.isChecked());
+                if(fieldFileName.getText().equals(""))
+                    csvWriter.writeCSV("Sample");
+                else
+                    csvWriter.writeCSV(fieldFileName.getText());
             }
             else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
                 //TODO Make restart
