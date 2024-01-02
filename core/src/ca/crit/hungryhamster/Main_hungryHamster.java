@@ -74,6 +74,7 @@ public class Main_hungryHamster extends Game {
 	public void dispose () {
 		gameSounds.dispose();
 		gameScreen.dispose();
+		mainMenuScreen.dispose();
 	}
 
 	@Override

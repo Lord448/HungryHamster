@@ -29,11 +29,12 @@ public class ResumeScreen extends MenusScreen {
 
         titleText.setScales(0.15f, 0.38f);
         resumeMenu = new ResumeMenu(skin, shadeSkin, new Stage(uiViewport), titleText);
+        resumeMenu.uiConstruct();
+
     }
 
     @Override
     public void show() {
-        resumeMenu.uiConstruct();
         resumeMenu.setLabelsText();
     }
 

@@ -45,6 +45,8 @@ public abstract class Menus {
     public void dispose() {
         if(titleText != null)
             titleText.dispose();
+        stage.dispose();
+        skin.dispose();
     }
     public Stage getStage() {
         return stage;

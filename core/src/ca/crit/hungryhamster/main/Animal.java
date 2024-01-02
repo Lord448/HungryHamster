@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.main;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -111,6 +112,10 @@ public class Animal {
                 timer.stop();
                 oneActionFlag = false;
             }
+        }
+
+        if(GameHandler.resetAnimal) {
+
         }
 
         //Quick an dirty zone

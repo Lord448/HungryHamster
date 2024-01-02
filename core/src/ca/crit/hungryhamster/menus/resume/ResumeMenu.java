@@ -420,7 +420,6 @@ public class ResumeMenu extends Menus {
             if(dialog == null)
                 return;
             if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
-                //TODO Make CSV file
                 PrintTag.print(TAG, "Generando archivo CSV");
                 csvWriter.setSeparateCells(cbSeparateTimeCells.isChecked());
                 if(fieldFileName.getText().equals(""))
@@ -429,13 +428,11 @@ public class ResumeMenu extends Menus {
                     csvWriter.writeCSV(fieldFileName.getText());
             }
             else if(dialog.getTitleLabel().getText().toString().equals("Reiniciar")) {
-                //TODO Make restart
-                PrintTag.print(TAG, "Corresponde Si Reiniti");
-                //GameHandler.currentScreen = GameHandler.Screens.MenuScreen; //TODO Manage return to menu
-                //GameHandler.disposeAll();
+                PrintTag.print(TAG, "Reiniciando");
+                GameHandler.currentScreen = GameHandler.Screens.MenuScreen;
+                GameHandler.disposeAll();
             }
             else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
-                PrintTag.print(TAG, "Corresponde Si Salir");
                 System.exit(0);
             }
             dialog.hide();
@@ -443,6 +440,7 @@ public class ResumeMenu extends Menus {
         }
 
         private void btnDgNoListener() {
+            /*
             if(dialog == null)
                 return;
             if(dialog.getTitleLabel().getText().toString().equals("Advertencia")) {
@@ -454,6 +452,7 @@ public class ResumeMenu extends Menus {
             else if(dialog.getTitleLabel().getText().toString().equals("Salir")) {
                 PrintTag.print(TAG, "Corresponde NO Salir");
             }
+             */
             dialog.cancel();
             dialog.hide();
         }

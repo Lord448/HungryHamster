@@ -43,7 +43,7 @@ public class CSVWriter {
     private final String TimeSessionDef = "Tiempo de la sesión";
     private final String AvgTimeStepDef = "Tiempo promedio de escalón";
     private final String RepsCompletedDef = "Repeticiones completas";
-    private final String repsIncompletedDef = "Repeticiones incompletas";
+    private final String repsIncompleteDef = "Repeticiones incompletas";
     private final String rawDataDef = "Datos en Crudo";
     private final String avgRepDef = "Promedios";
     private final String sessionAvgDef = "Promedio de tiempo de escalones en la sesión";
@@ -140,7 +140,7 @@ public class CSVWriter {
         result[6][1] = TimeSessionDef;
         result[6][2] = AvgTimeStepDef;
         result[6][3] = RepsCompletedDef;
-        result[6][4] = repsIncompletedDef;
+        result[6][4] = repsIncompleteDef;
         result[7][0] = GameHandler.limitSessionTime.toString();
         result[7][1] = GameHandler.sessionTime.toString();
         if(GameHandler.avgSessionTimeStep == null)

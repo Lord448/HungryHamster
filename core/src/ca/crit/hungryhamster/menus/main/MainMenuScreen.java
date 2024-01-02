@@ -2,6 +2,7 @@ package ca.crit.hungryhamster.menus.main;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
+import ca.crit.hungryhamster.GameHandler;
 import ca.crit.hungryhamster.menus.MenusScreen;
 import ca.crit.hungryhamster.menus.main.stages.ConfigMenu;
 import ca.crit.hungryhamster.menus.main.stages.PatientsMenu;
@@ -34,15 +35,16 @@ public class MainMenuScreen extends MenusScreen {
         registerMenu = new RegisterMenu(skin, new Stage(uiViewport), registerText);
         configMenu = new ConfigMenu(skin, shadeSkin, new Stage(uiViewport), configText);
         mainMenuState = MainMenuState.INIT;
-    }
-
-    @Override
-    public void show() {
         initialMenu.uiConstruct();
         patientsMenu.uiConstruct();
         loginMenu.uiConstruct();
         registerMenu.uiConstruct();
         configMenu.uiConstruct();
+    }
+
+    @Override
+    public void show() {
+
     }
 
     @Override
@@ -85,6 +87,11 @@ public class MainMenuScreen extends MenusScreen {
                 configMenu.stageRender(deltaTime);
             break;
         }
+
+        if(GameHandler.resetConfigMenu) {
+            configMenu.reset();
+            GameHandler.resetConfigMenu = false;
+        }
     }
 
     @Override
@@ -104,6 +111,8 @@ public class MainMenuScreen extends MenusScreen {
 
     @Override
     public void dispose() {
+        batch.dispose();
+        skin.dispose();
         initialMenu.dispose();
         patientsMenu.dispose();
         loginMenu.dispose();

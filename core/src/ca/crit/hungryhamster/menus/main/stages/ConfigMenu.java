@@ -225,7 +225,18 @@ public class ConfigMenu extends Menus {
         parentTable.add(btnPlay).width(btnWidth).height(btnHeight).colspan(3);
         parentTable.row();
         parentTable.add(btnReturn).width(btnWidth).height(btnHeight).left();
-        //parentTable.debug();
+        parentTable.debug();
+    }
+
+    public void reset() {
+        fieldMaxStep.setText("10");
+        fieldMinStep.setText("0");
+        fieldReps.setText("Libre");
+        fieldExtra.setText("");
+        cbExtraFruit.setChecked(false);
+        cbRightHand.setChecked(false);
+        cbLeftHand.setChecked(false);
+        cbBothHands.setChecked(false);
     }
 
     private class Listener extends ChangeListener {

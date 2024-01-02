@@ -120,6 +120,8 @@ public class GameHandler {
     public static Screens currentScreen = Screens.IsSet;
     public static float[] foodPositions;
     public static int nextStep = 0;
+    public static boolean resetConfigMenu = false;
+    public static boolean resetAnimal = false;
     /**
      * --------------------------------------------------------------------------
      *                        PATIENT PERFORMANCE MEASURES
@@ -219,6 +221,17 @@ public class GameHandler {
     }
 
     public static void disposeAll() {
-        //TODO Destroy all classes
+        limitSessionTime = new Time(); //Limit time of the session if it exists
+        sessionTime = new Time(); //Duration of the session
+        avgSessionTimeStep = new TimeMillis(); //Mean time to complete a step per session
+        avgRepTimeStep = new ArrayList<TimeMillis>(); //List of mean time to complete step per Repetition
+        repsTime = new ArrayList<Time>(); //Time to complete the repetition
+        sessionReps = 0; //Completed session repetitions
+        sessionUncompletedReps = 0; //Uncompleted repetitions on the session
+        successfulSteps = 0; //Successful steps on the session
+        allTimeInSteps = new ArrayList<>(); //Have lists of all the times of the patient
+        resetConfigMenu = true;
+        Arrays.fill(touchPins, false);
+        Arrays.fill(GameHandler.espTouch, false);
     }
 }
