@@ -225,7 +225,7 @@ public class ConfigMenu extends Menus {
         parentTable.add(btnPlay).width(btnWidth).height(btnHeight).colspan(3);
         parentTable.row();
         parentTable.add(btnReturn).width(btnWidth).height(btnHeight).left();
-        parentTable.debug();
+        //parentTable.debug();
     }
 
     public void reset() {

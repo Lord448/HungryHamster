@@ -99,6 +99,7 @@ public class GameScreen implements Screen {
         final float ANIMAL_INITIAL_X = (float) GameHandler.WORLD_WIDTH/2+5;
         food = new Food[GameHandler.numHouseSteps/2];
         animal = new Animal(ANIMAL_INITIAL_X, ANIMAL_INITIAL_Y, 7, 10, 30);
+        timerGameTime.reset();
         //Construct for the food
         for(int i = 0, j = 0; i < GameHandler.numHouseSteps/2; i++, j++) {
             if(j == Fruits.totalFruits) {
@@ -214,6 +215,8 @@ public class GameScreen implements Screen {
         lblRepsUncompleted = new Label("Reps Incompletas: 0", skin);
         TextButton btnEndReps = new TextButton("Terminar Repeticion", skin);
         TextButton btnEndSession = new TextButton("Terminar la sesion", skin);
+        TextButton btnReturn = new TextButton("Regresar", skin);
+
 
         lblTimeMills = new Label("T: ", skin);
 
@@ -271,6 +274,13 @@ public class GameScreen implements Screen {
                     GameHandler.currentScreen = GameHandler.Screens.DemoScreen;
             }
         });
+        btnReturn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameHandler.currentScreen = GameHandler.Screens.MenuScreen;
+                GameHandler.disposeAll();
+            }
+        });
         lblRepsUncompleted.setPosition(xREPS, yTOP_TEXT);
         lblReps.setPosition(xREPS, yTOP_TEXT - 22);
         lblTimeSession.setPosition(xTIME, yTOP_TEXT);
@@ -278,6 +288,7 @@ public class GameScreen implements Screen {
         lblBLEData.setPosition(400, 0);
         btnEndReps.setPosition(xBtn, 250);
         btnEndSession.setPosition(xBtn, 220);
+        btnReturn.setPosition(GameHandler.NATIVE_RES_WIDTH-btnReturn.getWidth()-10, 20);
 
         lblTimeMills.setPosition(0, 0);
         stage.addActor(lblTimeMills);
@@ -288,6 +299,7 @@ public class GameScreen implements Screen {
         stage.addActor(lblRepsUncompleted);
         stage.addActor(btnEndReps);
         stage.addActor(btnEndSession);
+        stage.addActor(btnReturn);
     }
 
     private void resetRepetition() {

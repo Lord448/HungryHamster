@@ -55,6 +55,10 @@ public class ResumeMenu extends Menus {
     private final Label lblDialogMessageRestart;
     private final Label lblDialogMessageExit;
     private final Label lblTimeFormat;
+    private final Label lblPlayerName;
+    private final Label lblPlayerID;
+    private final Label lblPlayerAge;
+    private final Label lblPlayerGender;
     /**
      * ---------------------------------------------------------------------
      *                          PERFORMANCE LABELS
@@ -128,6 +132,10 @@ public class ResumeMenu extends Menus {
         lblTimeFormat = new Label(GameHandler.timeFormat, skin);
         lblTimeFormat.setAlignment(Align.center);
         lblDialogMessageExit.setAlignment(Align.center);
+        lblPlayerName = new Label("Nombre: " + GameHandler.playerName, skin);
+        lblPlayerID = new Label("ID: " + GameHandler.playerID, skin);
+        lblPlayerAge = new Label("Edad: " + GameHandler.playerAge, skin);
+        lblPlayerGender = new Label("Sexo: " + GameHandler.playerGender, skin);
         lblInfoConstruct();
         lblPerformanceConstruct();
         //TextField
@@ -213,10 +221,26 @@ public class ResumeMenu extends Menus {
         lblSessionCompReps.setText("Repeticiones completas: " + GameHandler.sessionReps);
         lblSessionNoCompReps.setText("Repeticiones incompletas: " + GameHandler.sessionUncompletedReps);
 
+        lblPlayerName.setText("Nombre: " + GameHandler.playerName);
+        lblPlayerID.setText("ID: " + GameHandler.playerID);
+        lblPlayerAge.setText("Edad: " + GameHandler.playerAge);
+        lblPlayerGender.setText("Sexo: " + GameHandler.playerGender);
+
         try {
+            //TODO Try when DB implemented
+            /*
             fieldFileName.setText(GameHandler.playerName.replaceAll("\\s", "")+
                     GameHandler.playerID.replaceAll("\\s", "")+
                     GameHandler.filenameF.format(GameHandler.calendar.getTime()));
+             */
+            if(GameHandler.saveOnDir)
+                fieldFileName.setText(GameHandler.playerID.replaceAll("\\s", "") +
+                                  "/" +
+                                  GameHandler.filenameF.format(GameHandler.calendar.getTime()));
+            else
+                fieldFileName.setText(GameHandler.playerID.replaceAll("\\s", "") +
+                        "-" +
+                        GameHandler.filenameF.format(GameHandler.calendar.getTime()));
         }
         catch (NullPointerException ex) {
             fieldFileName.setText("");
@@ -274,10 +298,10 @@ public class ResumeMenu extends Menus {
     private void lblInfoConstruct() {
         //User Information Labels
         /** DISPLAY INFORMATION **/
-        Label lblPlayerName = new Label("Nombre: " + GameHandler.playerName, skin);
-        Label lblPlayerID = new Label("ID: " + GameHandler.playerID, skin);
-        Label lblPlayerAge = new Label("Edad: " + GameHandler.playerAge, skin);
-        Label lblPlayerGender = new Label("Sexo: " + GameHandler.playerGender, skin);
+        lblPlayerName.setText("Nombre: " + GameHandler.playerName);
+        lblPlayerID.setText("ID: " + GameHandler.playerID);
+        lblPlayerAge.setText("Edad: " + GameHandler.playerAge);
+        lblPlayerGender.setText("Sexo: " + GameHandler.playerGender);
         String hand;
         switch (GameHandler.playerWorkingHand) {
             case GameHandler.RIGHT_HAND:

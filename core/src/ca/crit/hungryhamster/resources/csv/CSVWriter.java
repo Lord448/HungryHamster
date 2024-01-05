@@ -113,7 +113,7 @@ public class CSVWriter {
         final String toDef = " a ";
         final String endOfRow = " ";
         int totalRepetitions = GameHandler.sessionReps + GameHandler.sessionUncompletedReps;
-        String[][] result = new String[32+GameHandler.numHouseSteps][totalRepetitions+4];
+        String[][] result = new String[32+GameHandler.numHouseSteps][totalRepetitions+6];
         GameHandler.calendar = Calendar.getInstance();
 
         for(String[] row : result)
@@ -155,7 +155,7 @@ public class CSVWriter {
         result[10][0] = endOfRow; //Marker
 
         if(rawData == null) { //Take and process from Game handler
-            rawData = new String[16+GameHandler.numHouseSteps][totalRepetitions+4];
+            rawData = new String[16+GameHandler.numHouseSteps][totalRepetitions+6];
             int i = 0;
             for(List<TimeMillis> timeMillisList : GameHandler.allTimeInSteps) {
                 i++;

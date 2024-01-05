@@ -170,6 +170,7 @@ public class Animal {
                 When pressed to fast the touch pin is in false,
                 need to synchronize with the arrive event
                 Possible sol: Use a FIFO to handle and process the incoming data
+                Possible sol: Implement it with a circular buffer
                  */
                 for(int j = 0; j < GameHandler.maxStep; j++) {
                     if(j != i)

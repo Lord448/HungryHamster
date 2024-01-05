@@ -61,15 +61,6 @@ public class TimerMillis extends Timer {
     }
 
     public void reset() {
-        switch (mode)
-        {
-            case ONE_SHOT:
-            case TIME_MEASURE:
-                state = States.STOP;
-                break;
-            case PERIODIC:
-                break;
-        }
         currentTime.setZeros();
     }
 
