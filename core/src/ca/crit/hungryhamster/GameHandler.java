@@ -151,7 +151,7 @@ public class GameHandler {
     public static String playerGender;
     public static int playerWorkingHand;
     public static int playerAge;
-    public static int playerLastNumSteps; //TODO Register the last step configuration
+    public static int playerLastNumSteps; //TODO Register the last step configuration -- ONLY IF DB Implemented
     public static Calendar calendar  = Calendar.getInstance();
     public static Date currentDate;
     /**
