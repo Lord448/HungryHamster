@@ -183,14 +183,14 @@ public class ConfigMenu extends Menus {
         parentTable.add(timeTable).padLeft(70);
         parentTable.row();
         parentTable.add(fieldMaxStep).width(fieldWidth).height(fieldHeight);
-        upperArrowsTable.add(btnArrows[0]); //Up
-        upperArrowsTable.row();
-        upperArrowsTable.add(btnArrows[1]); //Down
+            upperArrowsTable.add(btnArrows[0]); //Up
+            upperArrowsTable.row();
+            upperArrowsTable.add(btnArrows[1]); //Down
         parentTable.add(upperArrowsTable).left();
         parentTable.add(fieldTime).width(fieldWidth).height(fieldHeight).left();
-        timeArrowsTable.add(btnArrows[2]); //Up
-        timeArrowsTable.row();
-        timeArrowsTable.add(btnArrows[3]); //Down
+            timeArrowsTable.add(btnArrows[2]); //Up
+            timeArrowsTable.row();
+            timeArrowsTable.add(btnArrows[3]); //Down
         parentTable.add(timeArrowsTable).left();
         parentTable.row();
         parentTable.add(lblMinStep);
@@ -198,22 +198,22 @@ public class ConfigMenu extends Menus {
         parentTable.add(cbExtraFruit).padLeft(10);
         parentTable.row();
         parentTable.add(fieldMinStep).width(fieldWidth).height(fieldHeight);
-        lowerArrowsTable.add(btnArrows[4]); //Up
-        lowerArrowsTable.row();
-        lowerArrowsTable.add(btnArrows[5]); //Down
+            lowerArrowsTable.add(btnArrows[4]); //Up
+            lowerArrowsTable.row();
+            lowerArrowsTable.add(btnArrows[5]); //Down
         parentTable.add(lowerArrowsTable).left().padRight(10);
         parentTable.add(fieldExtra).width(fieldWidth).height(fieldHeight).left();
-        extraArrowsTable.add(btnArrows[6]);
-        extraArrowsTable.row();
-        extraArrowsTable.add(btnArrows[7]);
+            extraArrowsTable.add(btnArrows[6]);
+            extraArrowsTable.row();
+            extraArrowsTable.add(btnArrows[7]);
         parentTable.add(extraArrowsTable).left();
         parentTable.row();
         parentTable.add(lblReps);
         parentTable.row().padBottom(20);
         parentTable.add(fieldReps).width(fieldWidth).height(fieldHeight);
-        repsArrowsTable.add(btnArrows[8]);
-        repsArrowsTable.row();
-        repsArrowsTable.add(btnArrows[9]);
+            repsArrowsTable.add(btnArrows[8]);
+            repsArrowsTable.row();
+            repsArrowsTable.add(btnArrows[9]);
         parentTable.add(repsArrowsTable).left();
         handCheckTable.add(cbLeftHand);
         handCheckTable.row();

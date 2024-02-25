@@ -1,5 +1,6 @@
 package ca.crit.hungryhamster.resources.csv;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
@@ -62,15 +63,14 @@ public class CSVWriter {
     }
 
     public void writeCSV(String fileName) {
-        // Obtén el directorio externo de almacenamiento específico de la aplicación
+        //Get the external directory of the application working directory
         String externalStoragePath = Gdx.files.getExternalStoragePath();
         //String externalStoragePath = "/storage/emulated/0/Documents/TreasureHunter/";
 
-        // Combina el directorio externo con el nombre del archivo
+        //Concatenate the external directory with name of the file
         filePath = externalStoragePath + fileName + ".csv";
-        //System.out.println("se guardo en: "+filePath);
 
-        // Crea un FileHandle con la ruta completa
+        //Creates a FileHandle with the absolute path
         FileHandle file = Gdx.files.absolute(filePath);
 
         String[][] outputData = concatenateData();
@@ -84,7 +84,7 @@ public class CSVWriter {
                         continue; //Removing null and void characters to optimize size
                     csvBuilder.append(value).append(",");
                 }
-                csvBuilder.setLength(csvBuilder.length() - 1); // Remove the trailing comma
+                csvBuilder.setLength(csvBuilder.length() - 1); //Remove the trailing comma
                 csvBuilder.append("\n");
             }
             file.writeString(csvBuilder.toString(), false);
@@ -127,12 +127,16 @@ public class CSVWriter {
         result[2][1] = ageDef;
         result[2][2] = iDDef;
         result[2][3] = sexDef;
-        //result[3][0] = GameHandler.playerName;
-        result[3][0] = "null"; //TODO Remove this
+        result[3][0] = GameHandler.playerName;
         result[3][1] = String.valueOf(GameHandler.playerAge);
         result[3][2] = GameHandler.playerID;
-        //result[3][3] = GameHandler.playerGender;
-        result[3][3] = "null"; //TODO Remove this
+        //Translation to spanish
+        if(GameHandler.playerGender.equals("Male")) {
+            result[3][3] = "Hombre";
+        }
+        else if(GameHandler.playerGender.equals("Female")) {
+            result[3][3] = "Mujer";
+        }
         result[4][0] = endOfRow;
         /**Resume**/
         result[5][0] = resumeDef;

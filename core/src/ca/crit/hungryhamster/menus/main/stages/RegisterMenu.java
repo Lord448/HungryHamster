@@ -214,12 +214,14 @@ public class RegisterMenu extends Menus {
 
         private void btnMaleListener() {
             GameHandler.playerGender = "Male";
-            btnFemale.setChecked(false);
+            if(btnMale.isChecked())
+                btnFemale.setChecked(false);
         }
 
         private void btnFemaleListener() {
             GameHandler.playerGender = "Female";
-            btnMale.setChecked(false);
+            if (btnFemale.isChecked())
+                btnMale.setChecked(false);
         }
     }
 }

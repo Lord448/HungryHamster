@@ -31,7 +31,7 @@ public class MainMenuScreen extends MenusScreen {
         //Menus
         initialMenu = new InitialMenu(skin, new Stage(uiViewport), titleText);
         patientsMenu = new PatientsMenu(skin, new Stage(uiViewport), patientsText);
-        loginMenu = new LoginMenu(skin, new Stage(uiViewport), whoPlaysText);
+        loginMenu = new LoginMenu(skin, shadeSkin, new Stage(uiViewport), whoPlaysText);
         registerMenu = new RegisterMenu(skin, new Stage(uiViewport), registerText);
         configMenu = new ConfigMenu(skin, shadeSkin, new Stage(uiViewport), configText);
         mainMenuState = MainMenuState.INIT;
