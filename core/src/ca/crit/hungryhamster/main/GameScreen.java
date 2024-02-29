@@ -100,6 +100,8 @@ public class GameScreen implements Screen {
         food = new Food[GameHandler.numHouseSteps/2];
         animal = new Animal(ANIMAL_INITIAL_X, ANIMAL_INITIAL_Y, 7, 10, 30);
         timerGameTime.reset();
+        lblReps.setText("Reps Completas: 0");
+        lblRepsUncompleted.setText("Reps Incompletas: 0");
         //Construct for the food
         for(int i = 0, j = 0; i < GameHandler.numHouseSteps/2; i++, j++) {
             if(j == Fruits.totalFruits) {
