@@ -81,9 +81,9 @@ public class ConfigMenu extends Menus {
      */
     private final CheckBox cbExtraFruit;
     private final CheckBox cbRightHand;
-    private final CheckBox cbLeftHand;
     private final CheckBox cbBothHands;
     private final CheckBox cbFreeTime;
+    private final CheckBox cbLeftHand;
     /**
      * ---------------------------------------------------------------------
      *                              TABLES
@@ -135,9 +135,10 @@ public class ConfigMenu extends Menus {
         //Checkboxes
         cbExtraFruit = new CheckBox("Fruta extra", shadeSkin);
         cbRightHand = new CheckBox("Mano derecha", shadeSkin);
-        cbLeftHand = new CheckBox("Mano izquierda", shadeSkin);
         cbBothHands = new CheckBox("Ambas manos", shadeSkin);
         cbFreeTime = new CheckBox("Libre", shadeSkin);
+        cbLeftHand = new CheckBox("Mano izquierda", shadeSkin);
+        cbLeftHand.setChecked(true);
         //Tables
         upperArrowsTable = new Table();
         lowerArrowsTable = new Table();
@@ -235,7 +236,7 @@ public class ConfigMenu extends Menus {
         fieldExtra.setText("");
         cbExtraFruit.setChecked(false);
         cbRightHand.setChecked(false);
-        cbLeftHand.setChecked(false);
+        cbLeftHand.setChecked(true);
         cbBothHands.setChecked(false);
     }
 

@@ -103,7 +103,7 @@ public class GameHandler {
      */
     public static float musicVolume;
     public static float effectsVolume;
-    public static int numHouseSteps = 15;
+    public static int numHouseSteps = 16;
     public static int maxStep;
     public static int minStep;
     public static int extraStep = 0;
